@@ -20,9 +20,7 @@ using Tests_and_Interviews.ViewModels;
 
 namespace Tests_and_Interviews.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class TestPage : Page
     {
         public TestViewModel ViewModel { get; }
