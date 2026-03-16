@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Tests_and_Interviews (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Tests_and_Interviews (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
