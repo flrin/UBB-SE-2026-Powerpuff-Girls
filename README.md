@@ -31,17 +31,6 @@ One person must review the PR!
 - Services: connects the controller and the database
 - Helpers: utility classes
 
-# Managing Migrations
-### If someone added a new Migration:
-1. View > Other Windows > Package Manager Console
-2. run Update-Database
-
-### If you want to add a new Migration
-1. Change your class from Models
-2. View > Other Windows > Package Manager Console
-3. run Update-Database
-4. commit the new Migration file
-
 # Notes!
 ### Adding a .xaml file
 1. Right click on views
@@ -51,3 +40,8 @@ One person must review the PR!
 5. Blank Page
 
 Not .xml file!
+
+### Database not up to date
+1. Open repo folder in terminal
+2. run docker-compose down -v
+3. run docker-compose up -d 
