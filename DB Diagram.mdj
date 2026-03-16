@@ -297,9 +297,9 @@
 									"parentStyle": true,
 									"left": 702,
 									"top": 71,
-									"width": 245.77587890625,
+									"width": 255.15771484375,
 									"height": 13,
-									"text": "UserTest"
+									"text": "TestAttempt"
 								},
 								{
 									"_type": "ERDColumnCompartmentView",
@@ -324,7 +324,7 @@
 											"parentStyle": true,
 											"left": 707,
 											"top": 94,
-											"width": 235.77587890625,
+											"width": 245.15771484375,
 											"height": 13
 										},
 										{
@@ -340,7 +340,7 @@
 											"parentStyle": true,
 											"left": 707,
 											"top": 109,
-											"width": 235.77587890625,
+											"width": 245.15771484375,
 											"height": 13
 										},
 										{
@@ -356,7 +356,7 @@
 											"parentStyle": true,
 											"left": 707,
 											"top": 124,
-											"width": 235.77587890625,
+											"width": 245.15771484375,
 											"height": 13
 										},
 										{
@@ -372,7 +372,7 @@
 											"parentStyle": true,
 											"left": 707,
 											"top": 139,
-											"width": 235.77587890625,
+											"width": 245.15771484375,
 											"height": 13
 										},
 										{
@@ -388,7 +388,7 @@
 											"parentStyle": true,
 											"left": 707,
 											"top": 154,
-											"width": 235.77587890625,
+											"width": 245.15771484375,
 											"height": 13
 										},
 										{
@@ -404,7 +404,7 @@
 											"parentStyle": true,
 											"left": 707,
 											"top": 169,
-											"width": 235.77587890625,
+											"width": 245.15771484375,
 											"height": 13
 										},
 										{
@@ -420,7 +420,7 @@
 											"parentStyle": true,
 											"left": 707,
 											"top": 184,
-											"width": 235.77587890625,
+											"width": 245.15771484375,
 											"height": 13
 										},
 										{
@@ -437,7 +437,7 @@
 											"parentStyle": true,
 											"left": 791,
 											"top": 195,
-											"width": 235.77587890625,
+											"width": 245.15771484375,
 											"height": 13
 										},
 										{
@@ -453,7 +453,7 @@
 											"parentStyle": true,
 											"left": 707,
 											"top": 199,
-											"width": 235.77587890625,
+											"width": 245.15771484375,
 											"height": 13
 										}
 									],
@@ -461,7 +461,7 @@
 									"parentStyle": true,
 									"left": 702,
 									"top": 89,
-									"width": 245.77587890625,
+									"width": 255.15771484375,
 									"height": 128
 								}
 							],
@@ -469,7 +469,7 @@
 							"parentStyle": false,
 							"left": 702,
 							"top": 66,
-							"width": 245.77587890625,
+							"width": 255.15771484375,
 							"height": 151,
 							"nameLabel": {
 								"$ref": "AAAAAAGc6+i1Y7+LlvE="
@@ -585,7 +585,7 @@
 									"top": 262,
 									"width": 242.1513671875,
 									"height": 13,
-									"text": "Leaderboard"
+									"text": "LeaderboardEntry"
 								},
 								{
 									"_type": "ERDColumnCompartmentView",
@@ -1711,7 +1711,7 @@
 					"_parent": {
 						"$ref": "AAAAAAGc6+ftgb9vccY="
 					},
-					"name": "UserTest",
+					"name": "TestAttempt",
 					"columns": [
 						{
 							"_type": "ERDColumn",
@@ -1800,7 +1800,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGc6+i1Y7+IJ0g="
 							},
-							"name": "user_answer",
+							"name": "answers_file_path",
 							"type": "VARCHAR",
 							"length": "200"
 						}
@@ -1812,7 +1812,7 @@
 					"_parent": {
 						"$ref": "AAAAAAGc6+ftgb9vccY="
 					},
-					"name": "Leaderboard",
+					"name": "LeaderboardEntry",
 					"columns": [
 						{
 							"_type": "ERDColumn",
@@ -1842,7 +1842,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGc6/hkhsCeyOo="
 							},
-							"name": "external_user_id",
+							"name": "user_id",
 							"type": "INTEGER",
 							"length": 0
 						},
@@ -1955,8 +1955,8 @@
 								"$ref": "AAAAAAGc7Ae8tMD+YWE="
 							},
 							"name": "question_score",
-							"type": "VARCHAR",
-							"length": "200"
+							"type": "DECIMAL",
+							"length": 0
 						},
 						{
 							"_type": "ERDColumn",
