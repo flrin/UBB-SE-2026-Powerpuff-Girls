@@ -16,6 +16,8 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
+using Tests_and_Interviews.Services;
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -35,6 +37,10 @@ namespace Tests_and_Interviews
         public App()
         {
             InitializeComponent();
+            using (var db = new AppDbContext()) // Replace with your actual DbContext name
+            {
+                db.Database.EnsureCreated();
+            }
         }
 
         /// <summary>
