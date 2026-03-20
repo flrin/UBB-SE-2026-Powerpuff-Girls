@@ -14,7 +14,6 @@ namespace Tests_and_Interviews.Helpers
             _canExecute = canExecute;
         }
 
-        // Required by ICommand interface
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter) => _canExecute == null || _canExecute();

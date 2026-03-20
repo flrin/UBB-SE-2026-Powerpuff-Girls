@@ -39,7 +39,7 @@ namespace Tests_and_Interviews
             InitializeComponent();
             using (var db = new AppDbContext()) // Replace with your actual DbContext name
             {
-                db.Database.EnsureCreated();
+                db.SeedDatabase();
             }
         }
 
