@@ -11,6 +11,7 @@ namespace Tests_and_Interviews.Domain
         public DateTime EndTime { get; set; }
         public int Duration { get; set; }
         public SlotStatus Status { get; set; }
+        public string InterviewType { get; set; }
         
         public bool IsAvailable()
         {
