@@ -14,7 +14,6 @@ using Tests_and_Interviews.Services;
 
 namespace Tests_and_Interviews.ViewModels
 {
-    // ---- Option (singura alegere / multipla) ----
     public class OptionViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -22,7 +21,7 @@ namespace Tests_and_Interviews.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));
 
         public string Text { get; set; } = string.Empty;
-        public string GroupName { get; set; } = string.Empty; // pentru RadioButton
+        public string GroupName { get; set; } = string.Empty; 
         public int Index { get; set; }
 
         private bool _isSelected;
@@ -34,7 +33,6 @@ namespace Tests_and_Interviews.ViewModels
         public Action? OnSelectionChanged { get; set; }
     }
 
-    // ---- O intrebare ----
     public class QuestionViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -49,13 +47,11 @@ namespace Tests_and_Interviews.ViewModels
 
         public ObservableCollection<OptionViewModel> Options { get; set; } = new();
 
-        // Visibility helpers
         public Visibility IsSingleChoice => Type == QuestionType.SINGLE_CHOICE ? Visibility.Visible : Visibility.Collapsed;
         public Visibility IsMultipleChoice => Type == QuestionType.MULTIPLE_CHOICE ? Visibility.Visible : Visibility.Collapsed;
         public Visibility IsTrueFalse => Type == QuestionType.TRUE_FALSE ? Visibility.Visible : Visibility.Collapsed;
         public Visibility IsText => Type == QuestionType.TEXT ? Visibility.Visible : Visibility.Collapsed;
 
-        // TRUE/FALSE
         public string TrueFalseGroup => $"tf_{QuestionId}";
 
         private bool _trueSelected;
@@ -84,7 +80,6 @@ namespace Tests_and_Interviews.ViewModels
             }
         }
 
-        // TEXT
         private string _textAnswer = string.Empty;
         public string TextAnswer
         {
@@ -94,7 +89,6 @@ namespace Tests_and_Interviews.ViewModels
 
         public Action? OnAnswerChanged { get; set; }
 
-        // Returneaza raspunsul ca string pentru salvare
         public string GetAnswerValue()
         {
             return Type switch
@@ -121,7 +115,6 @@ namespace Tests_and_Interviews.ViewModels
         }
     }
 
-    // ---- ViewModel pagina test ----
     public class TestPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -133,18 +126,16 @@ namespace Tests_and_Interviews.ViewModels
         private string _testTitle = string.Empty;
         public string TestTitle { get => _testTitle; set { _testTitle = value; Notify(); } }
 
-        // Timer
         private TimeSpan _timeLeft = TimeSpan.FromMinutes(30);
         private DispatcherTimer? _timer;
         public string TimerDisplay => _timeLeft.ToString(@"mm\:ss");
         public Action? OnTimerExpired { get; set; }
 
-        // Contori
         private int _answeredCount;
         public int AnsweredCount { get => _answeredCount; set { _answeredCount = value; Notify(); } }
         public int TotalCount => Questions.Count;
 
-        // Servicii
+        
         private readonly AppDbContext _db;
         private readonly TestService _testService;
         private int _attemptId;
@@ -171,7 +162,6 @@ namespace Tests_and_Interviews.ViewModels
         public async System.Threading.Tasks.Task LoadAsync(int testId, int userId)
         {
             TestId = testId;
-            // UserId e setat din constructor cu ID-ul real din DB, nu folosim parametrul hardcodat
 
             var testRepo = new TestRepository(_db);
             var test = await testRepo.FindByIdAsync(testId);
@@ -256,7 +246,6 @@ namespace Tests_and_Interviews.ViewModels
         {
             StopTimer();
 
-            // Salveaza raspunsurile si calculeaza scorul
             var attemptRepo = new TestAttemptRepository(_db);
             var attempt = await attemptRepo.FindByUserAndTestAsync(UserId, TestId);
             if (attempt == null) return 0f;

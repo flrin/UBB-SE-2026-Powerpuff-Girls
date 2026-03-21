@@ -17,7 +17,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- ===== TOP BAR ===== -->
+        
         <Border Grid.Row="0" Background="White" Padding="32,14"
                 BorderBrush="#E8E4FF" BorderThickness="0,0,0,1">
             <Grid>
@@ -36,7 +36,7 @@
                     </StackPanel>
                 </Button>
 
-                <!-- Timer pill -->
+                
                 <Border Grid.Column="2" Background="White" CornerRadius="20"
                         BorderBrush="#E8E4FF" BorderThickness="1"
                         Padding="16,8">
@@ -51,7 +51,7 @@
             </Grid>
         </Border>
 
-        <!-- ===== TITLE ===== -->
+        
         <StackPanel Grid.Row="1" Margin="280,24,280,8">
             <TextBlock Text="{x:Bind ViewModel.TestTitle, Mode=OneWay}"
                        FontSize="22" FontWeight="Bold" Foreground="#1a1a2e"/>
@@ -59,7 +59,7 @@
                        FontSize="13" Foreground="#888" Margin="0,4,0,0"/>
         </StackPanel>
 
-        <!-- ===== QUESTIONS ===== -->
+       
         <ScrollViewer Grid.Row="2" Padding="280,12,280,12"
                       VerticalScrollBarVisibility="Auto">
             <ItemsRepeater ItemsSource="{x:Bind ViewModel.Questions, Mode=OneWay}">
@@ -70,7 +70,7 @@
                                 Margin="0,0,0,16" Padding="24">
                             <StackPanel Spacing="12">
 
-                                <!-- Question header: number + type badge -->
+                                
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -92,12 +92,12 @@
                                        VerticalAlignment="Center"/>     
                                 </Grid>
 
-                                <!-- Question text -->
+                               
                                 <TextBlock Text="{x:Bind QuestionText}"
                                            FontSize="15" Foreground="#1a1a2e"
                                            TextWrapping="Wrap" Margin="50,0,0,0"/>
 
-                                <!-- SINGLE CHOICE options -->
+                               
                                 <StackPanel Spacing="8" Margin="50,0,0,0"
                                             Visibility="{x:Bind IsSingleChoice}">
                                     <ItemsRepeater ItemsSource="{x:Bind Options}">
@@ -116,7 +116,7 @@
                                     </ItemsRepeater>
                                 </StackPanel>
 
-                                <!-- MULTIPLE CHOICE options -->
+                                
                                 <StackPanel Spacing="8" Margin="50,0,0,0"
                                             Visibility="{x:Bind IsMultipleChoice}">
                                     <ItemsRepeater ItemsSource="{x:Bind Options}">
@@ -134,7 +134,7 @@
                                     </ItemsRepeater>
                                 </StackPanel>
 
-                                <!-- TRUE/FALSE options -->
+                               
                                 <StackPanel Spacing="8" Margin="50,0,0,0"
                                             Visibility="{x:Bind IsTrueFalse}">
                                     <Border Background="White" CornerRadius="8"
@@ -155,7 +155,7 @@
                                     </Border>
                                 </StackPanel>
 
-                                <!-- TEXT answer -->
+                               
                                 <TextBox Margin="50,0,0,0"
                                          PlaceholderText="Type your answer here..."
                                          Text="{x:Bind TextAnswer, Mode=TwoWay}"
@@ -170,7 +170,7 @@
             </ItemsRepeater>
         </ScrollViewer>
 
-        <!-- ===== FOOTER ===== -->
+        
         <Border Grid.Row="3" Background="White"
                 BorderBrush="#E8E4FF" BorderThickness="0,1,0,0"
                 Padding="32,16">

@@ -10,7 +10,6 @@ using Tests_and_Interviews.Services;
 
 namespace Tests_and_Interviews.ViewModels
 {
-    // ViewModel pentru un card de test individual
     public class TestCardViewModel
     {
         public int TestId { get; set; }
@@ -19,7 +18,6 @@ namespace Tests_and_Interviews.ViewModels
         public string QuestionTypeLabel { get; set; } = string.Empty;
     }
 
-    // ViewModel pentru pagina principala
     public class MainTestViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -52,8 +50,7 @@ namespace Tests_and_Interviews.ViewModels
 
             var repo = new TestRepository(_db);
 
-            // Incarcam testele din toate categoriile cunoscute
-            // (ajusteaza categoriile dupa ce ai in DB)
+            
             var categories = new List<string> { "Programming", "Database" };
 
             foreach (var cat in categories)
@@ -61,7 +58,6 @@ namespace Tests_and_Interviews.ViewModels
                 var tests = await repo.FindTestsByCategoryAsync(cat);
                 foreach (var t in tests)
                 {
-                    // Determinam tipul de intrebare dominant (primul din lista)
                     string typeLabel = "MIXED";
                     if (t.Questions.Count > 0)
                         typeLabel = t.Questions[0].QuestionTypeString.Replace("_", "/");

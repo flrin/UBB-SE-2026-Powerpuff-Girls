@@ -199,7 +199,6 @@ namespace Tests_and_Interviews.Services
 
             if (!TestAttempts.Any())
             {
-                // ID-urile sunt OMISE — PostgreSQL le genereaza automat (GENERATED ALWAYS AS IDENTITY)
                 TestAttempts.AddRange(
                     new TestAttempt
                     {
@@ -237,7 +236,6 @@ namespace Tests_and_Interviews.Services
 
             if (!Answers.Any())
             {
-                // Luam attempt-urile din DB dupa user+test pentru ID-urile reale
                 var attempt1 = TestAttempts.First(ta => ta.ExternalUserId == 1 && ta.TestId == 1);
                 var attempt2 = TestAttempts.First(ta => ta.ExternalUserId == 2 && ta.TestId == 2);
 
