@@ -16,6 +16,7 @@
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="MainWindow.xaml" />
     <None Remove="Views\InterviewCandidatePage.xaml" />
   </ItemGroup>
 
@@ -47,6 +48,9 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\InterviewCandidatePage.xaml" />
     <Folder Include="Dialogs\" />
     <Folder Include="Controls\" />
