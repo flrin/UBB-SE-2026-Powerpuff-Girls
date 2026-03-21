@@ -23,7 +23,7 @@ namespace Tests_and_Interviews.Repositories
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<List<Test>> FindTestsByCategory(string category)
+        public async Task<List<Test>> FindTestsByCategoryAsync(string category)
         {
             return await _db.Tests
                 .Include(t => t.Questions)
