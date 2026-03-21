@@ -11,6 +11,7 @@ namespace Tests_and_Interviews.Models.Core
     {
         [Key]
         [Column("userTest_id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Column("test_id")]

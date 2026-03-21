@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Tests_and_Interviews.Views.TestPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Tests_and_Interviews.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="#F0EEFF">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ===== TOP BAR ===== -->
+        <Border Grid.Row="0" Background="White" Padding="32,14"
+                BorderBrush="#E8E4FF" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Click="BackToTests_Click"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="#8494FF" FontSize="14" Padding="0">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="←" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="Back to Tests" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Timer pill -->
+                <Border Grid.Column="2" Background="White" CornerRadius="20"
+                        BorderBrush="#E8E4FF" BorderThickness="1"
+                        Padding="16,8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="⏱" FontSize="14" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TimerText"
+                                   Text="{x:Bind ViewModel.TimerDisplay, Mode=OneWay}"
+                                   FontSize="18" FontWeight="SemiBold"
+                                   Foreground="#1a1a2e" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ===== TITLE ===== -->
+        <StackPanel Grid.Row="1" Margin="280,24,280,8">
+            <TextBlock Text="{x:Bind ViewModel.TestTitle, Mode=OneWay}"
+                       FontSize="22" FontWeight="Bold" Foreground="#1a1a2e"/>
+            <TextBlock Text="Answer all questions below. Scroll to view all questions."
+                       FontSize="13" Foreground="#888" Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <!-- ===== QUESTIONS ===== -->
+        <ScrollViewer Grid.Row="2" Padding="280,12,280,12"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsRepeater ItemsSource="{x:Bind ViewModel.Questions, Mode=OneWay}">
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="vm:QuestionViewModel">
+                        <Border Background="White" CornerRadius="12"
+                                BorderBrush="#E8E4FF" BorderThickness="1"
+                                Margin="0,0,0,16" Padding="24">
+                            <StackPanel Spacing="12">
+
+                                <!-- Question header: number + type badge -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="#8494FF"
+                                            CornerRadius="8" Width="36" Height="36"
+                                            Margin="0,0,14,0">
+                                        <TextBlock Text="{x:Bind DisplayNumber}"
+                                                   Foreground="White" FontWeight="Bold"
+                                                   FontSize="15"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Grid.Column="1"
+                                       Text="{x:Bind TypeLabel}"
+                                       FontSize="11" FontWeight="SemiBold"
+                                       Foreground="#8494FF"
+                                       VerticalAlignment="Center"/>     
+                                </Grid>
+
+                                <!-- Question text -->
+                                <TextBlock Text="{x:Bind QuestionText}"
+                                           FontSize="15" Foreground="#1a1a2e"
+                                           TextWrapping="Wrap" Margin="50,0,0,0"/>
+
+                                <!-- SINGLE CHOICE options -->
+                                <StackPanel Spacing="8" Margin="50,0,0,0"
+                                            Visibility="{x:Bind IsSingleChoice}">
+                                    <ItemsRepeater ItemsSource="{x:Bind Options}">
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:OptionViewModel">
+                                                <Border Background="White" CornerRadius="8"
+                                                        BorderBrush="#E8E4FF" BorderThickness="1"
+                                                        Padding="16,12">
+                                                    <RadioButton Content="{x:Bind Text}"
+                                                                 GroupName="{x:Bind GroupName}"
+                                                                 IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                                                                 Foreground="#333" FontSize="14"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+                                </StackPanel>
+
+                                <!-- MULTIPLE CHOICE options -->
+                                <StackPanel Spacing="8" Margin="50,0,0,0"
+                                            Visibility="{x:Bind IsMultipleChoice}">
+                                    <ItemsRepeater ItemsSource="{x:Bind Options}">
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:OptionViewModel">
+                                                <Border Background="White" CornerRadius="8"
+                                                        BorderBrush="#E8E4FF" BorderThickness="1"
+                                                        Padding="16,12">
+                                                    <CheckBox Content="{x:Bind Text}"
+                                                              IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                                                              Foreground="#333" FontSize="14"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+                                </StackPanel>
+
+                                <!-- TRUE/FALSE options -->
+                                <StackPanel Spacing="8" Margin="50,0,0,0"
+                                            Visibility="{x:Bind IsTrueFalse}">
+                                    <Border Background="White" CornerRadius="8"
+                                            BorderBrush="#E8E4FF" BorderThickness="1"
+                                            Padding="16,12">
+                                        <RadioButton Content="True"
+                                                     GroupName="{x:Bind TrueFalseGroup}"
+                                                     IsChecked="{x:Bind TrueSelected, Mode=TwoWay}"
+                                                     Foreground="#333" FontSize="14"/>
+                                    </Border>
+                                    <Border Background="White" CornerRadius="8"
+                                            BorderBrush="#E8E4FF" BorderThickness="1"
+                                            Padding="16,12">
+                                        <RadioButton Content="False"
+                                                     GroupName="{x:Bind TrueFalseGroup}"
+                                                     IsChecked="{x:Bind FalseSelected, Mode=TwoWay}"
+                                                     Foreground="#333" FontSize="14"/>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- TEXT answer -->
+                                <TextBox Margin="50,0,0,0"
+                                         PlaceholderText="Type your answer here..."
+                                         Text="{x:Bind TextAnswer, Mode=TwoWay}"
+                                         Visibility="{x:Bind IsText}"
+                                         CornerRadius="8" Padding="12"
+                                         BorderBrush="#E8E4FF"/>
+
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollViewer>
+
+        <!-- ===== FOOTER ===== -->
+        <Border Grid.Row="3" Background="White"
+                BorderBrush="#E8E4FF" BorderThickness="0,1,0,0"
+                Padding="32,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{x:Bind ViewModel.AnsweredCount, Mode=OneWay}"
+                               FontWeight="Bold" Foreground="#1a1a2e" FontSize="14"/>
+                    <TextBlock Text=" of " Foreground="#888" FontSize="14"/>
+                    <TextBlock Text="{x:Bind ViewModel.TotalCount, Mode=OneWay}"
+                               FontWeight="Bold" Foreground="#1a1a2e" FontSize="14"/>
+                    <TextBlock Text=" questions answered" Foreground="#888" FontSize="14"/>
+                </StackPanel>
+
+                <Button Grid.Column="1" Content="Submit Test"
+                        Click="SubmitTest_Click"
+                        Background="#8494FF" Foreground="White"
+                        FontWeight="SemiBold" FontSize="15"
+                        Padding="32,14" CornerRadius="10"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

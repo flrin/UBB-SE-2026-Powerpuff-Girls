@@ -34,15 +34,14 @@ namespace Tests_and_Interviews.Repositories
         public async Task<TestAttempt?> UpdateAsync(TestAttempt attempt)
         {
             var existing = await _db.TestAttempts.FindAsync(attempt.Id);
-            if(existing == null) return null;
+            if (existing == null) return null;
 
-            existing.TestId = attempt.TestId;
-            existing.ExternalUserId = attempt.ExternalUserId;
             existing.Score = attempt.Score;
             existing.Status = attempt.Status;
-            existing.StartedAt = attempt.StartedAt;
             existing.CompletedAt = attempt.CompletedAt;
             existing.AnswersFilePath = attempt.AnswersFilePath;
+
+           
 
             await _db.SaveChangesAsync();
             return existing;

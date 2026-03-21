@@ -52,7 +52,6 @@ namespace Tests_and_Interviews.Services
                 .HasForeignKey(ta => ta.TestId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-          
             modelBuilder.Entity<TestAttempt>()
                 .HasOne(ta => ta.User)
                 .WithMany()
@@ -60,7 +59,9 @@ namespace Tests_and_Interviews.Services
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            
+            modelBuilder.Entity<TestAttempt>()
+                .Property(ta => ta.Id)
+                .UseIdentityAlwaysColumn();
         }
 
         public void SeedDatabase()
@@ -102,7 +103,6 @@ namespace Tests_and_Interviews.Services
             if (!Questions.Any())
             {
                 Questions.AddRange(
-
                     new Question
                     {
                         PositionId = 1,
@@ -130,7 +130,6 @@ namespace Tests_and_Interviews.Services
                         QuestionScore = 10f,
                         QuestionAnswer = null
                     },
-
                     new Question
                     {
                         PositionId = null,
@@ -149,7 +148,6 @@ namespace Tests_and_Interviews.Services
                         QuestionScore = 5f,
                         QuestionAnswer = "false"
                     },
-
                     new Question
                     {
                         PositionId = null,
@@ -159,7 +157,6 @@ namespace Tests_and_Interviews.Services
                         QuestionScore = 10f,
                         QuestionAnswer = "1"
                     },
-
                     new Question
                     {
                         PositionId = null,
@@ -169,7 +166,6 @@ namespace Tests_and_Interviews.Services
                         QuestionScore = 10f,
                         QuestionAnswer = "[0,1,2]"
                     },
-
                     new Question
                     {
                         PositionId = null,
@@ -188,7 +184,6 @@ namespace Tests_and_Interviews.Services
                         QuestionScore = 10f,
                         QuestionAnswer = "HAVING"
                     },
-
                     new Question
                     {
                         PositionId = null,
@@ -204,10 +199,10 @@ namespace Tests_and_Interviews.Services
 
             if (!TestAttempts.Any())
             {
+                // ID-urile sunt OMISE — PostgreSQL le genereaza automat (GENERATED ALWAYS AS IDENTITY)
                 TestAttempts.AddRange(
                     new TestAttempt
                     {
-                        Id = 1,
                         TestId = 1,
                         ExternalUserId = 1,
                         Score = 25m,
@@ -218,7 +213,6 @@ namespace Tests_and_Interviews.Services
                     },
                     new TestAttempt
                     {
-                        Id = 2,
                         TestId = 2,
                         ExternalUserId = 2,
                         Score = 18m,
@@ -229,7 +223,6 @@ namespace Tests_and_Interviews.Services
                     },
                     new TestAttempt
                     {
-                        Id = 3,
                         TestId = 1,
                         ExternalUserId = 3,
                         Score = 0m,
@@ -244,16 +237,20 @@ namespace Tests_and_Interviews.Services
 
             if (!Answers.Any())
             {
+                // Luam attempt-urile din DB dupa user+test pentru ID-urile reale
+                var attempt1 = TestAttempts.First(ta => ta.ExternalUserId == 1 && ta.TestId == 1);
+                var attempt2 = TestAttempts.First(ta => ta.ExternalUserId == 2 && ta.TestId == 2);
+
                 var q_tf1 = Questions.First(q => q.QuestionText == "C# is a statically typed language.");
                 var q_tf2 = Questions.First(q => q.QuestionText == "In C#, a string is a value type.");
                 var q_sc1 = Questions.First(q => q.QuestionText == "Which keyword is used to define an interface in C#?");
                 var q_mc1 = Questions.First(q => q.QuestionText == "Which of the following are C# access modifiers?");
 
                 Answers.AddRange(
-                    new Answer { AttemptId = 1, QuestionId = q_tf1.Id, Value = "true" },
-                    new Answer { AttemptId = 1, QuestionId = q_tf2.Id, Value = "false" },
-                    new Answer { AttemptId = 1, QuestionId = q_sc1.Id, Value = "1" },
-                    new Answer { AttemptId = 1, QuestionId = q_mc1.Id, Value = "[0,1,2]" }
+                    new Answer { AttemptId = attempt1.Id, QuestionId = q_tf1.Id, Value = "true" },
+                    new Answer { AttemptId = attempt1.Id, QuestionId = q_tf2.Id, Value = "false" },
+                    new Answer { AttemptId = attempt1.Id, QuestionId = q_sc1.Id, Value = "1" },
+                    new Answer { AttemptId = attempt1.Id, QuestionId = q_mc1.Id, Value = "[0,1,2]" }
                 );
 
                 var q_txt1 = Questions.First(q => q.QuestionText == "What SQL keyword is used to retrieve data from a table?");
@@ -261,15 +258,13 @@ namespace Tests_and_Interviews.Services
                 var q_sc2 = Questions.First(q => q.QuestionText == "Which JOIN returns all rows from the left table?");
 
                 Answers.AddRange(
-                    new Answer { AttemptId = 2, QuestionId = q_txt1.Id, Value = "SELECT" },
-                    new Answer { AttemptId = 2, QuestionId = q_txt2.Id, Value = "WHERE" }, // wrong answer intentionally
-                    new Answer { AttemptId = 2, QuestionId = q_sc2.Id, Value = "2" }
+                    new Answer { AttemptId = attempt2.Id, QuestionId = q_txt1.Id, Value = "SELECT" },
+                    new Answer { AttemptId = attempt2.Id, QuestionId = q_txt2.Id, Value = "WHERE" },
+                    new Answer { AttemptId = attempt2.Id, QuestionId = q_sc2.Id, Value = "2" }
                 );
 
                 SaveChanges();
             }
-
-           
 
             if (!InterviewSessions.Any())
             {
@@ -298,7 +293,6 @@ namespace Tests_and_Interviews.Services
                 SaveChanges();
             }
         }
-
 
         public async Task<List<Question>> GetInterviewQuestionsByPositionAsync(int positionId)
         {
