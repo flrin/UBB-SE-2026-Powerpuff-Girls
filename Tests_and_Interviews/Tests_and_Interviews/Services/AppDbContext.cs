@@ -64,7 +64,7 @@ namespace Tests_and_Interviews.Services
                     new InterviewSession
                     {
                         PositionId= 1,
-                        Video = "",
+                        Video = "C:/Users/imaru/AppData/Local/Packages/a3366c06-71bc-43fb-8094-d1631262ffd6_fxf7zjn086j7y/LocalState/CandidateInterview.mp4",
                         Status = "NOT_SUBMITED",
                     }
                 );
@@ -97,6 +97,20 @@ namespace Tests_and_Interviews.Services
                     throw new KeyNotFoundException($"InterviewSession with ID {id} was not found.");
                 }
 
+                return session;
+            }
+        }
+
+        public InterviewSession GetInterviewSessionById(int id)
+        {
+            using (var db = new AppDbContext())
+            {
+                var session = db.InterviewSessions
+                    .FirstOrDefault(ins => ins.Id == id);
+                if (session == null)
+                {
+                    throw new KeyNotFoundException($"InterviewSession with ID {id} was not found.");
+                }
                 return session;
             }
         }

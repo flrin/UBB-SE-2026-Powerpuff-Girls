@@ -16,6 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\InterviewCandidatePage.xaml" />
+    <None Remove="Views\InterviewInterviewerPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +45,11 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\InterviewInterviewerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\InterviewCandidatePage.xaml">
