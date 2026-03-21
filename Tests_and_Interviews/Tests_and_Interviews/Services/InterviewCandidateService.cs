@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Models;
 using Tests_and_Interviews.Helpers;
+using Tests_and_Interviews.Models.Core;
 
 namespace Tests_and_Interviews.Services
 {
@@ -19,13 +20,12 @@ namespace Tests_and_Interviews.Services
         public InterviewCandidateService()
         {
             _dbContext = new AppDbContext();
-            _interviewSessionId = 1; // this must be passed on by something else
+            _interviewSessionId = 1; 
             LoadData();
         }
 
         private async void LoadData()
         {
-            // InterviewSession
             Task<InterviewSession> interviewSessionLoadingTask = _dbContext.GetInterviewSessionByIdAsync(_interviewSessionId);
             _interviewSession = await interviewSessionLoadingTask;
             _interviewSession.DateStart = DateTime.UtcNow;
@@ -33,7 +33,6 @@ namespace Tests_and_Interviews.Services
 
             await _dbContext.UpdateInterviewSessionAsync(_interviewSession);
 
-            // Questions
             Task<List<Question>> questionsLoadingTask = _dbContext.GetInterviewQuestionsByPositionAsync(_interviewSession.PositionId);
             questions = await questionsLoadingTask;
         }

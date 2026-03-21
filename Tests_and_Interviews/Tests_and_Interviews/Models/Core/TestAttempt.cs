@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Tests_and_Interviews.Models.Enums;
+
+namespace Tests_and_Interviews.Models.Core
+{
+    [Table("test_attempts")]
+    public class TestAttempt
+    {
+        [Key]
+        [Column("userTest_id")]
+        public int Id { get; set; }
+
+        [Column("test_id")]
+        public int TestId { get; set; }
+
+        
+        [Column("external_user_id")]
+        public int ExternalUserId { get; set; }
+
+        [NotMapped]
+        public int UserId
+        {
+            get => ExternalUserId;
+            set => ExternalUserId = value;
+        }
+
+        [Column("score")]
+        public decimal Score { get; set; }
+
+        [Column("status")]
+        [MaxLength(200)]
+        public string Status { get; set; } = TestStatus.NOT_STARTED.ToString();
+
+        [Column("started_at")]
+        public DateTime StartedAt { get; set; }
+
+        [Column("completed_at")]
+        public DateTime? CompletedAt { get; set; }
+
+        [Column("answers_file_path")]
+        [MaxLength(200)]
+        public string AnswersFilePath { get; set; } = string.Empty;
+
+        public List<Answer> Answers { get; set; } = new();
+        public Test? Test { get; set; }
+        public User? User { get; set; }
+
+         public void Start()
+        {
+            Status = TestStatus.RECORDING.ToString();
+            StartedAt = DateTime.UtcNow;
+        }
+
+        public void Submit()
+        {
+            Status = TestStatus.SUBMITTED.ToString();
+            CompletedAt = DateTime.UtcNow;
+        }
+
+        public void Expire()
+        {
+            Status = TestStatus.SUBMITTED.ToString();
+            CompletedAt = DateTime.UtcNow;
+        }
+        public float CalculateScore()
+        {
+            if (Answers.Count == 0 || Test?.Questions.Count is null or 0)
+                return 0f;
+
+            float maxPossible = 0f;
+            foreach (var q in Test.Questions)
+                maxPossible += q.QuestionScore;
+
+            return maxPossible == 0f ? 0f : (float)Score / maxPossible * 100f;
+        }
+    }
+}
