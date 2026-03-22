@@ -17,7 +17,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        
         <Border Grid.Row="0" Background="White" Padding="32,14"
                 BorderBrush="#E8E4FF" BorderThickness="0,0,0,1">
             <Grid>
@@ -26,7 +25,6 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-
                 <Button Grid.Column="0" Click="BackToTests_Click"
                         Background="Transparent" BorderThickness="0"
                         Foreground="#8494FF" FontSize="14" Padding="0">
@@ -35,11 +33,8 @@
                         <TextBlock Text="Back to Tests" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-
-                
                 <Border Grid.Column="2" Background="White" CornerRadius="20"
-                        BorderBrush="#E8E4FF" BorderThickness="1"
-                        Padding="16,8">
+                        BorderBrush="#E8E4FF" BorderThickness="1" Padding="16,8">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <TextBlock Text="⏱" FontSize="14" VerticalAlignment="Center"/>
                         <TextBlock x:Name="TimerText"
@@ -51,7 +46,6 @@
             </Grid>
         </Border>
 
-        
         <StackPanel Grid.Row="1" Margin="280,24,280,8">
             <TextBlock Text="{x:Bind ViewModel.TestTitle, Mode=OneWay}"
                        FontSize="22" FontWeight="Bold" Foreground="#1a1a2e"/>
@@ -59,7 +53,6 @@
                        FontSize="13" Foreground="#888" Margin="0,4,0,0"/>
         </StackPanel>
 
-       
         <ScrollViewer Grid.Row="2" Padding="280,12,280,12"
                       VerticalScrollBarVisibility="Auto">
             <ItemsRepeater ItemsSource="{x:Bind ViewModel.Questions, Mode=OneWay}">
@@ -70,7 +63,7 @@
                                 Margin="0,0,0,16" Padding="24">
                             <StackPanel Spacing="12">
 
-                                
+                                <!-- Header: numar + tip -->
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -86,18 +79,18 @@
                                                    VerticalAlignment="Center"/>
                                     </Border>
                                     <TextBlock Grid.Column="1"
-                                       Text="{x:Bind TypeLabel}"
-                                       FontSize="11" FontWeight="SemiBold"
-                                       Foreground="#8494FF"
-                                       VerticalAlignment="Center"/>     
+                                               Text="{x:Bind TypeLabel}"
+                                               FontSize="11" FontWeight="SemiBold"
+                                               Foreground="#8494FF"
+                                               VerticalAlignment="Center"/>
                                 </Grid>
 
-                               
+                                <!-- Textul intrebarii -->
                                 <TextBlock Text="{x:Bind QuestionText}"
                                            FontSize="15" Foreground="#1a1a2e"
                                            TextWrapping="Wrap" Margin="50,0,0,0"/>
 
-                               
+                                <!-- SINGLE CHOICE -->
                                 <StackPanel Spacing="8" Margin="50,0,0,0"
                                             Visibility="{x:Bind IsSingleChoice}">
                                     <ItemsRepeater ItemsSource="{x:Bind Options}">
@@ -109,14 +102,32 @@
                                                     <RadioButton Content="{x:Bind Text}"
                                                                  GroupName="{x:Bind GroupName}"
                                                                  IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
-                                                                 Foreground="#333" FontSize="14"/>
+                                                                 FontSize="14"
+                                                                 HorizontalAlignment="Stretch">
+                                                        <RadioButton.Resources>
+                                                            <SolidColorBrush x:Key="RadioButtonForeground" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="RadioButtonForegroundPointerOver" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="RadioButtonForegroundPressed" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="RadioButtonForegroundChecked" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="RadioButtonForegroundCheckedPointerOver" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="RadioButtonForegroundCheckedPressed" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="RadioButtonBackground" Color="White"/>
+                                                            <SolidColorBrush x:Key="RadioButtonBackgroundPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="RadioButtonBackgroundPressed" Color="White"/>
+                                                            <SolidColorBrush x:Key="RadioButtonBackgroundChecked" Color="White"/>
+                                                            <SolidColorBrush x:Key="RadioButtonBackgroundCheckedPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="RadioButtonBorderBrush" Color="#E8E4FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonBorderBrushPointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonBorderBrushChecked" Color="#8494FF"/>
+                                                        </RadioButton.Resources>
+                                                    </RadioButton>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsRepeater.ItemTemplate>
                                     </ItemsRepeater>
                                 </StackPanel>
 
-                                
+                                <!-- MULTIPLE CHOICE -->
                                 <StackPanel Spacing="8" Margin="50,0,0,0"
                                             Visibility="{x:Bind IsMultipleChoice}">
                                     <ItemsRepeater ItemsSource="{x:Bind Options}">
@@ -127,14 +138,32 @@
                                                         Padding="16,12">
                                                     <CheckBox Content="{x:Bind Text}"
                                                               IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
-                                                              Foreground="#333" FontSize="14"/>
+                                                              FontSize="14"
+                                                              HorizontalAlignment="Stretch">
+                                                        <CheckBox.Resources>
+                                                            <SolidColorBrush x:Key="CheckBoxForegroundUnchecked" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="CheckBoxForegroundUncheckedPointerOver" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="CheckBoxForegroundUncheckedPressed" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="CheckBoxForegroundChecked" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="CheckBoxForegroundCheckedPointerOver" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="CheckBoxForegroundCheckedPressed" Color="#333333"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBackgroundUnchecked" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBackgroundUncheckedPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBackgroundUncheckedPressed" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBackgroundChecked" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBackgroundCheckedPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBorderBrushUnchecked" Color="#E8E4FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBorderBrushUncheckedPointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBorderBrushChecked" Color="#8494FF"/>
+                                                        </CheckBox.Resources>
+                                                    </CheckBox>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsRepeater.ItemTemplate>
                                     </ItemsRepeater>
                                 </StackPanel>
 
-                               
+                                <!-- TRUE/FALSE -->
                                 <StackPanel Spacing="8" Margin="50,0,0,0"
                                             Visibility="{x:Bind IsTrueFalse}">
                                     <Border Background="White" CornerRadius="8"
@@ -143,7 +172,25 @@
                                         <RadioButton Content="True"
                                                      GroupName="{x:Bind TrueFalseGroup}"
                                                      IsChecked="{x:Bind TrueSelected, Mode=TwoWay}"
-                                                     Foreground="#333" FontSize="14"/>
+                                                     FontSize="14"
+                                                     HorizontalAlignment="Stretch">
+                                            <RadioButton.Resources>
+                                                <SolidColorBrush x:Key="RadioButtonForeground" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundPointerOver" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundPressed" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundChecked" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundCheckedPointerOver" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundCheckedPressed" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackground" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackgroundPointerOver" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackgroundPressed" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackgroundChecked" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackgroundCheckedPointerOver" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBorderBrush" Color="#E8E4FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonBorderBrushPointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonBorderBrushChecked" Color="#8494FF"/>
+                                            </RadioButton.Resources>
+                                        </RadioButton>
                                     </Border>
                                     <Border Background="White" CornerRadius="8"
                                             BorderBrush="#E8E4FF" BorderThickness="1"
@@ -151,17 +198,50 @@
                                         <RadioButton Content="False"
                                                      GroupName="{x:Bind TrueFalseGroup}"
                                                      IsChecked="{x:Bind FalseSelected, Mode=TwoWay}"
-                                                     Foreground="#333" FontSize="14"/>
+                                                     FontSize="14"
+                                                     HorizontalAlignment="Stretch">
+                                            <RadioButton.Resources>
+                                                <SolidColorBrush x:Key="RadioButtonForeground" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundPointerOver" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundPressed" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundChecked" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundCheckedPointerOver" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonForegroundCheckedPressed" Color="#333333"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackground" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackgroundPointerOver" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackgroundPressed" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackgroundChecked" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBackgroundCheckedPointerOver" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonBorderBrush" Color="#E8E4FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonBorderBrushPointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonBorderBrushChecked" Color="#8494FF"/>
+                                            </RadioButton.Resources>
+                                        </RadioButton>
                                     </Border>
                                 </StackPanel>
 
-                               
+                                <!-- TEXT -->
                                 <TextBox Margin="50,0,0,0"
                                          PlaceholderText="Type your answer here..."
                                          Text="{x:Bind TextAnswer, Mode=TwoWay}"
                                          Visibility="{x:Bind IsText}"
-                                         CornerRadius="8" Padding="12"
-                                         BorderBrush="#E8E4FF"/>
+                                         CornerRadius="8"
+                                         Padding="12"
+                                         Foreground="#1a1a2e"
+                                         Background="White">
+                                    <TextBox.Resources>
+                                        <SolidColorBrush x:Key="TextControlBackground" Color="White"/>
+                                        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="White"/>
+                                        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="White"/>
+                                        <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#F5F5F5"/>
+                                        <SolidColorBrush x:Key="TextControlForeground" Color="#1a1a2e"/>
+                                        <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#1a1a2e"/>
+                                        <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#1a1a2e"/>
+                                        <SolidColorBrush x:Key="TextControlBorderBrush" Color="#E8E4FF"/>
+                                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#8494FF"/>
+                                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#8494FF"/>
+                                    </TextBox.Resources>
+                                </TextBox>
 
                             </StackPanel>
                         </Border>
@@ -170,7 +250,6 @@
             </ItemsRepeater>
         </ScrollViewer>
 
-        
         <Border Grid.Row="3" Background="White"
                 BorderBrush="#E8E4FF" BorderThickness="0,1,0,0"
                 Padding="32,16">
@@ -179,7 +258,6 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4"
                             VerticalAlignment="Center">
                     <TextBlock Text="{x:Bind ViewModel.AnsweredCount, Mode=OneWay}"
@@ -189,7 +267,6 @@
                                FontWeight="Bold" Foreground="#1a1a2e" FontSize="14"/>
                     <TextBlock Text=" questions answered" Foreground="#888" FontSize="14"/>
                 </StackPanel>
-
                 <Button Grid.Column="1" Content="Submit Test"
                         Click="SubmitTest_Click"
                         Background="#8494FF" Foreground="White"
