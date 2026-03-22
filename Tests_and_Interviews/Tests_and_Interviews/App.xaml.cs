@@ -32,7 +32,6 @@ namespace Tests_and_Interviews
             {
                 db.SeedDatabase();
 
-                // Ia ID-ul real al lui Alice dupa seed
                 var alice = db.Users.FirstOrDefault(u => u.Name == "Alice Johnson");
                 CurrentUserId = alice?.Id ?? 0;
                 System.Diagnostics.Debug.WriteLine($"[App] CurrentUserId = {CurrentUserId}");

@@ -10,7 +10,6 @@
     Background="#F0EEFF">
 
     <Page.Resources>
-        <!-- Style comun pentru RadioButton -->
         <Style x:Key="OptionRadioStyle" TargetType="RadioButton">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -97,7 +96,6 @@
                                            FontSize="15" Foreground="#1a1a2e"
                                            TextWrapping="Wrap" Margin="50,0,0,0"/>
 
-                                <!-- SINGLE CHOICE -->
                                 <StackPanel Spacing="8" Margin="50,0,0,0"
                                             Visibility="{x:Bind IsSingleChoice}">
                                     <ItemsRepeater ItemsSource="{x:Bind Options}">
@@ -126,7 +124,6 @@
                                                             <SolidColorBrush x:Key="RadioButtonBorderBrush" Color="#E8E4FF"/>
                                                             <SolidColorBrush x:Key="RadioButtonBorderBrushPointerOver" Color="#8494FF"/>
                                                             <SolidColorBrush x:Key="RadioButtonBorderBrushChecked" Color="#8494FF"/>
-                                                            <!-- Bulina exterioara -->
                                                             <SolidColorBrush x:Key="RadioButtonOuterEllipseStroke" Color="#8494FF"/>
                                                             <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokePointerOver" Color="#8494FF"/>
                                                             <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokeChecked" Color="#8494FF"/>
@@ -135,7 +132,6 @@
                                                             <SolidColorBrush x:Key="RadioButtonOuterEllipseFillPointerOver" Color="White"/>
                                                             <SolidColorBrush x:Key="RadioButtonOuterEllipseFillChecked" Color="White"/>
                                                             <SolidColorBrush x:Key="RadioButtonOuterEllipseFillCheckedPointerOver" Color="White"/>
-                                                            <!-- Bulina interioara (punctul selectat) -->
                                                             <SolidColorBrush x:Key="RadioButtonCheckGlyphFill" Color="#8494FF"/>
                                                             <SolidColorBrush x:Key="RadioButtonCheckGlyphFillPointerOver" Color="#8494FF"/>
                                                             <SolidColorBrush x:Key="RadioButtonCheckGlyphFillChecked" Color="#8494FF"/>
@@ -150,7 +146,6 @@
                                     </ItemsRepeater>
                                 </StackPanel>
 
-                                <!-- MULTIPLE CHOICE -->
                                 <StackPanel Spacing="8" Margin="50,0,0,0"
                                             Visibility="{x:Bind IsMultipleChoice}">
                                     <ItemsRepeater ItemsSource="{x:Bind Options}">
@@ -202,7 +197,7 @@
                                     </ItemsRepeater>
                                 </StackPanel>
 
-                                <!-- TRUE/FALSE -->
+                                
                                 <StackPanel Spacing="8" Margin="50,0,0,0"
                                             Visibility="{x:Bind IsTrueFalse}">
                                     <Border Background="White" CornerRadius="8"
@@ -287,7 +282,7 @@
                                     </Border>
                                 </StackPanel>
 
-                                <!-- TEXT -->
+                               
                                 <TextBox Margin="50,0,0,0"
                                          PlaceholderText="Type your answer here..."
                                          Text="{x:Bind TextAnswer, Mode=TwoWay}"

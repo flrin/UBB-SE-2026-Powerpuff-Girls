@@ -273,9 +273,9 @@ namespace Tests_and_Interviews.Services
 
                 TestAttempts.AddRange(
                     new TestAttempt { TestId = 1, ExternalUserId = bob.Id, Score = 25m, Status = TestStatus.SUBMITTED.ToString(), StartedAt = new DateTime(2025, 3, 1, 10, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 1, 10, 45, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_1.json" },
-                    new TestAttempt { TestId = 2, ExternalUserId = bob.Id, Score = 18m, Status = TestStatus.REVIEWED.ToString(), StartedAt = new DateTime(2025, 3, 5, 14, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 5, 14, 30, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_2.json" },
+                    new TestAttempt { TestId = 2, ExternalUserId = bob.Id, Score = 18m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2025, 3, 5, 14, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 5, 14, 30, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_2.json" },
                     new TestAttempt { TestId = 3, ExternalUserId = carol.Id, Score = 40m, Status = TestStatus.SUBMITTED.ToString(), StartedAt = new DateTime(2025, 3, 10, 9, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 10, 9, 28, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_3.json" },
-                    new TestAttempt { TestId = 4, ExternalUserId = dan.Id, Score = 35m, Status = TestStatus.REVIEWED.ToString(), StartedAt = new DateTime(2025, 3, 12, 11, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 12, 11, 25, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_4.json" },
+                    new TestAttempt { TestId = 4, ExternalUserId = dan.Id, Score = 35m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2025, 3, 12, 11, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 12, 11, 25, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_4.json" },
                     new TestAttempt { TestId = 5, ExternalUserId = elena.Id, Score = 50m, Status = TestStatus.SUBMITTED.ToString(), StartedAt = new DateTime(2025, 3, 15, 13, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 15, 13, 29, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_5.json" }
                 );
                 SaveChanges();

@@ -6,6 +6,6 @@
         NOT_STARTED,
         RECORDING,
         SUBMITTED,
-        REVIEWED
+        COMPLETED
     }
 }
