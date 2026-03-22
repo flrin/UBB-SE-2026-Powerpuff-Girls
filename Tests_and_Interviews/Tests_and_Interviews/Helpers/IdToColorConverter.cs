@@ -14,8 +14,8 @@ namespace Tests_and_Interviews.Helpers
             if (value is SlotStatus status)
             {
                 return status == SlotStatus.Occupied
-                    ? new SolidColorBrush(Color.FromArgb(255, 33, 150, 243))
-                    : new SolidColorBrush(Colors.LightGray);
+                   ? new SolidColorBrush(Color.FromArgb(255, 99, 102, 255))   
+                   : new SolidColorBrush(Color.FromArgb(255, 201, 190, 255)); 
             }
 
             return new SolidColorBrush(Colors.LightGray);

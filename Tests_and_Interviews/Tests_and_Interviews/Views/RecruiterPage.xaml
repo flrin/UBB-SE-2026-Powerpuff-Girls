@@ -5,17 +5,17 @@
     xmlns:models="using:Tests_and_Interviews.Models"
     xmlns:viewmodels="using:Tests_and_Interviews.ViewModels"
     xmlns:converters="using:Tests_and_Interviews.Helpers"
-    Background="#E3F2FD">
+    Background="#C9BEFF">
 
     <Page.Resources>
-        <converters:IdToColorConverter x:Key="IdToColorConverter"/>
+        <converters:IdToColorConverter x:Key="StatusToColorConverter"/>
     </Page.Resources>
 
     <Page.DataContext>
         <viewmodels:RecruiterViewModel />
     </Page.DataContext>
 
-    <Grid Padding="30">
+    <Grid Padding="60">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="400"/>
             <ColumnDefinition Width="*"/>
@@ -24,16 +24,18 @@
   
         <StackPanel Grid.Column="0" Spacing="20">
             <TextBlock Text="Calendar Recrutor"
-                       FontSize="28"
-                       FontWeight="Bold"/>
+                       FontSize="35"
+                       FontWeight="Bold"
+                       Foreground="#6366FF"/>
 
             <CalendarView x:Name="MainCalendar"
                           SelectionMode="Single"
-                          SelectedDatesChanged="MainCalendar_SelectedDatesChanged"/>
+                          SelectedDatesChanged="MainCalendar_SelectedDatesChanged"
+                          Foreground="#6366FF"/>
         </StackPanel>
 
 
-        <Grid Grid.Column="1" Margin="20,0,0,0">
+        <Grid Grid.Column="1" Margin="80,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -77,9 +79,9 @@
                             <Border Grid.Column="1"
                                     Height="50"
                                     Margin="5,0"
-                                    Background="{Binding Status, Converter={StaticResource IdToColorConverter}}"
+                                    Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
                                     BorderThickness="1"
-                                    BorderBrush="#BBDEFB"
+                                    BorderBrush="#6366FF"
                                     CornerRadius="10">
 
                                 <StackPanel HorizontalAlignment="Center"
