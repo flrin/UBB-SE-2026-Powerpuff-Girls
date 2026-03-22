@@ -84,41 +84,11 @@ namespace Tests_and_Interviews.Services
             if (!Tests.Any())
             {
                 Tests.AddRange(
-                    new Test
-                    {
-                        Id = 1,
-                        Title = "C# Fundamentals",
-                        Category = "Programming",
-                        CreatedAt = new DateTime(2025, 1, 10, 9, 0, 0, DateTimeKind.Utc)
-                    },
-                    new Test
-                    {
-                        Id = 2,
-                        Title = "SQL Basics",
-                        Category = "Database",
-                        CreatedAt = new DateTime(2025, 2, 5, 10, 0, 0, DateTimeKind.Utc)
-                    },
-                    new Test
-                    {
-                        Id = 3,
-                        Title = "OOP Principles",
-                        Category = "Programming",
-                        CreatedAt = new DateTime(2025, 3, 1, 9, 0, 0, DateTimeKind.Utc)
-                    },
-                    new Test
-                    {
-                        Id = 4,
-                        Title = "Data Structures",
-                        Category = "Computer Science",
-                        CreatedAt = new DateTime(2025, 3, 10, 9, 0, 0, DateTimeKind.Utc)
-                    },
-                    new Test
-                    {
-                        Id = 5,
-                        Title = "Database Design",
-                        Category = "Database",
-                        CreatedAt = new DateTime(2025, 3, 15, 9, 0, 0, DateTimeKind.Utc)
-                    }
+                    new Test { Id = 1, Title = "C# Fundamentals", Category = "Programming", CreatedAt = new DateTime(2025, 1, 10, 9, 0, 0, DateTimeKind.Utc) },
+                    new Test { Id = 2, Title = "SQL Basics", Category = "Database", CreatedAt = new DateTime(2025, 2, 5, 10, 0, 0, DateTimeKind.Utc) },
+                    new Test { Id = 3, Title = "OOP Principles", Category = "Programming", CreatedAt = new DateTime(2025, 3, 1, 9, 0, 0, DateTimeKind.Utc) },
+                    new Test { Id = 4, Title = "Data Structures", Category = "Computer Science", CreatedAt = new DateTime(2025, 3, 10, 9, 0, 0, DateTimeKind.Utc) },
+                    new Test { Id = 5, Title = "Database Design", Category = "Database", CreatedAt = new DateTime(2025, 3, 15, 9, 0, 0, DateTimeKind.Utc) }
                 );
                 SaveChanges();
             }
@@ -126,278 +96,170 @@ namespace Tests_and_Interviews.Services
             if (!Questions.Any())
             {
                 Questions.AddRange(
-                    new Question
-                    {
-                        PositionId = 1,
-                        TestId = null,
-                        QuestionText = "Tell us about your favourite project.",
-                        QuestionTypeString = QuestionType.INTERVIEW.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = null
-                    },
-                    new Question
-                    {
-                        PositionId = 1,
-                        TestId = null,
-                        QuestionText = "How do you handle conflict in a team?",
-                        QuestionTypeString = QuestionType.INTERVIEW.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = null
-                    },
-                    new Question
-                    {
-                        PositionId = 2,
-                        TestId = null,
-                        QuestionText = "Where do you see yourself in 5 years?",
-                        QuestionTypeString = QuestionType.INTERVIEW.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = null
-                    },
-
-                    // Test 1 - C# Fundamentals
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 1,
-                        QuestionText = "C# is a statically typed language.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "true"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 1,
-                        QuestionText = "In C#, a string is a value type.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "false"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 1,
-                        QuestionText = "Which keyword is used to define an interface in C#?",
-                        QuestionTypeString = QuestionType.SINGLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "1"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 1,
-                        QuestionText = "Which of the following are C# access modifiers?",
-                        QuestionTypeString = QuestionType.MULTIPLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "[0,1,2]"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 1,
-                        QuestionText = "What keyword is used to inherit a class in C#?",
-                        QuestionTypeString = QuestionType.TEXT.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "extends"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 1,
-                        QuestionText = "C# supports multiple inheritance through classes.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "false"
-                    },
-
-                    // Test 2 - SQL Basics
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 2,
-                        QuestionText = "What SQL keyword is used to retrieve data from a table?",
-                        QuestionTypeString = QuestionType.TEXT.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "SELECT"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 2,
-                        QuestionText = "Which SQL clause filters rows after grouping?",
-                        QuestionTypeString = QuestionType.TEXT.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "HAVING"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 2,
-                        QuestionText = "Which JOIN returns all rows from the left table?",
-                        QuestionTypeString = QuestionType.SINGLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "2"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 2,
-                        QuestionText = "SQL is case sensitive for string comparisons by default.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "false"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 2,
-                        QuestionText = "Which of the following are valid SQL JOIN types?",
-                        QuestionTypeString = QuestionType.MULTIPLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "[0,1,2,3]"
-                    },
-
-                    // Test 3 - OOP Principles
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 3,
-                        QuestionText = "Encapsulation means hiding internal implementation details.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "true"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 3,
-                        QuestionText = "Which OOP principle allows a class to have multiple forms?",
-                        QuestionTypeString = QuestionType.SINGLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "2"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 3,
-                        QuestionText = "What is the name of the OOP concept that allows code reuse through parent-child relationships?",
-                        QuestionTypeString = QuestionType.TEXT.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "inheritance"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 3,
-                        QuestionText = "Which of the following are core OOP principles?",
-                        QuestionTypeString = QuestionType.MULTIPLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "[0,1,2,3]"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 3,
-                        QuestionText = "An abstract class can be instantiated directly.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "false"
-                    },
-
-                    // Test 4 - Data Structures
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 4,
-                        QuestionText = "A stack follows FIFO order.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "false"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 4,
-                        QuestionText = "What data structure uses FIFO ordering?",
-                        QuestionTypeString = QuestionType.TEXT.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "queue"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 4,
-                        QuestionText = "Which data structure is best for implementing undo functionality?",
-                        QuestionTypeString = QuestionType.SINGLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "1"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 4,
-                        QuestionText = "Which of the following are linear data structures?",
-                        QuestionTypeString = QuestionType.MULTIPLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "[0,1,2]"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 4,
-                        QuestionText = "Binary search requires the array to be sorted.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "true"
-                    },
-
-                    // Test 5 - Database Design
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 5,
-                        QuestionText = "A primary key can contain NULL values.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "false"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 5,
-                        QuestionText = "What normal form eliminates partial dependencies?",
-                        QuestionTypeString = QuestionType.TEXT.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "2NF"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 5,
-                        QuestionText = "Which of the following are properties of a relational database?",
-                        QuestionTypeString = QuestionType.MULTIPLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "[0,1,2]"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 5,
-                        QuestionText = "A foreign key references the primary key of another table.",
-                        QuestionTypeString = QuestionType.TRUE_FALSE.ToString(),
-                        QuestionScore = 5f,
-                        QuestionAnswer = "true"
-                    },
-                    new Question
-                    {
-                        PositionId = null,
-                        TestId = 5,
-                        QuestionText = "Which constraint ensures all values in a column are unique?",
-                        QuestionTypeString = QuestionType.SINGLE_CHOICE.ToString(),
-                        QuestionScore = 10f,
-                        QuestionAnswer = "0"
-                    }
+                    new Question { PositionId = 1, TestId = null, QuestionText = "Tell us about your favourite project.", QuestionTypeString = QuestionType.INTERVIEW.ToString(), QuestionScore = 4f, QuestionAnswer = null },
+                    new Question { PositionId = 1, TestId = null, QuestionText = "How do you handle conflict in a team?", QuestionTypeString = QuestionType.INTERVIEW.ToString(), QuestionScore = 4f, QuestionAnswer = null },
+                    new Question { PositionId = 2, TestId = null, QuestionText = "Where do you see yourself in 5 years?", QuestionTypeString = QuestionType.INTERVIEW.ToString(), QuestionScore = 4f, QuestionAnswer = null }
                 );
+                SaveChanges();
+
+                var csharpTrueFalse = new (string text, string answer)[]
+                {
+                    ("C# is a statically typed language.", "true"),
+                    ("In C#, a string is a value type.", "false"),
+                    ("C# supports multiple inheritance through classes.", "false"),
+                    ("The 'var' keyword in C# means the variable is dynamic.", "false"),
+                    ("In C#, 'int' is an alias for System.Int32.", "true"),
+                    ("A struct in C# is a reference type.", "false"),
+                    ("C# interfaces can contain method implementations.", "true"),
+                    ("In C#, arrays are zero-indexed.", "true"),
+                    ("The 'sealed' keyword prevents a class from being inherited.", "true"),
+                    ("In C#, a constructor can be private.", "true"),
+                    ("C# does not support operator overloading.", "false"),
+                    ("The 'readonly' keyword means a field can only be set in the constructor.", "true"),
+                    ("In C#, 'null' can be assigned to a value type directly.", "false"),
+                    ("A delegate in C# is a type-safe function pointer.", "true"),
+                    ("In C#, 'abstract' classes can be instantiated directly.", "false"),
+                    ("C# enums are value types.", "true"),
+                    ("In C#, properties can have different access levels for get and set.", "true"),
+                    ("The 'using' statement is only used for importing namespaces.", "false"),
+                    ("In C#, a 'List<T>' is part of the System.Collections.Generic namespace.", "true"),
+                    ("C# does not support lambda expressions.", "false"),
+                    ("In C#, 'override' is used to redefine a virtual method.", "true"),
+                    ("Static methods can access instance members directly.", "false"),
+                    ("In C#, exception handling uses try, catch, and finally blocks.", "true"),
+                    ("The 'base' keyword refers to the current class.", "false"),
+                    ("In C#, LINQ stands for Language Integrated Query.", "true"),
+                };
+                foreach (var (text, answer) in csharpTrueFalse)
+                    Questions.Add(new Question { PositionId = null, TestId = 1, QuestionText = text, QuestionTypeString = QuestionType.TRUE_FALSE.ToString(), QuestionScore = 4f, QuestionAnswer = answer });
+                SaveChanges();
+
+                var sqlText = new (string text, string answer)[]
+                {
+                    ("What SQL keyword is used to retrieve data from a table?", "SELECT"),
+                    ("What SQL clause is used to filter rows?", "WHERE"),
+                    ("What SQL clause filters rows after grouping?", "HAVING"),
+                    ("What SQL keyword is used to sort results?", "ORDER BY"),
+                    ("What SQL keyword groups rows with the same values?", "GROUP BY"),
+                    ("What SQL keyword is used to insert new data?", "INSERT"),
+                    ("What SQL keyword updates existing data?", "UPDATE"),
+                    ("What SQL keyword removes rows from a table?", "DELETE"),
+                    ("What SQL keyword creates a new table?", "CREATE"),
+                    ("What SQL keyword removes a table entirely?", "DROP"),
+                    ("What SQL keyword removes duplicate rows from results?", "DISTINCT"),
+                    ("What SQL keyword renames a column or table in a result?", "AS"),
+                    ("What SQL keyword checks if a value is within a range?", "BETWEEN"),
+                    ("What SQL keyword checks if a value matches a list?", "IN"),
+                    ("What SQL keyword is used for pattern matching?", "LIKE"),
+                    ("What SQL aggregate function counts the number of rows?", "COUNT"),
+                    ("What SQL aggregate function returns the sum of values?", "SUM"),
+                    ("What SQL aggregate function returns the highest value?", "MAX"),
+                    ("What SQL aggregate function returns the lowest value?", "MIN"),
+                    ("What SQL aggregate function returns the average?", "AVG"),
+                    ("What SQL keyword combines results of two SELECT statements?", "UNION"),
+                    ("What SQL join returns all rows from the left table?", "LEFT JOIN"),
+                    ("What SQL join returns only matching rows from both tables?", "INNER JOIN"),
+                    ("What SQL keyword is used to define a primary key constraint?", "PRIMARY KEY"),
+                    ("What SQL keyword defines a relationship between two tables?", "FOREIGN KEY"),
+                };
+                foreach (var (text, answer) in sqlText)
+                    Questions.Add(new Question { PositionId = null, TestId = 2, QuestionText = text, QuestionTypeString = QuestionType.TEXT.ToString(), QuestionScore = 4f, QuestionAnswer = answer });
+                SaveChanges();
+
+                var oopSingle = new (string text, string answer)[]
+                {
+                    ("Which OOP principle hides internal implementation details?", "1"),
+                    ("Which OOP principle allows a class to inherit from another?", "0"),
+                    ("Which OOP principle allows objects to take multiple forms?", "2"),
+                    ("Which keyword in C# is used to inherit a class?", "3"),
+                    ("Which OOP concept groups data and methods together?", "0"),
+                    ("Which principle is achieved using access modifiers?", "1"),
+                    ("Which keyword is used to call a parent class constructor?", "2"),
+                    ("Which OOP concept allows method overriding?", "3"),
+                    ("Which concept describes a class that cannot be instantiated?", "0"),
+                    ("Which OOP term describes a class blueprint for objects?", "1"),
+                    ("Which keyword defines an abstract method in C#?", "2"),
+                    ("Which concept allows different classes to share an interface?", "3"),
+                    ("Which access modifier makes a member visible only within the class?", "0"),
+                    ("Which OOP principle reduces code duplication through reuse?", "1"),
+                    ("Which concept describes a class implementing multiple interfaces?", "2"),
+                    ("Which keyword in C# prevents a method from being overridden?", "3"),
+                    ("Which OOP term describes the process of creating an object?", "0"),
+                    ("Which principle is violated when a class has too many responsibilities?", "1"),
+                    ("Which concept allows a method to have multiple signatures?", "2"),
+                    ("Which keyword is used to define an interface in C#?", "3"),
+                    ("Which concept describes hiding data using private fields?", "0"),
+                    ("Which OOP term describes a child class?", "1"),
+                    ("Which principle encourages programming to interfaces?", "2"),
+                    ("Which concept allows extending a class without modifying it?", "3"),
+                    ("Which keyword is used to implement an interface in C#?", "0"),
+                };
+                foreach (var (text, answer) in oopSingle)
+                    Questions.Add(new Question { PositionId = null, TestId = 3, QuestionText = text, QuestionTypeString = QuestionType.SINGLE_CHOICE.ToString(), QuestionScore = 4f, QuestionAnswer = answer });
+                SaveChanges();
+
+                var dsMultiple = new (string text, string answer)[]
+                {
+                    ("Which of the following are linear data structures?", "[0,1]"),
+                    ("Which of the following use LIFO ordering?", "[1,3]"),
+                    ("Which data structures allow duplicate values?", "[0,2]"),
+                    ("Which of the following are tree-based structures?", "[2,3]"),
+                    ("Which structures allow O(1) access by index?", "[0,1]"),
+                    ("Which of the following are sorting algorithms?", "[0,1,2]"),
+                    ("Which data structures use nodes and pointers?", "[1,2,3]"),
+                    ("Which of the following are valid graph representations?", "[0,2]"),
+                    ("Which structures are used to implement recursion?", "[1,3]"),
+                    ("Which of the following have O(log n) search time?", "[2,3]"),
+                    ("Which data structures are based on hashing?", "[0,3]"),
+                    ("Which of the following are examples of queues?", "[1,2]"),
+                    ("Which structures preserve insertion order?", "[0,1,2]"),
+                    ("Which of the following are search algorithms?", "[0,1,3]"),
+                    ("Which data structures support fast insertion at both ends?", "[1,2]"),
+                    ("Which of the following are heap types?", "[0,3]"),
+                    ("Which structures are used in BFS traversal?", "[0,2]"),
+                    ("Which of the following are balanced tree types?", "[1,3]"),
+                    ("Which data structures have O(1) push and pop?", "[0,1]"),
+                    ("Which of the following describe a linked list?", "[0,2,3]"),
+                    ("Which structures can be used to detect cycles in a graph?", "[1,2]"),
+                    ("Which of the following are divide-and-conquer algorithms?", "[0,3]"),
+                    ("Which data structures are used in DFS traversal?", "[1,3]"),
+                    ("Which of the following describe a binary tree?", "[0,1,2]"),
+                    ("Which structures allow O(1) average lookup time?", "[2,3]"),
+                };
+                foreach (var (text, answer) in dsMultiple)
+                    Questions.Add(new Question { PositionId = null, TestId = 4, QuestionText = text, QuestionTypeString = QuestionType.MULTIPLE_CHOICE.ToString(), QuestionScore = 4f, QuestionAnswer = answer });
+                SaveChanges();
+
+                var dbDesignTrueFalse = new (string text, string answer)[]
+                {
+                    ("A primary key can contain NULL values.", "false"),
+                    ("A foreign key references the primary key of another table.", "true"),
+                    ("Second normal form eliminates partial dependencies.", "true"),
+                    ("A table can have multiple primary keys.", "false"),
+                    ("Third normal form eliminates transitive dependencies.", "true"),
+                    ("An index always speeds up both reads and writes.", "false"),
+                    ("A unique constraint allows NULL values.", "true"),
+                    ("Denormalization can improve read performance.", "true"),
+                    ("A composite key is made up of a single column.", "false"),
+                    ("BCNF is a stricter version of 3NF.", "true"),
+                    ("A view stores data physically in the database.", "false"),
+                    ("Referential integrity is enforced by foreign keys.", "true"),
+                    ("A surrogate key has a natural business meaning.", "false"),
+                    ("An ER diagram is used to model database structure.", "true"),
+                    ("NULL means zero in a database.", "false"),
+                    ("A clustered index determines the physical order of data.", "true"),
+                    ("A database can have multiple clustered indexes per table.", "false"),
+                    ("Normalization always improves query performance.", "false"),
+                    ("A check constraint limits the values allowed in a column.", "true"),
+                    ("Stored procedures are precompiled SQL statements.", "true"),
+                    ("A trigger is executed automatically on a table event.", "true"),
+                    ("Joins can only be performed between two tables at a time.", "false"),
+                    ("A self-join joins a table with itself.", "true"),
+                    ("CASCADE delete removes child records when a parent is deleted.", "true"),
+                    ("A non-clustered index contains the actual data rows.", "false"),
+                };
+                foreach (var (text, answer) in dbDesignTrueFalse)
+                    Questions.Add(new Question { PositionId = null, TestId = 5, QuestionText = text, QuestionTypeString = QuestionType.TRUE_FALSE.ToString(), QuestionScore = 4f, QuestionAnswer = answer });
                 SaveChanges();
             }
 
@@ -410,56 +272,11 @@ namespace Tests_and_Interviews.Services
                 var elena = Users.First(u => u.Name == "Elena Popescu");
 
                 TestAttempts.AddRange(
-                    new TestAttempt
-                    {
-                        TestId = 1,
-                        ExternalUserId = bob.Id,
-                        Score = 25m,
-                        Status = TestStatus.SUBMITTED.ToString(),
-                        StartedAt = new DateTime(2025, 3, 1, 10, 0, 0, DateTimeKind.Utc),
-                        CompletedAt = new DateTime(2025, 3, 1, 10, 45, 0, DateTimeKind.Utc),
-                        AnswersFilePath = "answers/attempt_1.json"
-                    },
-                    new TestAttempt
-                    {
-                        TestId = 2,
-                        ExternalUserId = bob.Id,
-                        Score = 18m,
-                        Status = TestStatus.REVIEWED.ToString(),
-                        StartedAt = new DateTime(2025, 3, 5, 14, 0, 0, DateTimeKind.Utc),
-                        CompletedAt = new DateTime(2025, 3, 5, 14, 30, 0, DateTimeKind.Utc),
-                        AnswersFilePath = "answers/attempt_2.json"
-                    },
-                    new TestAttempt
-                    {
-                        TestId = 3,
-                        ExternalUserId = carol.Id,
-                        Score = 40m,
-                        Status = TestStatus.SUBMITTED.ToString(),
-                        StartedAt = new DateTime(2025, 3, 10, 9, 0, 0, DateTimeKind.Utc),
-                        CompletedAt = new DateTime(2025, 3, 10, 9, 28, 0, DateTimeKind.Utc),
-                        AnswersFilePath = "answers/attempt_3.json"
-                    },
-                    new TestAttempt
-                    {
-                        TestId = 4,
-                        ExternalUserId = dan.Id,
-                        Score = 35m,
-                        Status = TestStatus.REVIEWED.ToString(),
-                        StartedAt = new DateTime(2025, 3, 12, 11, 0, 0, DateTimeKind.Utc),
-                        CompletedAt = new DateTime(2025, 3, 12, 11, 25, 0, DateTimeKind.Utc),
-                        AnswersFilePath = "answers/attempt_4.json"
-                    },
-                    new TestAttempt
-                    {
-                        TestId = 5,
-                        ExternalUserId = elena.Id,
-                        Score = 50m,
-                        Status = TestStatus.SUBMITTED.ToString(),
-                        StartedAt = new DateTime(2025, 3, 15, 13, 0, 0, DateTimeKind.Utc),
-                        CompletedAt = new DateTime(2025, 3, 15, 13, 29, 0, DateTimeKind.Utc),
-                        AnswersFilePath = "answers/attempt_5.json"
-                    }
+                    new TestAttempt { TestId = 1, ExternalUserId = bob.Id, Score = 25m, Status = TestStatus.SUBMITTED.ToString(), StartedAt = new DateTime(2025, 3, 1, 10, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 1, 10, 45, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_1.json" },
+                    new TestAttempt { TestId = 2, ExternalUserId = bob.Id, Score = 18m, Status = TestStatus.REVIEWED.ToString(), StartedAt = new DateTime(2025, 3, 5, 14, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 5, 14, 30, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_2.json" },
+                    new TestAttempt { TestId = 3, ExternalUserId = carol.Id, Score = 40m, Status = TestStatus.SUBMITTED.ToString(), StartedAt = new DateTime(2025, 3, 10, 9, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 10, 9, 28, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_3.json" },
+                    new TestAttempt { TestId = 4, ExternalUserId = dan.Id, Score = 35m, Status = TestStatus.REVIEWED.ToString(), StartedAt = new DateTime(2025, 3, 12, 11, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 12, 11, 25, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_4.json" },
+                    new TestAttempt { TestId = 5, ExternalUserId = elena.Id, Score = 50m, Status = TestStatus.SUBMITTED.ToString(), StartedAt = new DateTime(2025, 3, 15, 13, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 15, 13, 29, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_5.json" }
                 );
                 SaveChanges();
             }
@@ -471,26 +288,15 @@ namespace Tests_and_Interviews.Services
 
                 var q_tf1 = Questions.First(q => q.QuestionText == "C# is a statically typed language.");
                 var q_tf2 = Questions.First(q => q.QuestionText == "In C#, a string is a value type.");
-                var q_sc1 = Questions.First(q => q.QuestionText == "Which keyword is used to define an interface in C#?");
-                var q_mc1 = Questions.First(q => q.QuestionText == "Which of the following are C# access modifiers?");
+                var q_txt1 = Questions.First(q => q.QuestionText == "What SQL keyword is used to retrieve data from a table?");
+                var q_txt2 = Questions.First(q => q.QuestionText == "What SQL clause is used to filter rows?");
 
                 Answers.AddRange(
                     new Answer { AttemptId = attempt_bob_t1.Id, QuestionId = q_tf1.Id, Value = "true" },
                     new Answer { AttemptId = attempt_bob_t1.Id, QuestionId = q_tf2.Id, Value = "false" },
-                    new Answer { AttemptId = attempt_bob_t1.Id, QuestionId = q_sc1.Id, Value = "1" },
-                    new Answer { AttemptId = attempt_bob_t1.Id, QuestionId = q_mc1.Id, Value = "[0,1,2]" }
-                );
-
-                var q_txt1 = Questions.First(q => q.QuestionText == "What SQL keyword is used to retrieve data from a table?");
-                var q_txt2 = Questions.First(q => q.QuestionText == "Which SQL clause filters rows after grouping?");
-                var q_sc2 = Questions.First(q => q.QuestionText == "Which JOIN returns all rows from the left table?");
-
-                Answers.AddRange(
                     new Answer { AttemptId = attempt_bob_t2.Id, QuestionId = q_txt1.Id, Value = "SELECT" },
-                    new Answer { AttemptId = attempt_bob_t2.Id, QuestionId = q_txt2.Id, Value = "WHERE" },
-                    new Answer { AttemptId = attempt_bob_t2.Id, QuestionId = q_sc2.Id, Value = "2" }
+                    new Answer { AttemptId = attempt_bob_t2.Id, QuestionId = q_txt2.Id, Value = "WHERE" }
                 );
-
                 SaveChanges();
             }
 
@@ -501,36 +307,9 @@ namespace Tests_and_Interviews.Services
                 var carol = Users.First(u => u.Name == "Carol Williams");
 
                 InterviewSessions.AddRange(
-                    new InterviewSession
-                    {
-                        PositionId = 1,
-                        ExternalUserId = alice.Id,
-                        InterviewerId = 2,
-                        DateStart = new DateTime(2025, 4, 1, 10, 0, 0, DateTimeKind.Utc),
-                        Video = "recordings/session_1.mp4",
-                        Status = InterviewStatus.Completed.ToString(),
-                        Score = 8.5m
-                    },
-                    new InterviewSession
-                    {
-                        PositionId = 2,
-                        ExternalUserId = carol.Id,
-                        InterviewerId = 2,
-                        DateStart = new DateTime(2025, 4, 15, 14, 0, 0, DateTimeKind.Utc),
-                        Video = "",
-                        Status = InterviewStatus.Scheduled.ToString(),
-                        Score = 0m
-                    },
-                    new InterviewSession
-                    {
-                        PositionId = 1,
-                        ExternalUserId = bob.Id,
-                        InterviewerId = 3,
-                        DateStart = new DateTime(2025, 4, 20, 11, 0, 0, DateTimeKind.Utc),
-                        Video = "recordings/session_3.mp4",
-                        Status = InterviewStatus.Completed.ToString(),
-                        Score = 7.0m
-                    }
+                    new InterviewSession { PositionId = 1, ExternalUserId = alice.Id, InterviewerId = 2, DateStart = new DateTime(2025, 4, 1, 10, 0, 0, DateTimeKind.Utc), Video = "recordings/session_1.mp4", Status = InterviewStatus.Completed.ToString(), Score = 8.5m },
+                    new InterviewSession { PositionId = 2, ExternalUserId = carol.Id, InterviewerId = 2, DateStart = new DateTime(2025, 4, 15, 14, 0, 0, DateTimeKind.Utc), Video = "", Status = InterviewStatus.Scheduled.ToString(), Score = 0m },
+                    new InterviewSession { PositionId = 1, ExternalUserId = bob.Id, InterviewerId = 3, DateStart = new DateTime(2025, 4, 20, 11, 0, 0, DateTimeKind.Utc), Video = "recordings/session_3.mp4", Status = InterviewStatus.Completed.ToString(), Score = 7.0m }
                 );
                 SaveChanges();
             }

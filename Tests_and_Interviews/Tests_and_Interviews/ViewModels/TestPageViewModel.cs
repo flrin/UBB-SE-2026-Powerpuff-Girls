@@ -21,7 +21,7 @@ namespace Tests_and_Interviews.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));
 
         public string Text { get; set; } = string.Empty;
-        public string GroupName { get; set; } = string.Empty; 
+        public string GroupName { get; set; } = string.Empty;
         public int Index { get; set; }
 
         private bool _isSelected;
@@ -135,7 +135,8 @@ namespace Tests_and_Interviews.ViewModels
         public int AnsweredCount { get => _answeredCount; set { _answeredCount = value; Notify(); } }
         public int TotalCount => Questions.Count;
 
-        
+        public bool AlreadyAttempted { get; private set; } = false;
+
         private readonly AppDbContext _db;
         private readonly TestService _testService;
         private int _attemptId;
@@ -153,7 +154,6 @@ namespace Tests_and_Interviews.ViewModels
             var validation = new AttemptValidationService(attemptRepo);
             _testService = new TestService(testRepo, attemptRepo, answerRepo, grading, timerSvc, validation);
 
-            // Ia ID-ul real al primului user din DB
             var user = _db.Users.FirstOrDefault(u => u.Name == "Alice Johnson");
             UserId = user?.Id ?? 0;
             System.Diagnostics.Debug.WriteLine($"[TestPageViewModel] UserId = {UserId}");
@@ -172,6 +172,11 @@ namespace Tests_and_Interviews.ViewModels
             try
             {
                 await _testService.StartTestAsync(UserId, testId);
+            }
+            catch (InvalidOperationException)
+            {
+                AlreadyAttempted = true;
+                return;
             }
             catch (Exception ex)
             {

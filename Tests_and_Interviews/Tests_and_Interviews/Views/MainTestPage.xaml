@@ -76,9 +76,12 @@
                                     HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Stretch"
                                     Tag="{x:Bind TestId}"
-                                    Click="StartTest_Click">
+                                    Click="StartTest_Click"
+                                    PointerEntered="Card_PointerEntered"
+                                    PointerExited="Card_PointerExited">
                                 <Border Background="White" CornerRadius="16" Padding="24"
-                                        BorderBrush="#E8E4FF" BorderThickness="1">
+                                        BorderThickness="{x:Bind CardBorderThickness, Mode=OneWay}"
+                                        BorderBrush="{x:Bind CardBorderBrush, Mode=OneWay}">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
@@ -117,7 +120,6 @@
 
                                         <Grid Grid.Row="4" MinHeight="8"/>
 
-                                      
                                         <Grid Grid.Row="5">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>

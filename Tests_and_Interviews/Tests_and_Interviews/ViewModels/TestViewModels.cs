@@ -10,12 +10,54 @@ using Tests_and_Interviews.Services;
 
 namespace Tests_and_Interviews.ViewModels
 {
-    public class TestCardViewModel
+    public class TestCardViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = "") =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
         public int TestId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
         public string QuestionTypeLabel { get; set; } = string.Empty;
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CardBorderThickness));
+                OnPropertyChanged(nameof(CardBorderBrush));
+            }
+        }
+
+        private bool _isHovered;
+        public bool IsHovered
+        {
+            get => _isHovered;
+            set
+            {
+                _isHovered = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CardBorderThickness));
+                OnPropertyChanged(nameof(CardBorderBrush));
+            }
+        }
+
+        public Microsoft.UI.Xaml.Thickness CardBorderThickness =>
+            IsSelected || IsHovered
+                ? new Microsoft.UI.Xaml.Thickness(2.5)
+                : new Microsoft.UI.Xaml.Thickness(1);
+
+        public Microsoft.UI.Xaml.Media.SolidColorBrush CardBorderBrush =>
+            IsSelected
+                ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.ColorHelper.FromArgb(255, 132, 148, 255))
+                : IsHovered
+                    ? new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.ColorHelper.FromArgb(255, 30, 30, 30))
+                    : new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.ColorHelper.FromArgb(255, 232, 228, 255));
     }
 
     public class MainTestViewModel : INotifyPropertyChanged
@@ -32,6 +74,19 @@ namespace Tests_and_Interviews.ViewModels
         }
 
         public ObservableCollection<TestCardViewModel> Tests { get; } = new();
+
+        private TestCardViewModel? _selectedTest;
+        public TestCardViewModel? SelectedTest
+        {
+            get => _selectedTest;
+            set
+            {
+                if (_selectedTest != null) _selectedTest.IsSelected = false;
+                _selectedTest = value;
+                if (_selectedTest != null) _selectedTest.IsSelected = true;
+                OnPropertyChanged();
+            }
+        }
 
         public Visibility NoTestsVisible =>
             (!IsLoading && Tests.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
@@ -50,8 +105,7 @@ namespace Tests_and_Interviews.ViewModels
 
             var repo = new TestRepository(_db);
 
-            
-            var categories = new List<string> { "Programming", "Database" };
+            var categories = new List<string> { "Programming", "Database", "Computer science" };
 
             foreach (var cat in categories)
             {

@@ -29,6 +29,19 @@ namespace Tests_and_Interviews.Views
                 };
 
                 await ViewModel.LoadAsync(args.TestId, args.UserId);
+
+                if (ViewModel.AlreadyAttempted)
+                {
+                    var dialog = new ContentDialog
+                    {
+                        Title = "Test unavailable",
+                        Content = "You have already attempted this test. Each test can only be taken once.",
+                        CloseButtonText = "Back to Tests",
+                        XamlRoot = this.XamlRoot
+                    };
+                    await dialog.ShowAsync();
+                    Frame.Navigate(typeof(MainTestPage));
+                }
             }
         }
 
@@ -40,7 +53,6 @@ namespace Tests_and_Interviews.Views
 
         private async void SubmitTest_Click(object sender, RoutedEventArgs e)
         {
-            // Confirmare submit
             var dialog = new ContentDialog
             {
                 Title = "Submit Test",

@@ -9,6 +9,15 @@
     mc:Ignorable="d"
     Background="#F0EEFF">
 
+    <Page.Resources>
+        <!-- Style comun pentru RadioButton -->
+        <Style x:Key="OptionRadioStyle" TargetType="RadioButton">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Foreground" Value="#333333"/>
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -63,7 +72,6 @@
                                 Margin="0,0,0,16" Padding="24">
                             <StackPanel Spacing="12">
 
-                                <!-- Header: numar + tip -->
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -85,7 +93,6 @@
                                                VerticalAlignment="Center"/>
                                 </Grid>
 
-                                <!-- Textul intrebarii -->
                                 <TextBlock Text="{x:Bind QuestionText}"
                                            FontSize="15" Foreground="#1a1a2e"
                                            TextWrapping="Wrap" Margin="50,0,0,0"/>
@@ -119,6 +126,22 @@
                                                             <SolidColorBrush x:Key="RadioButtonBorderBrush" Color="#E8E4FF"/>
                                                             <SolidColorBrush x:Key="RadioButtonBorderBrushPointerOver" Color="#8494FF"/>
                                                             <SolidColorBrush x:Key="RadioButtonBorderBrushChecked" Color="#8494FF"/>
+                                                            <!-- Bulina exterioara -->
+                                                            <SolidColorBrush x:Key="RadioButtonOuterEllipseStroke" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokePointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokeChecked" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokeCheckedPointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonOuterEllipseFill" Color="White"/>
+                                                            <SolidColorBrush x:Key="RadioButtonOuterEllipseFillPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="RadioButtonOuterEllipseFillChecked" Color="White"/>
+                                                            <SolidColorBrush x:Key="RadioButtonOuterEllipseFillCheckedPointerOver" Color="White"/>
+                                                            <!-- Bulina interioara (punctul selectat) -->
+                                                            <SolidColorBrush x:Key="RadioButtonCheckGlyphFill" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonCheckGlyphFillPointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonCheckGlyphFillChecked" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonCheckGlyphFillCheckedPointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonCheckGlyphStroke" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="RadioButtonCheckGlyphStrokePointerOver" Color="#8494FF"/>
                                                         </RadioButton.Resources>
                                                     </RadioButton>
                                                 </Border>
@@ -150,11 +173,27 @@
                                                             <SolidColorBrush x:Key="CheckBoxBackgroundUnchecked" Color="White"/>
                                                             <SolidColorBrush x:Key="CheckBoxBackgroundUncheckedPointerOver" Color="White"/>
                                                             <SolidColorBrush x:Key="CheckBoxBackgroundUncheckedPressed" Color="White"/>
-                                                            <SolidColorBrush x:Key="CheckBoxBackgroundChecked" Color="White"/>
-                                                            <SolidColorBrush x:Key="CheckBoxBackgroundCheckedPointerOver" Color="White"/>
-                                                            <SolidColorBrush x:Key="CheckBoxBorderBrushUnchecked" Color="#E8E4FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBackgroundChecked" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBackgroundCheckedPointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBackgroundCheckedPressed" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBorderBrushUnchecked" Color="#8494FF"/>
                                                             <SolidColorBrush x:Key="CheckBoxBorderBrushUncheckedPointerOver" Color="#8494FF"/>
                                                             <SolidColorBrush x:Key="CheckBoxBorderBrushChecked" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxBorderBrushCheckedPointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundUnchecked" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundUncheckedPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundUncheckedPressed" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked" Color="White"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUncheckedPointerOver" Color="#E8E4FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked" Color="#8494FF"/>
+                                                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" Color="#8494FF"/>
                                                         </CheckBox.Resources>
                                                     </CheckBox>
                                                 </Border>
@@ -189,6 +228,20 @@
                                                 <SolidColorBrush x:Key="RadioButtonBorderBrush" Color="#E8E4FF"/>
                                                 <SolidColorBrush x:Key="RadioButtonBorderBrushPointerOver" Color="#8494FF"/>
                                                 <SolidColorBrush x:Key="RadioButtonBorderBrushChecked" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseStroke" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokePointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokeChecked" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokeCheckedPointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseFill" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseFillPointerOver" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseFillChecked" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseFillCheckedPointerOver" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphFill" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphFillPointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphFillChecked" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphFillCheckedPointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphStroke" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphStrokePointerOver" Color="#8494FF"/>
                                             </RadioButton.Resources>
                                         </RadioButton>
                                     </Border>
@@ -215,6 +268,20 @@
                                                 <SolidColorBrush x:Key="RadioButtonBorderBrush" Color="#E8E4FF"/>
                                                 <SolidColorBrush x:Key="RadioButtonBorderBrushPointerOver" Color="#8494FF"/>
                                                 <SolidColorBrush x:Key="RadioButtonBorderBrushChecked" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseStroke" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokePointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokeChecked" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseStrokeCheckedPointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseFill" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseFillPointerOver" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseFillChecked" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonOuterEllipseFillCheckedPointerOver" Color="White"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphFill" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphFillPointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphFillChecked" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphFillCheckedPointerOver" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphStroke" Color="#8494FF"/>
+                                                <SolidColorBrush x:Key="RadioButtonCheckGlyphStrokePointerOver" Color="#8494FF"/>
                                             </RadioButton.Resources>
                                         </RadioButton>
                                     </Border>

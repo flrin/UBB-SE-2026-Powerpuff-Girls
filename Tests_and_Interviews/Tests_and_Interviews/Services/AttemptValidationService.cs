@@ -13,7 +13,7 @@ namespace Tests_and_Interviews.Services
             _attemptRepository = attemptRepository;
         }
 
-        
+
         public async Task<bool> CanStartTestAsync(int userId, int testId)
         {
             var existing = await _attemptRepository.FindByUserAndTestAsync(userId, testId);
@@ -21,22 +21,18 @@ namespace Tests_and_Interviews.Services
             if (existing == null)
                 return true;
 
-            return existing.Status == TestStatus.NOT_STARTED.ToString();
+            return false;
         }
 
-       
+
         public async Task CheckExistingAttemptsAsync(int userId, int testId)
         {
             var existing = await _attemptRepository.FindByUserAndTestAsync(userId, testId);
 
             if (existing == null) return;
 
-            if (existing.Status == TestStatus.SUBMITTED.ToString() ||
-                existing.Status == TestStatus.REVIEWED.ToString())
-            {
-                throw new System.InvalidOperationException(
-                    $"User {userId} has already completed test {testId}.");
-            }
+            throw new System.InvalidOperationException(
+                $"User {userId} has already attempted test {testId}.");
         }
     }
 }
