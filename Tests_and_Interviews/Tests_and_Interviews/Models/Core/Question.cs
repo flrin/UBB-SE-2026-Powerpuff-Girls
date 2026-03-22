@@ -33,6 +33,9 @@ namespace Tests_and_Interviews.Models.Core
         [MaxLength(200)]
         public string? QuestionAnswer { get; set; }
 
+        [Column("options_json")]
+        [MaxLength(1000)]
+        public string? OptionsJson { get; set; }
 
         [NotMapped]
         public QuestionType Type => QuestionTypeString switch

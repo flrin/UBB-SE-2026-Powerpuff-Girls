@@ -201,8 +201,17 @@ namespace Tests_and_Interviews.ViewModels
 
                 if (q.Type == QuestionType.SINGLE_CHOICE || q.Type == QuestionType.MULTIPLE_CHOICE)
                 {
-                    var optionLabels = new[] { "Option A", "Option B", "Option C", "Option D", "Option E", "Option F" };
-                    for (int i = 0; i < optionLabels.Length; i++)
+                    List<string> optionLabels;
+                    if (!string.IsNullOrEmpty(q.OptionsJson))
+                    {
+                        optionLabels = System.Text.Json.JsonSerializer.Deserialize<List<string>>(q.OptionsJson)
+                                       ?? new List<string> { "Option A", "Option B", "Option C", "Option D", "Option E", "Option F" };
+                    }
+                    else
+                    {
+                        optionLabels = new List<string> { "Option A", "Option B", "Option C", "Option D", "Option E", "Option F" };
+                    }
+                    for (int i = 0; i < optionLabels.Count; i++)
                     {
                         var opt = new OptionViewModel
                         {

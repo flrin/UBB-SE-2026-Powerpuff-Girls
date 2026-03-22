@@ -166,68 +166,68 @@ namespace Tests_and_Interviews.Services
                     Questions.Add(new Question { PositionId = null, TestId = 2, QuestionText = text, QuestionTypeString = QuestionType.TEXT.ToString(), QuestionScore = 4f, QuestionAnswer = answer });
                 SaveChanges();
 
-                var oopSingle = new (string text, string answer)[]
+                var oopSingle = new (string text, string answer, string options)[]
                 {
-                    ("Which OOP principle hides internal implementation details?", "1"),
-                    ("Which OOP principle allows a class to inherit from another?", "0"),
-                    ("Which OOP principle allows objects to take multiple forms?", "2"),
-                    ("Which keyword in C# is used to inherit a class?", "3"),
-                    ("Which OOP concept groups data and methods together?", "0"),
-                    ("Which principle is achieved using access modifiers?", "1"),
-                    ("Which keyword is used to call a parent class constructor?", "2"),
-                    ("Which OOP concept allows method overriding?", "3"),
-                    ("Which concept describes a class that cannot be instantiated?", "0"),
-                    ("Which OOP term describes a class blueprint for objects?", "1"),
-                    ("Which keyword defines an abstract method in C#?", "2"),
-                    ("Which concept allows different classes to share an interface?", "3"),
-                    ("Which access modifier makes a member visible only within the class?", "0"),
-                    ("Which OOP principle reduces code duplication through reuse?", "1"),
-                    ("Which concept describes a class implementing multiple interfaces?", "2"),
-                    ("Which keyword in C# prevents a method from being overridden?", "3"),
-                    ("Which OOP term describes the process of creating an object?", "0"),
-                    ("Which principle is violated when a class has too many responsibilities?", "1"),
-                    ("Which concept allows a method to have multiple signatures?", "2"),
-                    ("Which keyword is used to define an interface in C#?", "3"),
-                    ("Which concept describes hiding data using private fields?", "0"),
-                    ("Which OOP term describes a child class?", "1"),
-                    ("Which principle encourages programming to interfaces?", "2"),
-                    ("Which concept allows extending a class without modifying it?", "3"),
-                    ("Which keyword is used to implement an interface in C#?", "0"),
+                    ("Which OOP principle hides internal implementation details?", "1", "[\"Inheritance\",\"Encapsulation\",\"Polymorphism\",\"Abstraction\",\"Composition\",\"Delegation\"]"),
+                    ("Which OOP principle allows a class to inherit from another?", "0", "[\"Inheritance\",\"Encapsulation\",\"Polymorphism\",\"Abstraction\",\"Composition\",\"Delegation\"]"),
+                    ("Which OOP principle allows objects to take multiple forms?", "2", "[\"Inheritance\",\"Encapsulation\",\"Polymorphism\",\"Abstraction\",\"Composition\",\"Delegation\"]"),
+                    ("Which keyword in C# is used to inherit a class?", "3", "[\"implements\",\"extends\",\"inherits\",\":\",\"base\",\"derived\"]"),
+                    ("Which OOP concept groups data and methods together?", "0", "[\"Class\",\"Interface\",\"Module\",\"Package\",\"Namespace\",\"Assembly\"]"),
+                    ("Which principle is achieved using access modifiers?", "1", "[\"Inheritance\",\"Encapsulation\",\"Polymorphism\",\"Abstraction\",\"Coupling\",\"Cohesion\"]"),
+                    ("Which keyword is used to call a parent class constructor?", "2", "[\"this\",\"super\",\"base\",\"parent\",\"root\",\"origin\"]"),
+                    ("Which OOP concept allows method overriding?", "3", "[\"Encapsulation\",\"Abstraction\",\"Composition\",\"Polymorphism\",\"Delegation\",\"Coupling\"]"),
+                    ("Which concept describes a class that cannot be instantiated?", "0", "[\"Abstract class\",\"Static class\",\"Sealed class\",\"Interface\",\"Partial class\",\"Generic class\"]"),
+                    ("Which OOP term describes a class blueprint for objects?", "1", "[\"Object\",\"Class\",\"Instance\",\"Method\",\"Field\",\"Property\"]"),
+                    ("Which keyword defines an abstract method in C#?", "2", "[\"virtual\",\"override\",\"abstract\",\"sealed\",\"static\",\"extern\"]"),
+                    ("Which concept allows different classes to share an interface?", "3", "[\"Inheritance\",\"Encapsulation\",\"Composition\",\"Polymorphism\",\"Coupling\",\"Cohesion\"]"),
+                    ("Which access modifier makes a member visible only within the class?", "0", "[\"private\",\"public\",\"protected\",\"internal\",\"sealed\",\"static\"]"),
+                    ("Which OOP principle reduces code duplication through reuse?", "1", "[\"Encapsulation\",\"Inheritance\",\"Polymorphism\",\"Abstraction\",\"Coupling\",\"Cohesion\"]"),
+                    ("Which concept describes a class implementing multiple interfaces?", "2", "[\"Multiple inheritance\",\"Composition\",\"Multiple interface implementation\",\"Delegation\",\"Aggregation\",\"Association\"]"),
+                    ("Which keyword in C# prevents a method from being overridden?", "3", "[\"abstract\",\"virtual\",\"override\",\"sealed\",\"static\",\"readonly\"]"),
+                    ("Which OOP term describes the process of creating an object?", "0", "[\"Instantiation\",\"Inheritance\",\"Encapsulation\",\"Abstraction\",\"Delegation\",\"Composition\"]"),
+                    ("Which principle is violated when a class has too many responsibilities?", "1", "[\"DRY\",\"Single Responsibility\",\"Open/Closed\",\"Liskov Substitution\",\"Interface Segregation\",\"Dependency Inversion\"]"),
+                    ("Which concept allows a method to have multiple signatures?", "2", "[\"Overriding\",\"Inheritance\",\"Overloading\",\"Encapsulation\",\"Abstraction\",\"Delegation\"]"),
+                    ("Which keyword is used to define an interface in C#?", "3", "[\"abstract\",\"class\",\"struct\",\"interface\",\"enum\",\"delegate\"]"),
+                    ("Which concept describes hiding data using private fields?", "0", "[\"Encapsulation\",\"Inheritance\",\"Polymorphism\",\"Abstraction\",\"Coupling\",\"Cohesion\"]"),
+                    ("Which OOP term describes a child class?", "1", "[\"Base class\",\"Derived class\",\"Abstract class\",\"Sealed class\",\"Static class\",\"Partial class\"]"),
+                    ("Which principle encourages programming to interfaces?", "2", "[\"DRY\",\"SOLID\",\"Dependency Inversion\",\"Open/Closed\",\"Liskov\",\"Cohesion\"]"),
+                    ("Which concept allows extending a class without modifying it?", "3", "[\"Encapsulation\",\"Inheritance\",\"Polymorphism\",\"Open/Closed Principle\",\"Abstraction\",\"Delegation\"]"),
+                    ("Which keyword is used to implement an interface in C#?", "0", "[\":\",\"implements\",\"extends\",\"inherits\",\"base\",\"using\"]"),
                 };
-                foreach (var (text, answer) in oopSingle)
-                    Questions.Add(new Question { PositionId = null, TestId = 3, QuestionText = text, QuestionTypeString = QuestionType.SINGLE_CHOICE.ToString(), QuestionScore = 4f, QuestionAnswer = answer });
+                foreach (var (text, answer, options) in oopSingle)
+                    Questions.Add(new Question { PositionId = null, TestId = 3, QuestionText = text, QuestionTypeString = QuestionType.SINGLE_CHOICE.ToString(), QuestionScore = 4f, QuestionAnswer = answer, OptionsJson = options });
                 SaveChanges();
 
-                var dsMultiple = new (string text, string answer)[]
+                var dsMultiple = new (string text, string answer, string options)[]
                 {
-                    ("Which of the following are linear data structures?", "[0,1]"),
-                    ("Which of the following use LIFO ordering?", "[1,3]"),
-                    ("Which data structures allow duplicate values?", "[0,2]"),
-                    ("Which of the following are tree-based structures?", "[2,3]"),
-                    ("Which structures allow O(1) access by index?", "[0,1]"),
-                    ("Which of the following are sorting algorithms?", "[0,1,2]"),
-                    ("Which data structures use nodes and pointers?", "[1,2,3]"),
-                    ("Which of the following are valid graph representations?", "[0,2]"),
-                    ("Which structures are used to implement recursion?", "[1,3]"),
-                    ("Which of the following have O(log n) search time?", "[2,3]"),
-                    ("Which data structures are based on hashing?", "[0,3]"),
-                    ("Which of the following are examples of queues?", "[1,2]"),
-                    ("Which structures preserve insertion order?", "[0,1,2]"),
-                    ("Which of the following are search algorithms?", "[0,1,3]"),
-                    ("Which data structures support fast insertion at both ends?", "[1,2]"),
-                    ("Which of the following are heap types?", "[0,3]"),
-                    ("Which structures are used in BFS traversal?", "[0,2]"),
-                    ("Which of the following are balanced tree types?", "[1,3]"),
-                    ("Which data structures have O(1) push and pop?", "[0,1]"),
-                    ("Which of the following describe a linked list?", "[0,2,3]"),
-                    ("Which structures can be used to detect cycles in a graph?", "[1,2]"),
-                    ("Which of the following are divide-and-conquer algorithms?", "[0,3]"),
-                    ("Which data structures are used in DFS traversal?", "[1,3]"),
-                    ("Which of the following describe a binary tree?", "[0,1,2]"),
-                    ("Which structures allow O(1) average lookup time?", "[2,3]"),
+                    ("Which of the following are linear data structures?", "[0,1]", "[\"Array\",\"Linked List\",\"Tree\",\"Graph\",\"Heap\",\"Trie\"]"),
+                    ("Which of the following use LIFO ordering?", "[1,3]", "[\"Queue\",\"Stack\",\"Deque\",\"Call Stack\",\"Priority Queue\",\"Circular Buffer\"]"),
+                    ("Which data structures allow duplicate values?", "[0,2]", "[\"List\",\"Set\",\"Bag\",\"Map\",\"HashSet\",\"TreeSet\"]"),
+                    ("Which of the following are tree-based structures?", "[2,3]", "[\"Array\",\"Stack\",\"Binary Search Tree\",\"Heap\",\"Queue\",\"Linked List\"]"),
+                    ("Which structures allow O(1) access by index?", "[0,1]", "[\"Array\",\"ArrayList\",\"Linked List\",\"Tree\",\"Stack\",\"Queue\"]"),
+                    ("Which of the following are sorting algorithms?", "[0,1,2]", "[\"Merge Sort\",\"Quick Sort\",\"Bubble Sort\",\"BFS\",\"DFS\",\"Dijkstra\"]"),
+                    ("Which data structures use nodes and pointers?", "[1,2,3]", "[\"Array\",\"Linked List\",\"Tree\",\"Graph\",\"Stack Array\",\"Queue Array\"]"),
+                    ("Which of the following are valid graph representations?", "[0,2]", "[\"Adjacency Matrix\",\"Linked List\",\"Adjacency List\",\"Stack\",\"Queue\",\"Array\"]"),
+                    ("Which structures are used to implement recursion?", "[1,3]", "[\"Queue\",\"Stack\",\"Array\",\"Call Stack\",\"Heap\",\"Tree\"]"),
+                    ("Which of the following have O(log n) search time?", "[2,3]", "[\"Array\",\"Linked List\",\"Binary Search Tree\",\"Balanced BST\",\"Stack\",\"Queue\"]"),
+                    ("Which data structures are based on hashing?", "[0,3]", "[\"HashMap\",\"Array\",\"Linked List\",\"HashSet\",\"Stack\",\"Queue\"]"),
+                    ("Which of the following are examples of queues?", "[1,2]", "[\"Stack\",\"FIFO Queue\",\"Circular Queue\",\"Deque\",\"Priority Queue\",\"Call Stack\"]"),
+                    ("Which structures preserve insertion order?", "[0,1,2]", "[\"ArrayList\",\"LinkedList\",\"Queue\",\"HashSet\",\"TreeSet\",\"HashMap\"]"),
+                    ("Which of the following are search algorithms?", "[0,1,3]", "[\"Binary Search\",\"Linear Search\",\"Bubble Sort\",\"BFS\",\"Merge Sort\",\"Quick Sort\"]"),
+                    ("Which data structures support fast insertion at both ends?", "[1,2]", "[\"Array\",\"Deque\",\"Doubly Linked List\",\"Stack\",\"Queue\",\"Tree\"]"),
+                    ("Which of the following are heap types?", "[0,3]", "[\"Min Heap\",\"Stack\",\"Queue\",\"Max Heap\",\"Array\",\"Tree\"]"),
+                    ("Which structures are used in BFS traversal?", "[0,2]", "[\"Queue\",\"Stack\",\"Visited Array\",\"Heap\",\"Tree\",\"Graph\"]"),
+                    ("Which of the following are balanced tree types?", "[1,3]", "[\"Binary Tree\",\"AVL Tree\",\"BST\",\"Red-Black Tree\",\"Trie\",\"Heap\"]"),
+                    ("Which data structures have O(1) push and pop?", "[0,1]", "[\"Stack\",\"Queue\",\"Array\",\"Linked List\",\"Tree\",\"Graph\"]"),
+                    ("Which of the following describe a linked list?", "[0,2,3]", "[\"Dynamic size\",\"Fixed size\",\"Node-based\",\"Pointer-based\",\"Index-based\",\"Contiguous memory\"]"),
+                    ("Which structures can be used to detect cycles in a graph?", "[1,2]", "[\"Queue\",\"DFS\",\"Visited Set\",\"Stack\",\"Array\",\"Heap\"]"),
+                    ("Which of the following are divide-and-conquer algorithms?", "[0,3]", "[\"Merge Sort\",\"Bubble Sort\",\"Insertion Sort\",\"Quick Sort\",\"Selection Sort\",\"Counting Sort\"]"),
+                    ("Which data structures are used in DFS traversal?", "[1,3]", "[\"Queue\",\"Stack\",\"Array\",\"Recursion Stack\",\"Heap\",\"Tree\"]"),
+                    ("Which of the following describe a binary tree?", "[0,1,2]", "[\"Each node has at most 2 children\",\"Has a root node\",\"Can be empty\",\"Always balanced\",\"Always sorted\",\"Always complete\"]"),
+                    ("Which structures allow O(1) average lookup time?", "[2,3]", "[\"Array\",\"Linked List\",\"HashMap\",\"HashSet\",\"Tree\",\"Stack\"]"),
                 };
-                foreach (var (text, answer) in dsMultiple)
-                    Questions.Add(new Question { PositionId = null, TestId = 4, QuestionText = text, QuestionTypeString = QuestionType.MULTIPLE_CHOICE.ToString(), QuestionScore = 4f, QuestionAnswer = answer });
+                foreach (var (text, answer, options) in dsMultiple)
+                    Questions.Add(new Question { PositionId = null, TestId = 4, QuestionText = text, QuestionTypeString = QuestionType.MULTIPLE_CHOICE.ToString(), QuestionScore = 4f, QuestionAnswer = answer, OptionsJson = options });
                 SaveChanges();
 
                 var dbDesignTrueFalse = new (string text, string answer)[]
