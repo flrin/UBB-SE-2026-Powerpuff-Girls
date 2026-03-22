@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Services;
-using Tests_and_Interviews.Domain;
+using Tests_and_Interviews.Models;
 
 namespace Tests_and_Interviews.ViewModels
 {
