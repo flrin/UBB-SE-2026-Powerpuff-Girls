@@ -42,6 +42,13 @@ namespace Tests_and_Interviews.Services
             slot.Lock(candidateId);
             _slotRepo.Update(slot);
         }
+        public List<Slot> GetAllAvailableSlots(int recruiterId)
+        {
+            return _slotRepo
+                .GetAllSlots(recruiterId)
+                .Where(s => s.IsAvailable)
+                .ToList();
+        }
         public void confirmBooking(int candidateId, int slotId)
         {
             ConfirmBooking(candidateId, slotId);

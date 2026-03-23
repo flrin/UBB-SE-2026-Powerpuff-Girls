@@ -8,12 +8,20 @@ namespace Tests_and_Interviews.Repositories
     public class SlotRepository
     {
         private static readonly List<Slot> _slots = new List<Slot>();
-
         public List<Slot> GetSlots(int recruiterId, DateTime date)
         {
             return _slots
                 .Where(s => s.RecruiterId == recruiterId &&
                             s.StartTime.Date == date.Date)
+                .OrderBy(s => s.StartTime)
+                .ToList();
+        }
+
+      
+        public List<Slot> GetAllSlots(int recruiterId)
+        {
+            return _slots
+                .Where(s => s.RecruiterId == recruiterId)
                 .OrderBy(s => s.StartTime)
                 .ToList();
         }
