@@ -40,8 +40,10 @@ namespace Tests_and_Interviews.Repositories
             existing.Status = attempt.Status;
             existing.CompletedAt = attempt.CompletedAt;
             existing.AnswersFilePath = attempt.AnswersFilePath;
-
-           
+            existing.IsValidated = attempt.IsValidated;
+            existing.PercentageScore = attempt.PercentageScore;
+            existing.RejectionReason = attempt.RejectionReason;
+            existing.RejectedAt = attempt.RejectedAt;
 
             await _db.SaveChangesAsync();
             return existing;

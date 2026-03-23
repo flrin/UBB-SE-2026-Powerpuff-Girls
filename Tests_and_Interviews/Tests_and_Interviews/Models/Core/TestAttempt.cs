@@ -45,6 +45,19 @@ namespace Tests_and_Interviews.Models.Core
         [MaxLength(200)]
         public string AnswersFilePath { get; set; } = string.Empty;
 
+        [Column("is_validated")]
+        public bool IsValidated { get; set; } = false;
+
+        [Column("percentage_score")]
+        public decimal? PercentageScore { get; set; }
+
+        [Column("rejection_reason")]
+        [MaxLength(500)]
+        public string? RejectionReason { get; set; }
+
+        [Column("rejected_at")]
+        public DateTime? RejectedAt { get; set; }
+
         public List<Answer> Answers { get; set; } = new();
         public Test? Test { get; set; }
         public User? User { get; set; }
@@ -57,7 +70,7 @@ namespace Tests_and_Interviews.Models.Core
 
         public void Submit()
         {
-            Status = TestStatus.SUBMITTED.ToString();
+            Status = TestStatus.COMPLETED.ToString();
             CompletedAt = DateTime.UtcNow;
         }
 
