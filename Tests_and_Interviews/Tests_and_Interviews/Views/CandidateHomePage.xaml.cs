@@ -13,23 +13,19 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
-using Tests_and_Interviews.Views;
+using Tests_and_Interviews.ViewModels;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
-namespace Tests_and_Interviews
+namespace Tests_and_Interviews.Views
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainWindow : Window
+
+    public sealed partial class CandidateHomePage : Page
     {
-        public MainWindow()
+        public CandidateViewModel ViewModel { get; }
+        public CandidateHomePage()
         {
             InitializeComponent();
-
-            RootFrame.Navigate(typeof(RecruiterPage));
+            ViewModel = new CandidateViewModel();
+            this.DataContext = ViewModel;
         }
     }
 }
