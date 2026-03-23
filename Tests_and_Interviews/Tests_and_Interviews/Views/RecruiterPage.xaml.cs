@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using Tests_and_Interviews.Models;
+using Tests_and_Interviews.Repositories;
 using Tests_and_Interviews.ViewModels;
 
 namespace Tests_and_Interviews.Views
@@ -12,11 +13,6 @@ namespace Tests_and_Interviews.Views
         public RecruiterPage()
         {
             this.InitializeComponent();
-
-            if (DataContext is RecruiterViewModel vm)
-            {
-                vm.OnCreateSlotRequested += ShowCreateSlotDialog;
-            }
         }
 
         private RecruiterViewModel ViewModel => (RecruiterViewModel)DataContext;
@@ -29,39 +25,48 @@ namespace Tests_and_Interviews.Views
             }
         }
 
-        private async void ShowCreateSlotDialog(Slot slot)
+        private async void Slot_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            var combo = new ComboBox
+            if (sender is Grid grid && grid.DataContext is Slot slot)
             {
-                ItemsSource = new List<string> { "60 min", "90 min" },
-                SelectedIndex = 1
-            };
-            var dialog = new ContentDialog
-            {
-                Title = "Create Slot",
-                Content = new StackPanel
+                if (slot.Status != SlotStatus.Free)
+                    return;
+
+                var combo = new ComboBox
                 {
-                    Spacing = 10,
-                    Children =
+                    ItemsSource = new List<string> { "60 min", "90 min" },
+                    SelectedIndex = 0
+                };
+
+                var dialog = new ContentDialog
+                {
+                    Title = "Create Slot",
+                    Content = combo,
+                    PrimaryButtonText = "Create",
+                    CloseButtonText = "Cancel",
+                    XamlRoot = this.XamlRoot
+                };
+
+                if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                {
+                    int duration = combo.SelectedIndex == 0 ? 60 : 90;
+
+                    var repo = new SlotRepository();
+                    repo.Add(new Slot
                     {
-                        new TextBlock { Text = $"Date: {slot.StartTime:dd/MM/yyyy}" },
-                        new TextBlock { Text = $"Time: {slot.StartTime:HH:mm} - {slot.EndTime:HH:mm}" },
-                        combo
-                    }
-                },
-                PrimaryButtonText = "Make Available",
-                CloseButtonText = "Cancel",
-                XamlRoot = this.XamlRoot
-            };
+                        Id = new Random().Next(1000, 9999),
+                        RecruiterId = 1,
+                        StartTime = slot.StartTime,
+                        EndTime = slot.StartTime.AddMinutes(duration),
+                        Duration = duration,
+                        Status = SlotStatus.Booked,
+                        InterviewType = "Available"
+                    });
 
-            var result = await dialog.ShowAsync().AsTask(); 
-            if (result == ContentDialogResult.Primary)
-            {
-                slot.Status = SlotStatus.Booked; 
-                slot.InterviewType = "Available";
-
-                ViewModel.LoadSlots();
+                    ViewModel.LoadSlots();
+                }
             }
         }
     }
+    
 }

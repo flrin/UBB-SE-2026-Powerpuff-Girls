@@ -3,10 +3,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
 using Tests_and_Interviews.Models;
 using Tests_and_Interviews.Repositories;
-using Tests_and_Interviews.Helpers;
 
 namespace Tests_and_Interviews.ViewModels
 {
@@ -16,14 +14,12 @@ namespace Tests_and_Interviews.ViewModels
 
         private ObservableCollection<Slot> _slots = new();
         private DateTime _selectedDate = DateTime.Today;
-        public ICommand CreateSlotCommand { get; }
-        public event Action<Slot>? OnCreateSlotRequested;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public RecruiterViewModel()
         {
             _repo = new SlotRepository();
-            CreateSlotCommand = new RelayCommand((obj) => CreateSlot((Slot)obj));
             LoadSlots();
         }
 
@@ -54,45 +50,48 @@ namespace Tests_and_Interviews.ViewModels
 
         public void LoadSlots()
         {
-            var existingSlots = _repo.GetSlots(1, SelectedDate);
+            var existing = _repo.GetSlots(1, SelectedDate);
             var fullDay = new ObservableCollection<Slot>();
+
             var start = SelectedDate.Date.AddHours(8);
             var end = SelectedDate.Date.AddHours(18);
 
-            int id = 1;
             while (start < end)
             {
-                var slot = existingSlots.FirstOrDefault(s => s.StartTime == start);
-                if (slot == null)
+                var slot = existing.FirstOrDefault(s =>
+                    start >= s.StartTime && start < s.EndTime);
+
+                if (slot != null)
                 {
+                    bool isStart = start == slot.StartTime;
+
                     fullDay.Add(new Slot
                     {
-                        Id = id++,
-                        RecruiterId = 1,
                         StartTime = start,
-                        EndTime = start.AddHours(1),
-                        Duration = 60,
-                        Status = SlotStatus.Free,
-                        InterviewType = "" 
+                        EndTime = slot.EndTime,
+                        Duration = slot.Duration,
+                        Status = slot.Status,
+                        InterviewType = slot.InterviewType,
+                        IsHidden = !isStart
                     });
                 }
                 else
                 {
-                    fullDay.Add(slot);
+                    fullDay.Add(new Slot
+                    {
+                        StartTime = start,
+                        EndTime = start.AddMinutes(30),
+                        Duration = 30,
+                        Status = SlotStatus.Free,
+                        InterviewType = "",
+                        IsHidden = false
+                    });
                 }
 
-                start = start.AddHours(1);
+                start = start.AddMinutes(30);
             }
 
-            Slots = fullDay;
-        }
-
-        private void CreateSlot(Slot slot)
-        {
-            if (slot.Status == SlotStatus.Free)
-            {
-                OnCreateSlotRequested?.Invoke(slot);
-            }
+            Slots = new ObservableCollection<Slot>(fullDay.Where(s => !s.IsHidden));
         }
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
