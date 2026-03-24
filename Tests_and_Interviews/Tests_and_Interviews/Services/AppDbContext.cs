@@ -17,6 +17,8 @@ namespace Tests_and_Interviews.Services
         public DbSet<TestAttempt> TestAttempts { get; set; }
         public DbSet<InterviewSession> InterviewSessions { get; set; }
 
+        public DbSet<LeaderboardEntry> LeaderboardEntries { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(
@@ -62,6 +64,23 @@ namespace Tests_and_Interviews.Services
             modelBuilder.Entity<TestAttempt>()
                 .Property(ta => ta.Id)
                 .UseIdentityAlwaysColumn();
+
+
+            modelBuilder.Entity<LeaderboardEntry>()
+                .HasOne(le => le.Test)
+                .WithMany()
+                .HasForeignKey(le => le.TestId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<LeaderboardEntry>()
+                .HasOne(le => le.User)
+                .WithMany()
+                .HasForeignKey(le => le.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<LeaderboardEntry>()
+                .Property(le => le.Id)
+                .UseIdentityAlwaysColumn();
         }
 
         public void SeedDatabase()
@@ -84,11 +103,11 @@ namespace Tests_and_Interviews.Services
             if (!Tests.Any())
             {
                 Tests.AddRange(
-                    new Test { Id = 1, Title = "C# Fundamentals", Category = "Programming", CreatedAt = new DateTime(2025, 1, 10, 9, 0, 0, DateTimeKind.Utc) },
-                    new Test { Id = 2, Title = "SQL Basics", Category = "Database", CreatedAt = new DateTime(2025, 2, 5, 10, 0, 0, DateTimeKind.Utc) },
-                    new Test { Id = 3, Title = "OOP Principles", Category = "Programming", CreatedAt = new DateTime(2025, 3, 1, 9, 0, 0, DateTimeKind.Utc) },
-                    new Test { Id = 4, Title = "Data Structures", Category = "Computer Science", CreatedAt = new DateTime(2025, 3, 10, 9, 0, 0, DateTimeKind.Utc) },
-                    new Test { Id = 5, Title = "Database Design", Category = "Database", CreatedAt = new DateTime(2025, 3, 15, 9, 0, 0, DateTimeKind.Utc) }
+                    new Test { Id = 1, Title = "C# Fundamentals", Category = "Programming", CreatedAt = new DateTime(2026, 1, 10, 9, 0, 0, DateTimeKind.Utc) },
+                    new Test { Id = 2, Title = "SQL Basics", Category = "Database", CreatedAt = new DateTime(2026, 2, 5, 10, 0, 0, DateTimeKind.Utc) },
+                    new Test { Id = 3, Title = "OOP Principles", Category = "Programming", CreatedAt = new DateTime(2026, 3, 1, 9, 0, 0, DateTimeKind.Utc) },
+                    new Test { Id = 4, Title = "Data Structures", Category = "Computer Science", CreatedAt = new DateTime(2026, 3, 10, 9, 0, 0, DateTimeKind.Utc) },
+                    new Test { Id = 5, Title = "Database Design", Category = "Database", CreatedAt = new DateTime(2026, 3, 15, 9, 0, 0, DateTimeKind.Utc) }
                 );
                 SaveChanges();
             }
@@ -272,11 +291,11 @@ namespace Tests_and_Interviews.Services
                 var elena = Users.First(u => u.Name == "Elena Popescu");
 
                 TestAttempts.AddRange(
-                    new TestAttempt { TestId = 1, ExternalUserId = bob.Id, Score = 25m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2025, 3, 1, 10, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 1, 10, 45, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_1.json" },
-                    new TestAttempt { TestId = 2, ExternalUserId = bob.Id, Score = 18m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2025, 3, 5, 14, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 5, 14, 30, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_2.json" },
-                    new TestAttempt { TestId = 3, ExternalUserId = carol.Id, Score = 40m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2025, 3, 10, 9, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 10, 9, 28, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_3.json" },
-                    new TestAttempt { TestId = 4, ExternalUserId = dan.Id, Score = 35m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2025, 3, 12, 11, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 12, 11, 25, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_4.json" },
-                    new TestAttempt { TestId = 5, ExternalUserId = elena.Id, Score = 50m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2025, 3, 15, 13, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2025, 3, 15, 13, 29, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_5.json" }
+                    new TestAttempt { TestId = 1, ExternalUserId = bob.Id, Score = 25m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2026, 3, 1, 10, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2026, 3,1, 10, 45, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_1.json", IsValidated = true, PercentageScore = 25m },
+                    new TestAttempt { TestId = 2, ExternalUserId = bob.Id, Score = 18m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2026, 3, 5, 14, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2026,3, 5, 14, 30, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_2.json", IsValidated = true, PercentageScore = 18m },
+                    new TestAttempt { TestId = 3, ExternalUserId = carol.Id, Score = 40m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2026, 3, 10, 9, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2026,3,10, 9, 28, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_3.json", IsValidated = true, PercentageScore = 40m },
+                    new TestAttempt { TestId = 5, ExternalUserId = dan.Id, Score = 35m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2026, 3, 12, 11, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2026, 3, 12, 11, 25, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_4.json", IsValidated = true, PercentageScore = 35m },
+                    new TestAttempt { TestId = 5, ExternalUserId = elena.Id, Score = 50m, Status = TestStatus.COMPLETED.ToString(), StartedAt = new DateTime(2026, 3, 15, 13, 0, 0, DateTimeKind.Utc), CompletedAt = new DateTime(2026, 3, 15, 13, 29, 0, DateTimeKind.Utc), AnswersFilePath = "answers/attempt_5.json", IsValidated = true, PercentageScore = 50m }
                 );
                 SaveChanges();
             }

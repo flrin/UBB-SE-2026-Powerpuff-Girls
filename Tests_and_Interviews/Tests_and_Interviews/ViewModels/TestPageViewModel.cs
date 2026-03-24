@@ -282,6 +282,11 @@ namespace Tests_and_Interviews.ViewModels
 
             await _testService.SubmitTestAsync(_attemptId);
 
+
+            var testRepo = new TestRepository(_db);
+            var dataProcessingService = new DataProcessingService(_db, attemptRepo, testRepo);
+            await dataProcessingService.ProcessFinalizedAttemptAsync(_attemptId);
+
             var finalAttempt = await attemptRepo.FindByUserAndTestAsync(UserId, TestId);
             return finalAttempt != null ? (float)finalAttempt.Score : 0f;
         }
