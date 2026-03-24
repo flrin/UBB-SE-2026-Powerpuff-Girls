@@ -15,38 +15,29 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-
 using Tests_and_Interviews.Services;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Tests_and_Interviews
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
     public partial class App : Application
     {
         private Window? _window;
 
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
+        public static int CurrentUserId { get; private set; } = 0;
+
         public App()
         {
             InitializeComponent();
-            using (var db = new AppDbContext()) // Replace with your actual DbContext name
+            using (var db = new AppDbContext())
             {
                 db.SeedDatabase();
+
+                var alice = db.Users.FirstOrDefault(u => u.Name == "Alice Johnson");
+                CurrentUserId = alice?.Id ?? 0;
+                System.Diagnostics.Debug.WriteLine($"[App] CurrentUserId = {CurrentUserId}");
             }
         }
 
-        /// <summary>
-        /// Invoked when the application is launched.
-        /// </summary>
-        /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             _window = new MainWindow();
