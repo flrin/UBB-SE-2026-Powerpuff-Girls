@@ -105,7 +105,7 @@ namespace Tests_and_Interviews.ViewModels
 
             var repo = new TestRepository(_db);
 
-            var categories = new List<string> { "Programming", "Database", "Computer science" };
+            var categories = new List<string> { "Programming", "Database", "Computer Science" };
 
             foreach (var cat in categories)
             {
