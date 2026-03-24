@@ -8,11 +8,13 @@ namespace Tests_and_Interviews.Repositories
 {
     public class SlotRepository
     {
+        
         private List<Slot> GetAll()
         {
             return SlotJsonService.LoadSlots();
         }
 
+     
         private void SaveAll(List<Slot> slots)
         {
             SlotJsonService.SaveSlots(slots);
@@ -27,6 +29,7 @@ namespace Tests_and_Interviews.Repositories
                 .ToList();
         }
 
+      
         public List<Slot> GetAllSlots(int recruiterId)
         {
             return GetAll()
@@ -35,11 +38,13 @@ namespace Tests_and_Interviews.Repositories
                 .ToList();
         }
 
+     
         public Slot? GetById(int id)
         {
             return GetAll().FirstOrDefault(s => s.Id == id);
         }
 
+       
         public void Add(Slot slot)
         {
             var slots = GetAll();
@@ -54,12 +59,14 @@ namespace Tests_and_Interviews.Repositories
             if (overlap)
                 throw new Exception("Slot overlaps!");
 
+       
             slot.Id = slots.Any() ? slots.Max(s => s.Id) + 1 : 1;
 
             slots.Add(slot);
             SaveAll(slots);
         }
 
+       
         public void Update(Slot slot)
         {
             var slots = GetAll();
@@ -72,6 +79,7 @@ namespace Tests_and_Interviews.Repositories
             SaveAll(slots);
         }
 
+     
         public void Delete(int id)
         {
             var slots = GetAll();
