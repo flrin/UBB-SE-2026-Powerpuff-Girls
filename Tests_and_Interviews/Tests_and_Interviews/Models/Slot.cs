@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Tests_and_Interviews.Repositories; 
+
 namespace Tests_and_Interviews.Models
-{
+{ 
         public class Slot : INotifyPropertyChanged
         {
             public int Id { get; set; }
@@ -21,34 +23,43 @@ namespace Tests_and_Interviews.Models
             public bool IsOccupied => Status == SlotStatus.Occupied;
             public bool IsAvailable => Status == SlotStatus.Free;
 
-            public event PropertyChangedEventHandler PropertyChanged;
+        private bool _isDaySelected;
+        public bool IsDaySelected
+        {
+            get => _isDaySelected;
+            set
+            {
+                _isDaySelected = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(BackgroundColor));
+                OnPropertyChanged(nameof(ForegroundColor));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
 
             public string BackgroundColor => IsDaySelected ? "#6367FF" : "#C9BEFF";
             public string ForegroundColor => IsDaySelected ? "White" : "Black";
             public string SlotColor => IsSlotSelected ? "#8494FF" : "#FFDBFD";
             public bool IsHidden { get; set; }
-        public void Lock(int candidateId)
-            {
-                if (!IsAvailable)
-                    throw new InvalidOperationException("Slot is not available");
-                Status = SlotStatus.Occupied;
-                CandidateId = candidateId;
-            }
-            private bool _isDaySelected;
-            public bool IsDaySelected
-            {
-                get => _isDaySelected;
-                set
-                {
-                    _isDaySelected = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(BackgroundColor));
-                    OnPropertyChanged(nameof(ForegroundColor));
-                }
-            }
+     
 
-            private bool _isSlotSelected;
+
+
+public void Lock(int candidateId)
+{
+    if (!IsAvailable)
+        throw new InvalidOperationException("Slot is not available");
+
+    Status = SlotStatus.Occupied;
+    CandidateId = candidateId;
+
+    var repo = new SlotRepository();
+    repo.Update(this);
+}
+
+private bool _isSlotSelected;
             public bool IsSlotSelected
             {
                 get => _isSlotSelected;
