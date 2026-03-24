@@ -20,6 +20,7 @@
 		<None Remove="Views\InterviewCandidatePage.xaml" />
 		<None Remove="Views\MainTestPage.xaml" />
 		<None Remove="Views\TestPage.xaml" />
+    <None Remove="Views\InterviewInterviewerPage.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="Assets\SplashScreen.scale-200.png" />
@@ -45,6 +46,9 @@
 		<Page Include="MainWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+    <Page Include="Views\InterviewInterviewerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
 		<Page Include="Views\RecruiterPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>

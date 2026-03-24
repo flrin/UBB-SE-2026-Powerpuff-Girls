@@ -349,6 +349,20 @@ namespace Tests_and_Interviews.Services
                 throw new KeyNotFoundException($"InterviewSession with ID {id} was not found.");
             return session;
         }
+        
+        public InterviewSession GetInterviewSessionById(int id)
+        {
+            using (var db = new AppDbContext())
+            {
+                var session = db.InterviewSessions
+                    .FirstOrDefault(ins => ins.Id == id);
+                if (session == null)
+                {
+                    throw new KeyNotFoundException($"InterviewSession with ID {id} was not found.");
+                }
+                return session;
+            }
+        }
 
         public async Task UpdateInterviewSessionAsync(InterviewSession updated)
         {
