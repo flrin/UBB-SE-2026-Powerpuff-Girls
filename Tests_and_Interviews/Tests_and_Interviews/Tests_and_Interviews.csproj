@@ -45,6 +45,12 @@
 		<Page Include="MainWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Include="Views\RecruiterPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\CandidateHomePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Include="Views\InterviewCandidatePage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
