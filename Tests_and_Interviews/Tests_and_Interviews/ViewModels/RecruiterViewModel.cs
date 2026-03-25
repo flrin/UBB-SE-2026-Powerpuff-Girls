@@ -52,9 +52,45 @@ namespace Tests_and_Interviews.ViewModels
             var existing = _repo.GetSlots(1, SelectedDate.Date);
             var fullDay = new ObservableCollection<Slot>();
 
-            Slots = new ObservableCollection<Slot>(
-                existing.OrderBy(s => s.StartTime)
-            );
+            var start = SelectedDate.Date.AddHours(8);
+            var end = SelectedDate.Date.AddHours(18);
+
+            while (start < end)
+            {
+                var slot = existing.FirstOrDefault(s =>
+                    start >= s.StartTime && start < s.EndTime);
+
+                if (slot != null)
+                {
+                    bool isStart = start == slot.StartTime;
+
+                    fullDay.Add(new Slot
+                    {
+                        StartTime = start,
+                        EndTime = slot.EndTime,
+                        Duration = slot.Duration,
+                        Status = slot.Status,
+                        InterviewType = slot.InterviewType,
+                        IsHidden = !isStart
+                    });
+                }
+                else
+                {
+                    fullDay.Add(new Slot
+                    {
+                        StartTime = start,
+                        EndTime = start.AddMinutes(30),
+                        Duration = 30,
+                        Status = SlotStatus.Free,
+                        InterviewType = "",
+                        IsHidden = false
+                    });
+                }
+
+                start = start.AddMinutes(30);
+            }
+
+            Slots = new ObservableCollection<Slot>(fullDay.Where(s => !s.IsHidden));
         }
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
