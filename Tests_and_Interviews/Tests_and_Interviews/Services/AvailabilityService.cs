@@ -1,10 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tests_and_Interviews.Models;
-using Tests_and_Interviews.Repositories;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace Tests_and_Interviews.Services
 {
+    using global::Tests_and_Interviews.Models;
+    using global::Tests_and_Interviews.Repositories;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Tests_and_Interviews.Models;
+    using Tests_and_Interviews.Repositories;
+
+    namespace Tests_and_Interviews.Services
+    {
         public class AvailabilityService
         {
             private readonly SlotRepository _slotRepo;
@@ -69,4 +80,5 @@ namespace Tests_and_Interviews.Services
                 return slot;
             }
         }
+    }
 }

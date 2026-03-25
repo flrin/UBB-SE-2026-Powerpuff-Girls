@@ -66,5 +66,10 @@ namespace Tests_and_Interviews.Views
                 }
             }
         }
+
+        private void LeaderboardInfo_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(RecruiterTestsPage));
+        }
     }
 }

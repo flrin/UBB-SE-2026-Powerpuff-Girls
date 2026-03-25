@@ -31,6 +31,17 @@
             <CalendarView x:Name="MainCalendar"
                           SelectionMode="Single"
                           SelectedDatesChanged="MainCalendar_SelectedDatesChanged"/>
+
+            <Button Content="Leaderboard Info"
+                         Click="LeaderboardInfo_Click"
+                         Background="#6366FF"
+                         Foreground="White"
+                         FontWeight="SemiBold"
+                         FontSize="15"
+                         Padding="20,12"
+                         CornerRadius="10"
+                         HorizontalAlignment="Left"/>
+            
         </StackPanel>
 
         <Grid Grid.Column="1" Margin="80,0,0,0">

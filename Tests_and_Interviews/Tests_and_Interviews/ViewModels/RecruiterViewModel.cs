@@ -11,8 +11,7 @@ namespace Tests_and_Interviews.ViewModels
     public class RecruiterViewModel : INotifyPropertyChanged
     {
         private readonly SlotRepository _repo;
-
-        private ObservableCollection<Slot> _slots = new();
+        private ObservableCollection<Slot> _slots = new ObservableCollection<Slot>();
         private DateTime _selectedDate = DateTime.Today;
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -53,45 +52,9 @@ namespace Tests_and_Interviews.ViewModels
             var existing = _repo.GetSlots(1, SelectedDate.Date);
             var fullDay = new ObservableCollection<Slot>();
 
-            var start = SelectedDate.Date.AddHours(8);
-            var end = SelectedDate.Date.AddHours(18);
-
-            while (start < end)
-            {
-                var slot = existing.FirstOrDefault(s =>
-                    start >= s.StartTime && start < s.EndTime);
-
-                if (slot != null)
-                {
-                    bool isStart = start == slot.StartTime;
-
-                    fullDay.Add(new Slot
-                    {
-                        StartTime = start,
-                        EndTime = slot.EndTime,
-                        Duration = slot.Duration,
-                        Status = slot.Status,
-                        InterviewType = slot.InterviewType,
-                        IsHidden = !isStart
-                    });
-                }
-                else
-                {
-                    fullDay.Add(new Slot
-                    {
-                        StartTime = start,
-                        EndTime = start.AddMinutes(30),
-                        Duration = 30,
-                        Status = SlotStatus.Free,
-                        InterviewType = "",
-                        IsHidden = false
-                    });
-                }
-
-                start = start.AddMinutes(30);
-            }
-
-            Slots = new ObservableCollection<Slot>(fullDay.Where(s => !s.IsHidden));
+            Slots = new ObservableCollection<Slot>(
+                existingSlots.OrderBy(s => s.StartTime)
+            );
         }
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
