@@ -50,7 +50,7 @@ namespace Tests_and_Interviews.ViewModels
 
         public void LoadSlots()
         {
-            var existing = _repo.GetSlots(1, SelectedDate);
+            var existing = _repo.GetSlots(1, SelectedDate.Date);
             var fullDay = new ObservableCollection<Slot>();
 
             var start = SelectedDate.Date.AddHours(8);

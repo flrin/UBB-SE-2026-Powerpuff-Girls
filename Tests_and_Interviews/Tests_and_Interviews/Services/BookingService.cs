@@ -15,18 +15,22 @@ namespace Tests_and_Interviews.Services
             _slotRepo = new SlotRepository();
         }
 
+
         public List<Slot> GetAvailableSlots(int recruiterId, DateTime date)
         {
             return _slotRepo
                 .GetSlots(recruiterId, date)
-                .Where(s => s.IsAvailable)
+                .Where(s => s.Status == SlotStatus.Free)
+                .OrderBy(s => s.StartTime)
                 .ToList();
         }
-
-
-        public List<Slot> getAvailableSlots(int recruiterId, DateTime date)
+        public List<Slot> GetAllAvailableSlots(int recruiterId)
         {
-            return GetAvailableSlots(recruiterId, date);
+            return _slotRepo
+                .GetAllSlots(recruiterId)
+                .Where(s => s.Status == SlotStatus.Free)
+                .OrderBy(s => s.StartTime)
+                .ToList();
         }
 
         public void ConfirmBooking(int candidateId, int slotId)
@@ -36,22 +40,13 @@ namespace Tests_and_Interviews.Services
             if (slot == null)
                 throw new Exception("Slot not found");
 
-            if (!slot.IsAvailable)
+            if (slot.Status != SlotStatus.Free)
                 throw new Exception("This slot is no longer available");
 
-            slot.Lock(candidateId);
+            slot.Status = SlotStatus.Occupied;
+            slot.CandidateId = candidateId;
+
             _slotRepo.Update(slot);
-        }
-        public List<Slot> GetAllAvailableSlots(int recruiterId)
-        {
-            return _slotRepo
-                .GetAllSlots(recruiterId)
-                .Where(s => s.IsAvailable)
-                .ToList();
-        }
-        public void confirmBooking(int candidateId, int slotId)
-        {
-            ConfirmBooking(candidateId, slotId);
         }
     }
 }

@@ -173,21 +173,7 @@ namespace Tests_and_Interviews.ViewModels
                 }
             });
 
-            var repo = new SlotRepository();
-
-            repo.Add(new Slot { Id = 1, RecruiterId = 1, StartTime = DateTime.Today.AddHours(10), EndTime = DateTime.Today.AddHours(10).AddMinutes(45), Duration = 45, Status = SlotStatus.Free });
-            repo.Add(new Slot { Id = 2, RecruiterId = 1, StartTime = DateTime.Today.AddHours(11), EndTime = DateTime.Today.AddHours(11).AddMinutes(45), Duration = 45, Status = SlotStatus.Free });
-            repo.Add(new Slot { Id = 3, RecruiterId = 1, StartTime = DateTime.Today.AddHours(12), EndTime = DateTime.Today.AddHours(12).AddMinutes(45), Duration = 45, Status = SlotStatus.Free });
-       
-            repo.Add(new Slot { Id = 4, RecruiterId = 1, StartTime = DateTime.Today.AddDays(1).AddHours(10), EndTime = DateTime.Today.AddDays(1).AddHours(10).AddMinutes(45), Duration = 45, Status = SlotStatus.Free });
-            repo.Add(new Slot { Id = 5, RecruiterId = 1, StartTime = DateTime.Today.AddDays(1).AddHours(11), EndTime = DateTime.Today.AddDays(1).AddHours(11).AddMinutes(45), Duration = 45, Status = SlotStatus.Free });
-
-            repo.Add(new Slot { Id = 6, RecruiterId = 2, StartTime = DateTime.Today.AddHours(13), EndTime = DateTime.Today.AddHours(13).AddMinutes(45), Duration = 45, Status = SlotStatus.Free });
-            repo.Add(new Slot { Id = 7, RecruiterId = 2, StartTime = DateTime.Today.AddHours(14), EndTime = DateTime.Today.AddHours(14).AddMinutes(45), Duration = 45, Status = SlotStatus.Free });
             
-            repo.Add(new Slot { Id = 8, RecruiterId = 2, StartTime = DateTime.Today.AddDays(1).AddHours(15), EndTime = DateTime.Today.AddDays(1).AddHours(15).AddMinutes(45), Duration = 45, Status = SlotStatus.Free });
-            repo.Add(new Slot { Id = 9, RecruiterId = 2, StartTime = DateTime.Today.AddDays(1).AddHours(16), EndTime = DateTime.Today.AddDays(1).AddHours(16).AddMinutes(45), Duration = 45, Status = SlotStatus.Free });
-
             MatchedCompanies = new ObservableCollection<Company>
             {
                 new Company { CompanyName = "Google", JobTitle = "Frontend Dev", RecruiterId = 1 },
@@ -224,7 +210,7 @@ namespace Tests_and_Interviews.ViewModels
             if (SelectedSlot == null) 
                 return;
 
-            _bookingService.confirmBooking(1, SelectedSlot.Id);
+            _bookingService.ConfirmBooking(1, SelectedSlot.Id);
             MatchedCompanies.Remove(SelectedCompany);
             IsBookingVisible = false;
         }

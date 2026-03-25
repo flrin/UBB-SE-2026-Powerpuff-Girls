@@ -54,12 +54,11 @@ namespace Tests_and_Interviews.Views
                     var repo = new SlotRepository();
                     repo.Add(new Slot
                     {
-                        Id = new Random().Next(1000, 9999),
                         RecruiterId = 1,
                         StartTime = slot.StartTime,
                         EndTime = slot.StartTime.AddMinutes(duration),
                         Duration = duration,
-                        Status = SlotStatus.Booked,
+                        Status = SlotStatus.Free, 
                         InterviewType = "Available"
                     });
 
@@ -68,5 +67,4 @@ namespace Tests_and_Interviews.Views
             }
         }
     }
-    
 }
