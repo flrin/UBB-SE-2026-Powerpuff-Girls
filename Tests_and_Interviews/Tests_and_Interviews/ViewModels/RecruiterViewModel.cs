@@ -11,8 +11,7 @@ namespace Tests_and_Interviews.ViewModels
     public class RecruiterViewModel : INotifyPropertyChanged
     {
         private readonly SlotRepository _repo;
-
-        private ObservableCollection<Slot> _slots = new();
+        private ObservableCollection<Slot> _slots = new ObservableCollection<Slot>();
         private DateTime _selectedDate = DateTime.Today;
 
         public event PropertyChangedEventHandler? PropertyChanged;

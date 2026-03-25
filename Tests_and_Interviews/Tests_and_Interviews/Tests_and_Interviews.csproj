@@ -18,7 +18,10 @@
 	<ItemGroup>
 		<None Remove="MainWindow.xaml" />
 		<None Remove="Views\InterviewCandidatePage.xaml" />
+		<None Remove="Views\LeaderboardPage.xaml" />
 		<None Remove="Views\MainTestPage.xaml" />
+		<None Remove="Views\RecruiterLeaderboardPage.xaml" />
+		<None Remove="Views\RecruiterTestsPage.xaml" />
 		<None Remove="Views\TestPage.xaml" />
     <None Remove="Views\InterviewInterviewerPage.xaml" />
 	</ItemGroup>
@@ -46,6 +49,10 @@
 		<Page Include="MainWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+		<Page Include="Views\LeaderboardPage.xaml" />
+		<Page Include="Views\RecruiterLeaderboardPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
     <Page Include="Views\InterviewInterviewerPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -60,6 +67,9 @@
 		</Page>
 		<Page Include="Views\MainTestPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Include="Views\RecruiterTestsPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Include="Views\TestPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>

@@ -48,5 +48,10 @@ namespace Tests_and_Interviews.Services
 
             _slotRepo.Update(slot);
         }
+
+        public void confirmBooking(int candidateId, int slotId)
+        {
+            ConfirmBooking(candidateId, slotId);
+        }
     }
 }
