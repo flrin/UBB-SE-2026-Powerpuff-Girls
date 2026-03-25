@@ -53,7 +53,7 @@ namespace Tests_and_Interviews.ViewModels
             var fullDay = new ObservableCollection<Slot>();
 
             Slots = new ObservableCollection<Slot>(
-                existingSlots.OrderBy(s => s.StartTime)
+                existing.OrderBy(s => s.StartTime)
             );
         }
 

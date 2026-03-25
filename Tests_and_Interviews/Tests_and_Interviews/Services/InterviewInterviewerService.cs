@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models;
+using Tests_and_Interviews.Models.Core;
 using Windows.Storage;
 using System.IO;
 
@@ -57,7 +58,7 @@ namespace Tests_and_Interviews.Services
 
         public async void SubmitScore(float score) 
         {
-            _interviewSession.Score = score;
+            _interviewSession.Score = (decimal)score;
             _interviewSession.Status = InterviewSessionStatus.REVIEWED;
             await _dbContext.UpdateInterviewSessionAsync(_interviewSession);
         }

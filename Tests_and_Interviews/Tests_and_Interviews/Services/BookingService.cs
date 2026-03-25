@@ -48,9 +48,7 @@ namespace Tests_and_Interviews.Services
 
             _slotRepo.Update(slot);
         }
-                .Where(s => s.IsAvailable)
-                .ToList();
-        }
+
         public void confirmBooking(int candidateId, int slotId)
         {
             ConfirmBooking(candidateId, slotId);
