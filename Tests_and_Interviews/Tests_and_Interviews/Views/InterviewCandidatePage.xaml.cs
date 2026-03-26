@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Tests_and_Interviews.ViewModels;
+using Tests_and_Interviews.Models.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media.Capture;
@@ -29,14 +30,35 @@ namespace Tests_and_Interviews.Views
     /// </summary>
     public sealed partial class InterviewCandidatePage : Page
     {
+        // Optional callback invoked when the page is closed so callers can react (e.g., refresh lists)
+        public Action? OnClosed { get; set; }
+
+        // Optional interview session passed in when opening the page
+        public InterviewSession? InterviewSession { get; set; }
+
         private MediaCapture _mediaCapture = new MediaCapture();
         public InterviewCandidateViewModel ViewModel { get; }
         private bool _isRecording = false;
         private StorageFile _recordingFile;
+
         public InterviewCandidatePage()
         {
             InitializeComponent();
             ViewModel = new InterviewCandidateViewModel();
+            DataContext = ViewModel;
+            StopVideoButton.IsEnabled = false;
+            SubmitVideoButton.IsEnabled = false;
+            NextQuestionButton.IsEnabled = false;
+            RecordingBorder.BorderThickness = new Thickness(0);
+            StartCamera();
+        }
+
+        public InterviewCandidatePage(InterviewSession session)
+        {
+            InterviewSession = session;
+            ViewModel = new InterviewCandidateViewModel(session.Id);
+            InitializeComponent();
+            DataContext = ViewModel;
             StopVideoButton.IsEnabled = false;
             SubmitVideoButton.IsEnabled = false;
             NextQuestionButton.IsEnabled = false;
@@ -123,7 +145,20 @@ namespace Tests_and_Interviews.Views
             _mediaCapture?.Dispose();
             _mediaCapture = null;
 
-            if (this.Frame.CanGoBack)
+            // Invoke optional OnClosed callback so the opener can refresh data
+            try { OnClosed?.Invoke(); } catch { }
+
+            if (this.Tag is Window hostWindow)
+            {
+                try
+                {
+                    hostWindow.Close();
+                    return;
+                }
+                catch { }
+            }
+
+            if (this.Frame != null && this.Frame.CanGoBack)
             {
                 this.Frame.GoBack();
             }

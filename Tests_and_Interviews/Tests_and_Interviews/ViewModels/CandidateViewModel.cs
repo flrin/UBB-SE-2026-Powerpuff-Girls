@@ -6,11 +6,15 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Tests_and_Interviews.Helpers;
+using Microsoft.UI.Xaml;
+using Tests_and_Interviews.Views;
 using Tests_and_Interviews.Services;
+using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews;
 using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Models;
+using System.Security.Cryptography;
 
 namespace Tests_and_Interviews.ViewModels
 {
@@ -26,6 +30,7 @@ namespace Tests_and_Interviews.ViewModels
         private DateTime _selectedDay;
         private int _dayStartIndex = 0;
         private bool _isBookingVisible;
+        private System.Collections.ObjectModel.ObservableCollection<InterviewSession> _interviewSessions;
 
         public ICommand LoadSlotsCommand { get; }
         public ICommand ScheduleCommand { get; }
@@ -34,6 +39,8 @@ namespace Tests_and_Interviews.ViewModels
         public ICommand ConfirmCommand { get; }
         public ICommand NextDaysCommand { get; }
         public ICommand PrevDaysCommand { get; }
+        public ICommand JoinCommand { get; }
+        public ICommand CancelCommand { get; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -47,6 +54,8 @@ namespace Tests_and_Interviews.ViewModels
             _notificationService = new NotificationService();
             LoadSlotsCommand = new RelayCommand(_ => LoadSlots());
             ScheduleCommand = new RelayCommand((obj) => Schedule((Company)obj));
+            JoinCommand = new RelayCommand((obj) => Join(obj));
+            CancelCommand = new RelayCommand((obj) => Cancel(obj));
 
             SelectDayCommand = new RelayCommand((obj) =>
             {
@@ -95,12 +104,41 @@ namespace Tests_and_Interviews.ViewModels
                 }
             });
 
-            // initial sample data
             MatchedCompanies = new ObservableCollection<Company>
             {
                 new Company { CompanyName = "Google", JobTitle = "Frontend Dev", RecruiterId = 1 },
                 new Company { CompanyName = "Amazon", JobTitle = "Backend Dev", RecruiterId = 2 }
             };
+
+            LoadInterviewSessions();
+        }
+
+        public System.Collections.ObjectModel.ObservableCollection<InterviewSession> InterviewSessions
+        {
+            get => _interviewSessions;
+            set
+            {
+                if (_interviewSessions != value)
+                {
+                    _interviewSessions = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public void LoadInterviewSessions()
+        {
+            InterviewSessions = new System.Collections.ObjectModel.ObservableCollection<InterviewSession>();
+            try
+            {
+                using (var db = new AppDbContext())
+                {
+                    var sessions = db.InterviewSessions.ToList().Where(interviewSession => interviewSession.Status == InterviewStatus.Scheduled.ToString());
+                    foreach (var s in sessions)
+                        InterviewSessions.Add(s);
+                }
+            }
+            catch { }
         }
 
         public List<Slot> AvailableSlots
@@ -212,7 +250,8 @@ namespace Tests_and_Interviews.ViewModels
             if (SelectedSlot == null)
                 return;
 
-            _bookingService.ConfirmBooking(1, SelectedSlot.Id);
+            _bookingService.ConfirmBooking(1, SelectedSlot);
+            LoadInterviewSessions();
             try
             {
                 _notificationService.ShowBookingConfirmed(SelectedCompany.CompanyName, SelectedCompany.JobTitle, SelectedSlot.StartTime, SelectedSlot.EndTime);
@@ -220,6 +259,45 @@ namespace Tests_and_Interviews.ViewModels
             catch { }
             MatchedCompanies.Remove(SelectedCompany);
             IsBookingVisible = false;
+        }
+
+        private void Join(object obj)
+        {
+            try
+            {
+                // Open InterviewCandidatePage in a new Window
+                var page = new InterviewCandidatePage((InterviewSession)obj);
+                var window = new Window();
+                page.Tag = window; // so the page can close its host window later
+                // Refresh interview sessions when the interview page is closed
+                page.OnClosed = LoadInterviewSessions;
+                window.Content = page;
+                window.Activate();
+            }
+            catch { }
+        }
+
+        private void Cancel(object obj)
+        {
+            if (obj is InterviewSession session)
+            {
+                try
+                {
+                    using (var db = new AppDbContext())
+                    {
+                        var existing = db.InterviewSessions.FirstOrDefault(s => s.Id == session.Id);
+                        if (existing != null)
+                        {
+                            existing.Status = "Cancelled";
+                            db.SaveChanges();
+                        }
+                    }
+
+                    // Refresh local collection
+                    LoadInterviewSessions();
+                }
+                catch { }
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Tests_and_Interviews.Models;
+using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.Services
@@ -9,10 +10,12 @@ namespace Tests_and_Interviews.Services
     public class BookingService
     {
         private readonly SlotRepository _slotRepo;
+        private readonly AppDbContext _dbContext;
 
         public BookingService()
         {
             _slotRepo = new SlotRepository();
+            _dbContext = new AppDbContext();
         }
 
 
@@ -33,10 +36,8 @@ namespace Tests_and_Interviews.Services
                 .ToList();
         }
 
-        public void ConfirmBooking(int candidateId, int slotId)
+        public void ConfirmBooking(int candidateId, Slot slot)
         {
-            var slot = _slotRepo.GetById(slotId);
-
             if (slot == null)
                 throw new Exception("Slot not found");
 
@@ -47,11 +48,26 @@ namespace Tests_and_Interviews.Services
             slot.CandidateId = candidateId;
 
             _slotRepo.Update(slot);
+
+            InterviewSession newInterviewSession = new InterviewSession
+            {
+                SessionId = slot.Id,
+                PositionId = 0, // This should be set based on the actual position being applied for
+                ExternalUserId = candidateId,
+                InterviewerId = slot.RecruiterId,
+                DateStart = slot.StartTime.ToUniversalTime(),
+                Video = "",
+                Status = "Scheduled",
+                Score = 0
+            };
+
+            _dbContext.InterviewSessions.Add(newInterviewSession);
+            _dbContext.SaveChanges();
         }
 
-        public void confirmBooking(int candidateId, int slotId)
+        public void confirmBooking(int candidateId, Slot slot)
         {
-            ConfirmBooking(candidateId, slotId);
+            ConfirmBooking(candidateId, slot);
         }
     }
 }

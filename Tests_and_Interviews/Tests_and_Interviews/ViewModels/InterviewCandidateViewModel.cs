@@ -11,6 +11,9 @@ using Tests_and_Interviews.Helpers;
 using Windows.Graphics.Printing.PrintTicket;
 
 using Tests_and_Interviews.Services;
+using Tests_and_Interviews.Models.Core;
+
+using System.Diagnostics;
 
 namespace Tests_and_Interviews.ViewModels
 {
@@ -22,46 +25,105 @@ namespace Tests_and_Interviews.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public InterviewCandidateService Service { get; }
         private string _questionText;
         private string _recordingFilePath;
+        private List<Question> _questions = new List<Question>();
+        private int _currentQuestionIndex = 0;
+        private InterviewSession _session;
+        private AppDbContext _dbContext;
 
-        public string RecordingFilePath{ get; set; }
+        public string RecordingFilePath { get; set; }
 
         public ICommand NextQuestionCommand;
         public ICommand SubmitRecordingCommand;
 
-        public InterviewCandidateViewModel() {
-            Service = new InterviewCandidateService();
+        public InterviewCandidateViewModel()
+        {
+            _dbContext = new AppDbContext();
             _questionText = "Questions will start after starting recording";
             NextQuestionCommand = new RelayCommand(NextQuestion);
             SubmitRecordingCommand = new RelayCommand(SubmitRecording);
+            // default initialize with session id 1 to keep previous behavior
+            _ = InitializeAsync(1);
         }
 
-        private void NextQuestion() {
-            QuestionText = Service.GetNextQuestion();
+        public InterviewCandidateViewModel(int interviewSessionId)
+        {
+            _dbContext = new AppDbContext();
+            _questionText = "Questions will start after starting recording";
+            NextQuestionCommand = new RelayCommand(NextQuestion);
+            SubmitRecordingCommand = new RelayCommand(SubmitRecording);
+            _ = InitializeAsync(interviewSessionId);
+        }
+
+        private async Task InitializeAsync(int interviewSessionId)
+        {
+            try
+            {
+                _session = await _dbContext.GetInterviewSessionByIdAsync(interviewSessionId);
+                if (_session != null)
+                {
+                    _session.DateStart = DateTime.UtcNow;
+                    _session.Status = InterviewSessionStatus.RECORDING;
+                    await _dbContext.UpdateInterviewSessionAsync(_session);
+
+                    _questions = await _dbContext.GetInterviewQuestionsByPositionAsync(_session.PositionId);
+                    _currentQuestionIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"InterviewCandidateViewModel.InitializeAsync failed: {ex.Message}");
+            }
+        }
+
+        private void NextQuestion()
+        {
+            QuestionText = GetNextQuestion();
         }
 
         public void StartQuestions()
         {
-            QuestionText = Service.GetNextQuestion();
+            QuestionText = GetNextQuestion();
         }
 
         public void ResetQuestions()
         {
-            Service.ResetQuestions() ;
+            _currentQuestionIndex = 0;
             QuestionText = "Questions will start after starting recording";
         }
 
-        private void SubmitRecording()
+        private string GetNextQuestion()
         {
-            Service.SubmitRecording(RecordingFilePath);
+            if (_questions == null || _currentQuestionIndex >= _questions.Count)
+            {
+                return "Congratulation! You finnished all the questions. You may stop and submit the recording now.";
+            }
+            return _questions[_currentQuestionIndex++].QuestionText;
+        }
+
+        private async void SubmitRecording()
+        {
+            if (_session == null) return;
+            try
+            {
+                _session.Video = RecordingFilePath;
+                _session.Status = InterviewSessionStatus.SUBMITTED;
+                await _dbContext.UpdateInterviewSessionAsync(_session);
+                try
+                {
+                    var notif = new NotificationService();
+                    notif.ShowSimpleNotification("Video uploaded", "Your interview video was uploaded successfully.");
+                }
+                catch { }
+            }
+            catch { }
         }
 
         public string QuestionText
         {
             get { return _questionText; }
-            set 
+            set
             {
                 if (_questionText != value)
                 {
@@ -69,7 +131,7 @@ namespace Tests_and_Interviews.ViewModels
                     OnPropertyChanged();
                 }
             }
-        } 
+        }
 
     }
 }
