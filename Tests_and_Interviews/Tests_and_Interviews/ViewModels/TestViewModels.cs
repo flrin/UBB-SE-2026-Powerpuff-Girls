@@ -91,11 +91,12 @@ namespace Tests_and_Interviews.ViewModels
         public Visibility NoTestsVisible =>
             (!IsLoading && Tests.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
 
-        private readonly AppDbContext _db;
+        private readonly TestRepository _testRepo;
 
+        // Injected TestRepository instead of initializing AppDbContext
         public MainTestViewModel()
         {
-            _db = new AppDbContext();
+            _testRepo = new TestRepository();
         }
 
         public async Task LoadTestsAsync()
@@ -103,17 +104,19 @@ namespace Tests_and_Interviews.ViewModels
             IsLoading = true;
             Tests.Clear();
 
-            var repo = new TestRepository(_db);
-
             var categories = new List<string> { "Programming", "Database", "Computer Science" };
 
             foreach (var cat in categories)
             {
-                var tests = await repo.FindTestsByCategoryAsync(cat);
+                // Replaced creating a new repo instance with the injected one
+                var tests = await _testRepo.FindTestsByCategoryAsync(cat);
+
                 foreach (var t in tests)
                 {
                     string typeLabel = "MIXED";
-                    if (t.Questions.Count > 0)
+
+                    // Added a null check for t.Questions just to be safe with the ADO.NET mapping
+                    if (t.Questions != null && t.Questions.Count > 0)
                         typeLabel = t.Questions[0].QuestionTypeString.Replace("_", "/");
 
                     Tests.Add(new TestCardViewModel

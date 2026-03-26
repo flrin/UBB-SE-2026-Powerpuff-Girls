@@ -113,9 +113,8 @@ namespace Tests_and_Interviews.Views
 
         private async System.Threading.Tasks.Task ShowSummaryLeaderboardDialogAsync()
         {
-            using var db = new AppDbContext();
-            var leaderboardRepo = new LeaderboardRepository(db);
-            var leaderboardService = new LeaderboardService(db, leaderboardRepo);
+            var leaderboardRepo = new LeaderboardRepository();
+            var leaderboardService = new LeaderboardService();
 
             var topThree = await leaderboardService.GetTopThreeAsync(ViewModel.TestId);
             var currentUserEntry = await leaderboardService.GetUserRankingAsync(App.CurrentUserId, ViewModel.TestId);

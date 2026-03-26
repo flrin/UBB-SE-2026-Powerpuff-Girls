@@ -4,6 +4,7 @@ using System.Linq;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Tests_and_Interviews.Models;
 using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Repositories;
@@ -15,7 +16,9 @@ namespace Tests_and_Interviews.ViewModels
 {
     public class RecruiterViewModel : INotifyPropertyChanged
     {
-        private readonly SlotRepository _repo;
+        private readonly SlotRepository _slotRepo;
+        private readonly InterviewSessionRepository _sessionRepo;
+
         private ObservableCollection<Slot> _slots = new ObservableCollection<Slot>();
         private DateTime _selectedDate = DateTime.Today;
         private ObservableCollection<InterviewSession> _pendingReviews = new ObservableCollection<InterviewSession>();
@@ -24,9 +27,16 @@ namespace Tests_and_Interviews.ViewModels
 
         public RecruiterViewModel()
         {
-            _repo = new SlotRepository();
-            LoadSlots();
-            LoadPendingReviews();
+            _slotRepo = new SlotRepository();
+            _sessionRepo = new InterviewSessionRepository();
+
+            _ = InitializeDataAsync();
+        }
+
+        private async Task InitializeDataAsync()
+        {
+            await LoadSlotsAsync();
+            await LoadPendingReviewsAsync();
         }
 
         public DateTime SelectedDate
@@ -34,10 +44,14 @@ namespace Tests_and_Interviews.ViewModels
             get => _selectedDate;
             set
             {
-                _selectedDate = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(SelectedDateFormatted));
-                LoadSlots();
+                if (_selectedDate != value)
+                {
+                    _selectedDate = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedDateFormatted));
+
+                    _ = LoadSlotsAsync();
+                }
             }
         }
 
@@ -64,16 +78,11 @@ namespace Tests_and_Interviews.ViewModels
             }
         }
 
-        public void LoadPendingReviews()
+        public async Task LoadPendingReviewsAsync()
         {
             try
             {
-                using var db = new AppDbContext();
-                var list = db.InterviewSessions
-                    .Where(s => s.Status == InterviewStatus.InProgress.ToString())
-                    .OrderByDescending(s => s.DateStart)
-                    .ToList();
-
+                var list = await _sessionRepo.GetSessionsByStatusAsync(InterviewStatus.InProgress.ToString());
                 PendingReviews = new ObservableCollection<InterviewSession>(list);
             }
             catch
@@ -82,9 +91,14 @@ namespace Tests_and_Interviews.ViewModels
             }
         }
 
-        public void LoadSlots()
+        public void LoadPendingReviews()
         {
-            var existing = _repo.GetSlots(1, SelectedDate.Date);
+            LoadPendingReviewsAsync();
+        }
+
+        public async Task LoadSlotsAsync()
+        {
+            var existing = await _slotRepo.GetSlotsAsync(1, SelectedDate.Date);
             var fullDay = new ObservableCollection<Slot>();
 
             var start = SelectedDate.Date.AddHours(8);
@@ -126,6 +140,11 @@ namespace Tests_and_Interviews.ViewModels
             }
 
             Slots = new ObservableCollection<Slot>(fullDay.Where(s => !s.IsHidden));
+        }
+
+        public void LoadSlots()
+        {
+            LoadSlotsAsync();
         }
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)

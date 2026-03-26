@@ -14,6 +14,8 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 
 using Tests_and_Interviews.ViewModels;
+using Tests_and_Interviews.Services;
+using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.Views
 {

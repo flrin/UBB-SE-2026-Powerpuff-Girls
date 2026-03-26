@@ -31,9 +31,8 @@ namespace Tests_and_Interviews.Views
             {
                 _testId = testId;
 
-                using var db = new AppDbContext();
-                var repo = new LeaderboardRepository(db);
-                var service = new LeaderboardService(db, repo);
+                var repo = new LeaderboardRepository();
+                var service = new LeaderboardService();
 
                 _entries = await service.GetFullLeaderboardAsync(testId);
                 RenderPage();

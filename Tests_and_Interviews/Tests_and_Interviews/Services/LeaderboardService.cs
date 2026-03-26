@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Repositories;
@@ -10,28 +8,20 @@ namespace Tests_and_Interviews.Services
 {
     public class LeaderboardService
     {
-        private readonly AppDbContext _db;
+        private readonly TestAttemptRepository _testAttemptRepository;
         private readonly LeaderboardRepository _leaderboardRepository;
 
-        public LeaderboardService(AppDbContext db, LeaderboardRepository leaderboardRepository)
+        // Injected TestAttemptRepository instead of AppDbContext
+        public LeaderboardService()
         {
-            _db = db;
-            _leaderboardRepository = leaderboardRepository;
+            _testAttemptRepository = new TestAttemptRepository();
+            _leaderboardRepository = new LeaderboardRepository();
         }
 
         public async Task RecalculateLeaderboardAsync(int testId)
         {
-            var attempts = await _db.TestAttempts
-                .Include(a => a.User)
-                .Where(a =>
-                    a.TestId == testId &&
-                    a.Status == "COMPLETED" &&
-                    a.IsValidated &&
-                    a.PercentageScore != null &&
-                    a.CompletedAt != null)
-                .OrderByDescending(a => a.PercentageScore)
-                .ThenBy(a => a.CompletedAt)
-                .ToListAsync();
+            // Replaced _db.TestAttempts query with repository call
+            var attempts = await _testAttemptRepository.FindValidAttemptsByTestIdAsync(testId);
 
             await _leaderboardRepository.DeleteByTestIdAsync(testId);
 
@@ -44,7 +34,8 @@ namespace Tests_and_Interviews.Services
                 entries.Add(new LeaderboardEntry
                 {
                     TestId = attempt.TestId,
-                    UserId = attempt.ExternalUserId,
+                    // Note: Ensure your external user ID is not null here since it passed the validation filters
+                    UserId = attempt.ExternalUserId.Value,
                     NormalizedScore = attempt.PercentageScore!.Value,
                     RankPosition = i + 1,
                     TieBreakPriority = i + 1,

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tests_and_Interviews.Models.Core
 {
-    [Table("leaderboard_entries")]
+    [Table("LeaderboardEntries")]
     public class LeaderboardEntry
     {
         [Key]

@@ -5,23 +5,24 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Microsoft.UI.Xaml;
 using Tests_and_Interviews.Views;
 using Tests_and_Interviews.Services;
 using Tests_and_Interviews.Models.Core;
-using Tests_and_Interviews.Models.Core;
-using Tests_and_Interviews;
 using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Models;
-using System.Security.Cryptography;
+using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.ViewModels
 {
     public class CandidateViewModel : INotifyPropertyChanged
     {
         private readonly BookingService _bookingService;
+        private readonly InterviewSessionRepository _interviewSessionRepo;
         private readonly NotificationService _notificationService;
+
         private List<Slot> _availableSlots;
         private List<Slot> _availableDays;
         private ObservableCollection<Company> _matchedCompanies;
@@ -30,7 +31,7 @@ namespace Tests_and_Interviews.ViewModels
         private DateTime _selectedDay;
         private int _dayStartIndex = 0;
         private bool _isBookingVisible;
-        private System.Collections.ObjectModel.ObservableCollection<InterviewSession> _interviewSessions;
+        private ObservableCollection<InterviewSession> _interviewSessions;
 
         public ICommand LoadSlotsCommand { get; }
         public ICommand ScheduleCommand { get; }
@@ -48,14 +49,17 @@ namespace Tests_and_Interviews.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        // Use Dependency Injection to provide the required services
         public CandidateViewModel()
         {
             _bookingService = new BookingService();
+            _interviewSessionRepo = new InterviewSessionRepository();
             _notificationService = new NotificationService();
+
             LoadSlotsCommand = new RelayCommand(_ => LoadSlots());
             ScheduleCommand = new RelayCommand((obj) => Schedule((Company)obj));
             JoinCommand = new RelayCommand((obj) => Join(obj));
-            CancelCommand = new RelayCommand((obj) => Cancel(obj));
+            CancelCommand = new RelayCommand(Cancel);
 
             SelectDayCommand = new RelayCommand((obj) =>
             {
@@ -110,10 +114,11 @@ namespace Tests_and_Interviews.ViewModels
                 new Company { CompanyName = "Amazon", JobTitle = "Backend Dev", RecruiterId = 2 }
             };
 
-            LoadInterviewSessions();
+            // Fire and forget the initial load
+            _ = LoadInterviewSessionsAsync();
         }
 
-        public System.Collections.ObjectModel.ObservableCollection<InterviewSession> InterviewSessions
+        public ObservableCollection<InterviewSession> InterviewSessions
         {
             get => _interviewSessions;
             set
@@ -126,19 +131,23 @@ namespace Tests_and_Interviews.ViewModels
             }
         }
 
-        public void LoadInterviewSessions()
+        public async Task LoadInterviewSessionsAsync()
         {
-            InterviewSessions = new System.Collections.ObjectModel.ObservableCollection<InterviewSession>();
+            InterviewSessions = new ObservableCollection<InterviewSession>();
             try
             {
-                using (var db = new AppDbContext())
+                // Fetch scheduled sessions using the ADO.NET repository
+                var sessions = await _interviewSessionRepo.GetScheduledSessionsAsync();
+
+                foreach (var s in sessions)
                 {
-                    var sessions = db.InterviewSessions.ToList().Where(interviewSession => interviewSession.Status == InterviewStatus.Scheduled.ToString());
-                    foreach (var s in sessions)
-                        InterviewSessions.Add(s);
+                    InterviewSessions.Add(s);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load sessions: {ex.Message}");
+            }
         }
 
         public List<Slot> AvailableSlots
@@ -212,7 +221,6 @@ namespace Tests_and_Interviews.ViewModels
 
         private void LoadSlots()
         {
-            // Populate matched companies or load from a service if available
             MatchedCompanies = new ObservableCollection<Company>
             {
                 new Company { CompanyName = "Google", JobTitle = "Frontend Dev", RecruiterId = 1 },
@@ -245,18 +253,21 @@ namespace Tests_and_Interviews.ViewModels
                 .ToList();
         }
 
-        private void ConfirmBooking(object obj)
+        private async void ConfirmBooking(object obj)
         {
             if (SelectedSlot == null)
                 return;
 
             _bookingService.ConfirmBooking(1, SelectedSlot);
-            LoadInterviewSessions();
+
+            await LoadInterviewSessionsAsync();
+
             try
             {
                 _notificationService.ShowBookingConfirmed(SelectedCompany.CompanyName, SelectedCompany.JobTitle, SelectedSlot.StartTime, SelectedSlot.EndTime);
             }
             catch { }
+
             MatchedCompanies.Remove(SelectedCompany);
             IsBookingVisible = false;
         }
@@ -265,38 +276,39 @@ namespace Tests_and_Interviews.ViewModels
         {
             try
             {
-                // Open InterviewCandidatePage in a new Window
                 var page = new InterviewCandidatePage((InterviewSession)obj);
                 var window = new Window();
-                page.Tag = window; // so the page can close its host window later
-                // Refresh interview sessions when the interview page is closed
-                page.OnClosed = LoadInterviewSessions;
+                page.Tag = window;
+
+                // Wrap the async load method to match the Action signature
+                page.OnClosed = () => _ = LoadInterviewSessionsAsync();
+
                 window.Content = page;
                 window.Activate();
             }
             catch { }
         }
 
-        private void Cancel(object obj)
+        private async void Cancel(object obj)
         {
             if (obj is InterviewSession session)
             {
                 try
                 {
-                    using (var db = new AppDbContext())
+                    // Fetch existing, update status, and save via ADO.NET repo
+                    var existing = await _interviewSessionRepo.GetInterviewSessionByIdAsync(session.Id);
+                    if (existing != null)
                     {
-                        var existing = db.InterviewSessions.FirstOrDefault(s => s.Id == session.Id);
-                        if (existing != null)
-                        {
-                            existing.Status = "Cancelled";
-                            db.SaveChanges();
-                        }
+                        existing.Status = "Cancelled";
+                        await _interviewSessionRepo.UpdateInterviewSessionAsync(existing);
                     }
 
-                    // Refresh local collection
-                    LoadInterviewSessions();
+                    await LoadInterviewSessionsAsync();
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Cancellation failed: {ex.Message}");
+                }
             }
         }
     }

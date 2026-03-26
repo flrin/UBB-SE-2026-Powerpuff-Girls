@@ -10,14 +10,14 @@ namespace Tests_and_Interviews.Services
     public class BookingService
     {
         private readonly SlotRepository _slotRepo;
-        private readonly AppDbContext _dbContext;
+        private readonly InterviewSessionRepository _interviewRepo;
 
+        // Use dependency injection to pass your configured repositories
         public BookingService()
         {
             _slotRepo = new SlotRepository();
-            _dbContext = new AppDbContext();
+            _interviewRepo = new InterviewSessionRepository();
         }
-
 
         public List<Slot> GetAvailableSlots(int recruiterId, DateTime date)
         {
@@ -27,6 +27,7 @@ namespace Tests_and_Interviews.Services
                 .OrderBy(s => s.StartTime)
                 .ToList();
         }
+
         public List<Slot> GetAllAvailableSlots(int recruiterId)
         {
             return _slotRepo
@@ -61,8 +62,7 @@ namespace Tests_and_Interviews.Services
                 Score = 0
             };
 
-            _dbContext.InterviewSessions.Add(newInterviewSession);
-            _dbContext.SaveChanges();
+            _interviewRepo.Add(newInterviewSession);
         }
 
         public void confirmBooking(int candidateId, Slot slot)

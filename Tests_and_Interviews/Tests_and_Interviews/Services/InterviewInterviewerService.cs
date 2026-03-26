@@ -8,37 +8,39 @@ using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models;
 using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Models.Enums;
+using Tests_and_Interviews.Repositories;
 using Windows.Storage;
 
 namespace Tests_and_Interviews.Services
 {
     public class InterviewInterviewerService
     {
-        private AppDbContext _dbContext;
+        private readonly InterviewSessionRepository _interviewSessionRepo;
         private int _interviewSessionId;
         private InterviewSession _interviewSession;
 
-        public InterviewInterviewerService()
+        // Inject the repository via the constructor
+        public InterviewInterviewerService(InterviewSessionRepository interviewSessionRepo)
         {
-            _dbContext = new AppDbContext();
+            _interviewSessionRepo = interviewSessionRepo;
             _interviewSessionId = 1; // this must be passed on by something else
             LoadData();
         }
 
         public void LoadData()
         {
-            _interviewSession = _dbContext.GetInterviewSessionById(_interviewSessionId);
+            _interviewSession = _interviewSessionRepo.GetInterviewSessionById(_interviewSessionId);
         }
 
         public string GetRecordingPath()
         {
-            string videoPath = _interviewSession.Video;
-
-            if (string.IsNullOrWhiteSpace(videoPath))
+            // Null check added here to prevent NullReferenceException if _interviewSession isn't loaded yet
+            if (_interviewSession == null || string.IsNullOrWhiteSpace(_interviewSession.Video))
             {
                 return string.Empty;
             }
 
+            string videoPath = _interviewSession.Video;
             string localFolderPath = ApplicationData.Current.LocalFolder.Path;
 
             if (videoPath.StartsWith(localFolderPath, StringComparison.OrdinalIgnoreCase))
@@ -57,12 +59,12 @@ namespace Tests_and_Interviews.Services
             return videoPath;
         }
 
-        public async void SubmitScore(float score) 
+        public async void SubmitScore(float score)
         {
             _interviewSession.Score = (decimal)score;
             _interviewSession.Status = InterviewStatus.Completed.ToString();
 
-            await _dbContext.UpdateInterviewSessionAsync(_interviewSession);
+            await _interviewSessionRepo.UpdateInterviewSessionAsync(_interviewSession);
             try
             {
                 var notif = new NotificationService();

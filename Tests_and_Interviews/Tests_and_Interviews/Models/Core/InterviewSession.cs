@@ -22,7 +22,7 @@ namespace Tests_and_Interviews.Models.Core
         public int PositionId { get; set; }
 
         [Column("external_user_id")]
-        public int ExternalUserId { get; set; }
+        public int? ExternalUserId { get; set; }
 
         [Column("interviewer_id")]
         public int InterviewerId { get; set; }

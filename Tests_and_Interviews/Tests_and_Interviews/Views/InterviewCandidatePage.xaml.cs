@@ -56,7 +56,7 @@ namespace Tests_and_Interviews.Views
         public InterviewCandidatePage(InterviewSession session)
         {
             InterviewSession = session;
-            ViewModel = new InterviewCandidateViewModel(session.Id);
+            ViewModel = new InterviewCandidateViewModel();
             InitializeComponent();
             DataContext = ViewModel;
             StopVideoButton.IsEnabled = false;

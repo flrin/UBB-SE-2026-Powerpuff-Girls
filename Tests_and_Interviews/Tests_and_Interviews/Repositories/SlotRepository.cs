@@ -1,95 +1,347 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
+using System.Threading.Tasks;
+using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models;
-using Tests_and_Interviews.Services;
 
 namespace Tests_and_Interviews.Repositories
 {
     public class SlotRepository
     {
-        
-        private List<Slot> GetAll()
+        private readonly string _connectionString;
+
+        public SlotRepository()
         {
-            return SlotJsonService.LoadSlots();
+            _connectionString = Env.CONNECTION_STRING;
         }
 
-     
-        private void SaveAll(List<Slot> slots)
+        // --- Asynchronous Methods ---
+
+        public async Task<List<Slot>> GetSlotsAsync(int recruiterId, DateTime date)
         {
-            SlotJsonService.SaveSlots(slots);
+            var slots = new List<Slot>();
+            string query = @"
+                SELECT id, recruiter_id, start_time, end_time 
+                FROM Slots 
+                WHERE recruiter_id = @recruiter_id AND CAST(start_time AS DATE) = CAST(@date AS DATE)
+                ORDER BY start_time";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@recruiter_id", recruiterId);
+                command.Parameters.AddWithValue("@date", date);
+
+                await connection.OpenAsync();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        slots.Add(MapSlot(reader));
+                    }
+                }
+            }
+            return slots;
         }
+
+        public async Task<List<Slot>> GetAllSlotsAsync(int recruiterId)
+        {
+            var slots = new List<Slot>();
+            string query = @"
+                SELECT id, recruiter_id, start_time, end_time 
+                FROM Slots 
+                WHERE recruiter_id = @recruiter_id
+                ORDER BY start_time";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@recruiter_id", recruiterId);
+
+                await connection.OpenAsync();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        slots.Add(MapSlot(reader));
+                    }
+                }
+            }
+            return slots;
+        }
+
+        public async Task<Slot?> GetByIdAsync(int id)
+        {
+            string query = "SELECT id, recruiter_id, start_time, end_time FROM Slots WHERE id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+
+                await connection.OpenAsync();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        return MapSlot(reader);
+                    }
+                }
+            }
+            return null;
+        }
+
+        public async Task AddAsync(Slot slot)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string checkOverlapQuery = @"
+                    SELECT COUNT(1) 
+                    FROM Slots 
+                    WHERE recruiter_id = @recruiter_id 
+                      AND CAST(start_time AS DATE) = CAST(@start_time AS DATE)
+                      AND @start_time < end_time 
+                      AND @end_time > start_time";
+
+                using (var checkCommand = new SqlCommand(checkOverlapQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@recruiter_id", slot.RecruiterId);
+                    checkCommand.Parameters.AddWithValue("@start_time", slot.StartTime);
+                    checkCommand.Parameters.AddWithValue("@end_time", slot.EndTime);
+
+                    int overlapCount = (int)await checkCommand.ExecuteScalarAsync();
+                    if (overlapCount > 0)
+                    {
+                        throw new Exception("Slot overlaps with an existing appointment!");
+                    }
+                }
+
+                string insertQuery = @"
+                    INSERT INTO Slots (recruiter_id, start_time, end_time) 
+                    OUTPUT INSERTED.id 
+                    VALUES (@recruiter_id, @start_time, @end_time)";
+
+                using (var insertCommand = new SqlCommand(insertQuery, connection))
+                {
+                    insertCommand.Parameters.AddWithValue("@recruiter_id", slot.RecruiterId);
+                    insertCommand.Parameters.AddWithValue("@start_time", slot.StartTime);
+                    insertCommand.Parameters.AddWithValue("@end_time", slot.EndTime);
+
+                    slot.Id = (int)await insertCommand.ExecuteScalarAsync();
+                }
+            }
+        }
+
+        public async Task UpdateAsync(Slot slot)
+        {
+            string query = @"
+                UPDATE Slots 
+                SET start_time = @start_time, end_time = @end_time 
+                WHERE id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", slot.Id);
+                command.Parameters.AddWithValue("@start_time", slot.StartTime);
+                command.Parameters.AddWithValue("@end_time", slot.EndTime);
+
+                await connection.OpenAsync();
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("Slot not found");
+                }
+            }
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            string query = "DELETE FROM Slots WHERE id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+
+                await connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+
+        // --- Synchronous Methods ---
 
         public List<Slot> GetSlots(int recruiterId, DateTime date)
         {
-            return GetAll()
-                .Where(s => s.RecruiterId == recruiterId &&
-                            s.StartTime.Date == date.Date)
-                .OrderBy(s => s.StartTime)
-                .ToList();
+            var slots = new List<Slot>();
+            string query = @"
+                SELECT id, recruiter_id, start_time, end_time 
+                FROM Slots 
+                WHERE recruiter_id = @recruiter_id AND CAST(start_time AS DATE) = CAST(@date AS DATE)
+                ORDER BY start_time";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@recruiter_id", recruiterId);
+                command.Parameters.AddWithValue("@date", date);
+
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        slots.Add(MapSlot(reader));
+                    }
+                }
+            }
+            return slots;
         }
 
-      
         public List<Slot> GetAllSlots(int recruiterId)
         {
-            return GetAll()
-                .Where(s => s.RecruiterId == recruiterId)
-                .OrderBy(s => s.StartTime)
-                .ToList();
+            var slots = new List<Slot>();
+            string query = @"
+                SELECT id, recruiter_id, start_time, end_time 
+                FROM Slots 
+                WHERE recruiter_id = @recruiter_id
+                ORDER BY start_time";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@recruiter_id", recruiterId);
+
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        slots.Add(MapSlot(reader));
+                    }
+                }
+            }
+            return slots;
         }
 
-     
         public Slot? GetById(int id)
         {
-            return GetAll().FirstOrDefault(s => s.Id == id);
+            string query = "SELECT id, recruiter_id, start_time, end_time FROM Slots WHERE id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return MapSlot(reader);
+                    }
+                }
+            }
+            return null;
         }
 
-       
         public void Add(Slot slot)
         {
-            var slots = GetAll();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
 
-            bool overlap = slots.Any(s =>
-                s.RecruiterId == slot.RecruiterId &&
-                s.StartTime.Date == slot.StartTime.Date &&
-                slot.StartTime < s.EndTime &&
-                slot.EndTime > s.StartTime
-            );
+                string checkOverlapQuery = @"
+                    SELECT COUNT(1) 
+                    FROM Slots 
+                    WHERE recruiter_id = @recruiter_id 
+                      AND CAST(start_time AS DATE) = CAST(@start_time AS DATE)
+                      AND @start_time < end_time 
+                      AND @end_time > start_time";
 
-            if (overlap)
-                throw new Exception("Slot overlaps!");
+                using (var checkCommand = new SqlCommand(checkOverlapQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@recruiter_id", slot.RecruiterId);
+                    checkCommand.Parameters.AddWithValue("@start_time", slot.StartTime);
+                    checkCommand.Parameters.AddWithValue("@end_time", slot.EndTime);
 
-       
-            slot.Id = slots.Any() ? slots.Max(s => s.Id) + 1 : 1;
+                    int overlapCount = (int)checkCommand.ExecuteScalar();
+                    if (overlapCount > 0)
+                    {
+                        throw new Exception("Slot overlaps with an existing appointment!");
+                    }
+                }
 
-            slots.Add(slot);
-            SaveAll(slots);
+                string insertQuery = @"
+                    INSERT INTO Slots (recruiter_id, start_time, end_time) 
+                    OUTPUT INSERTED.id 
+                    VALUES (@recruiter_id, @start_time, @end_time)";
+
+                using (var insertCommand = new SqlCommand(insertQuery, connection))
+                {
+                    insertCommand.Parameters.AddWithValue("@recruiter_id", slot.RecruiterId);
+                    insertCommand.Parameters.AddWithValue("@start_time", slot.StartTime);
+                    insertCommand.Parameters.AddWithValue("@end_time", slot.EndTime);
+
+                    slot.Id = (int)insertCommand.ExecuteScalar();
+                }
+            }
         }
 
-       
         public void Update(Slot slot)
         {
-            var slots = GetAll();
+            string query = @"
+                UPDATE Slots 
+                SET start_time = @start_time, end_time = @end_time 
+                WHERE id = @id";
 
-            var index = slots.FindIndex(s => s.Id == slot.Id);
-            if (index == -1)
-                throw new Exception("Slot not found");
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", slot.Id);
+                command.Parameters.AddWithValue("@start_time", slot.StartTime);
+                command.Parameters.AddWithValue("@end_time", slot.EndTime);
 
-            slots[index] = slot;
-            SaveAll(slots);
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("Slot not found");
+                }
+            }
         }
 
-     
         public void Delete(int id)
         {
-            var slots = GetAll();
+            string query = "DELETE FROM Slots WHERE id = @id";
 
-            var slot = slots.FirstOrDefault(s => s.Id == id);
-            if (slot != null)
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
             {
-                slots.Remove(slot);
-                SaveAll(slots);
+                command.Parameters.AddWithValue("@id", id);
+
+                connection.Open();
+                command.ExecuteNonQuery();
             }
+        }
+
+        // --- Helper Mapping Method ---
+
+        private Slot MapSlot(SqlDataReader reader)
+        {
+            return new Slot
+            {
+                Id = reader.GetInt32(reader.GetOrdinal("id")),
+                RecruiterId = reader.GetInt32(reader.GetOrdinal("recruiter_id")),
+                StartTime = reader.GetDateTime(reader.GetOrdinal("start_time")),
+                EndTime = reader.GetDateTime(reader.GetOrdinal("end_time"))
+            };
         }
     }
 }

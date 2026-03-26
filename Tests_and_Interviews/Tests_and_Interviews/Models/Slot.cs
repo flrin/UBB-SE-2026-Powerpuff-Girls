@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Tests_and_Interviews.Repositories; 
+using Tests_and_Interviews.Repositories;
+using Tests_and_Interviews.Models;
 
 namespace Tests_and_Interviews.Models
 { 
@@ -47,17 +48,17 @@ namespace Tests_and_Interviews.Models
 
 
 
-public void Lock(int candidateId)
-{
-    if (!IsAvailable)
-        throw new InvalidOperationException("Slot is not available");
+        public void Lock(int candidateId)
+        {
+            if (!IsAvailable)
+                throw new InvalidOperationException("Slot is not available");
 
-    Status = SlotStatus.Occupied;
-    CandidateId = candidateId;
+            Status = SlotStatus.Occupied;
+            CandidateId = candidateId;
 
-    var repo = new SlotRepository();
-    repo.Update(this);
-}
+            var repo = new SlotRepository();
+            repo.Update(this);
+        }
 
 private bool _isSlotSelected;
             public bool IsSlotSelected

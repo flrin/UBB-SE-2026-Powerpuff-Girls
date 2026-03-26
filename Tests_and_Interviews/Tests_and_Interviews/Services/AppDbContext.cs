@@ -8,7 +8,7 @@ using Tests_and_Interviews.Models.Enums;
 
 namespace Tests_and_Interviews.Services
 {
-    public class AppDbContext : DbContext
+    public class AppDbContextt : DbContext
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Test> Tests { get; set; }

@@ -137,34 +137,56 @@ namespace Tests_and_Interviews.ViewModels
 
         public bool AlreadyAttempted { get; private set; } = false;
 
-        private readonly AppDbContext _db;
+        // Repositories & Services
+        private readonly UserRepository _userRepo;
+        private readonly TestRepository _testRepo;
+        private readonly QuestionRepository _questionRepo;
+        private readonly TestAttemptRepository _attemptRepo;
+        private readonly AnswerRepository _answerRepo;
         private readonly TestService _testService;
+        private readonly DataProcessingService _dataProcessingService;
+
         private int _attemptId;
-        public int UserId { get; set; } = 1;
+        public int UserId { get; set; }
         public int TestId { get; set; }
 
+        // Inject all required repositories via constructor
         public TestPageViewModel()
         {
-            _db = new AppDbContext();
-            var attemptRepo = new TestAttemptRepository(_db);
-            var answerRepo = new AnswerRepository(_db);
-            var testRepo = new TestRepository(_db);
-            var grading = new GradingService();
-            var timerSvc = new TimerService(attemptRepo);
-            var validation = new AttemptValidationService(attemptRepo);
-            _testService = new TestService(testRepo, attemptRepo, answerRepo, grading, timerSvc, validation);
+            _userRepo = new UserRepository();
+            _testRepo = new TestRepository();
+            _questionRepo = new QuestionRepository();
+            _attemptRepo = new TestAttemptRepository();
+            _answerRepo = new AnswerRepository();
 
-            var user = _db.Users.FirstOrDefault(u => u.Name == "Alice Johnson");
-            UserId = user?.Id ?? 0;
-            System.Diagnostics.Debug.WriteLine($"[TestPageViewModel] UserId = {UserId}");
+            // Instantiate internal domain services using the injected ADO.NET repositories
+            var grading = new GradingService();
+            var timerSvc = new TimerService(_attemptRepo);
+            var validation = new AttemptValidationService(_attemptRepo);
+
+            _testService = new TestService(_testRepo, _attemptRepo, _answerRepo, grading, timerSvc, validation);
+            _dataProcessingService = new DataProcessingService(_userRepo, _attemptRepo, _testRepo);
         }
 
         public async System.Threading.Tasks.Task LoadAsync(int testId, int userId)
         {
             TestId = testId;
 
-            var testRepo = new TestRepository(_db);
-            var test = await testRepo.FindByIdAsync(testId);
+            // If a valid userId is passed in, use it. Otherwise, fallback to finding Alice for dev purposes.
+            if (userId > 0)
+            {
+                UserId = userId;
+            }
+            else
+            {
+                var users = await _userRepo.GetAllAsync();
+                var user = users.FirstOrDefault(u => u.Name == "Alice Johnson");
+                UserId = user?.Id ?? 0;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"[TestPageViewModel] UserId = {UserId}");
+
+            var test = await _testRepo.FindByIdAsync(testId);
             if (test == null) return;
 
             TestTitle = test.Title;
@@ -183,8 +205,7 @@ namespace Tests_and_Interviews.ViewModels
                 System.Diagnostics.Debug.WriteLine($"[StartTest error] {ex.InnerException?.Message ?? ex.Message}");
             }
 
-            var qRepo = new QuestionRepository(_db);
-            var questions = await qRepo.FindByTestIdAsync(testId);
+            var questions = await _questionRepo.FindByTestIdAsync(testId);
 
             int idx = 1;
             foreach (var q in questions)
@@ -260,12 +281,10 @@ namespace Tests_and_Interviews.ViewModels
         {
             StopTimer();
 
-            var attemptRepo = new TestAttemptRepository(_db);
-            var attempt = await attemptRepo.FindByUserAndTestAsync(UserId, TestId);
+            var attempt = await _attemptRepo.FindByUserAndTestAsync(UserId, TestId);
             if (attempt == null) return 0f;
 
             _attemptId = attempt.Id;
-            var answerRepo = new AnswerRepository(_db);
 
             foreach (var qvm in Questions)
             {
@@ -277,18 +296,15 @@ namespace Tests_and_Interviews.ViewModels
                     QuestionId = qvm.QuestionId,
                     Value = val
                 };
-                await answerRepo.SaveAsync(answer);
+                await _answerRepo.SaveAsync(answer);
             }
 
             await _testService.SubmitTestAsync(_attemptId);
 
+            await _dataProcessingService.ProcessFinalizedAttemptAsync(_attemptId);
 
-            var testRepo = new TestRepository(_db);
-            var dataProcessingService = new DataProcessingService(_db, attemptRepo, testRepo);
-            await dataProcessingService.ProcessFinalizedAttemptAsync(_attemptId);
-
-            var finalAttempt = await attemptRepo.FindByUserAndTestAsync(UserId, TestId);
-            return finalAttempt != null ? (float)finalAttempt.Score : 0f;
+            var finalAttempt = await _attemptRepo.FindByUserAndTestAsync(UserId, TestId);
+            return finalAttempt != null ? (float)(finalAttempt.Score ?? 0m) : 0f;
         }
     }
 }

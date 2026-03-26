@@ -1,21 +1,9 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Tests_and_Interviews.Services;
+using System.Threading.Tasks;
+using Tests_and_Interviews.Repositories;
 using Tests_and_Interviews.Views;
 
 namespace Tests_and_Interviews
@@ -26,16 +14,30 @@ namespace Tests_and_Interviews
 
         public static int CurrentUserId { get; private set; } = 0;
 
+        // Ensure this matches the actual connection string for your new MSSQL database
+        private readonly string _connectionString = "Server=localhost;Database=WinUIDevDb;User Id=devuser;Password=devpassword;TrustServerCertificate=True;";
+
         public App()
         {
             InitializeComponent();
-            using (var db = new AppDbContext())
-            {
-                db.SeedDatabase();
 
-                var alice = db.Users.FirstOrDefault(u => u.Name == "Alice Johnson");
+            // Replaced AppDbContext with UserRepository
+            var userRepo = new UserRepository();
+
+            try
+            {
+                // Task.Run().Result safely blocks the constructor until the async database call finishes
+                var users = Task.Run(() => userRepo.GetAllAsync()).Result;
+                var alice = users.FirstOrDefault(u => u.Name == "Alice Johnson");
+
                 CurrentUserId = alice?.Id ?? 0;
                 System.Diagnostics.Debug.WriteLine($"[App] CurrentUserId = {CurrentUserId}");
+            }
+            catch (Exception ex)
+            {
+                // Helpful fallback in case you forgot to run the SeedData.sql script in SSMS first
+                System.Diagnostics.Debug.WriteLine($"[App] Failed to fetch users from database. Did you run the SQL seed script? Error: {ex.Message}");
+                CurrentUserId = 0;
             }
         }
 
