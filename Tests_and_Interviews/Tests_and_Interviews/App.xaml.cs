@@ -16,6 +16,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Tests_and_Interviews.Services;
+using Tests_and_Interviews.Views;
 
 namespace Tests_and_Interviews
 {
@@ -40,8 +41,25 @@ namespace Tests_and_Interviews
 
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            // Main test window
             _window = new MainWindow();
             _window.Activate();
+
+            // Recruiter window
+            var recruiterWindow = new Window();
+            var recruiterFrame = new Frame();
+            recruiterFrame.Navigate(typeof(RecruiterPage));
+            recruiterWindow.Content = recruiterFrame;
+            recruiterWindow.Title = "Recruiter";
+            recruiterWindow.Activate();
+
+            // Candidate home window
+            var candidateWindow = new Window();
+            var candidateFrame = new Frame();
+            candidateFrame.Navigate(typeof(CandidateHomePage));
+            candidateWindow.Content = candidateFrame;
+            candidateWindow.Title = "Candidate Home";
+            candidateWindow.Activate();
         }
     }
 }

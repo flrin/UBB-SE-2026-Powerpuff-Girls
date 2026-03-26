@@ -29,7 +29,7 @@ namespace Tests_and_Interviews
         {
             InitializeComponent();
 
-            RootFrame.Navigate(typeof(CandidateHomePage));
+            RootFrame.Navigate(typeof(MainTestPage));
         }
     }
 }
