@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Tests_and_Interviews.Models;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models.Core;
+using Tests_and_Interviews.Models.Enums;
 
 namespace Tests_and_Interviews.Services
 {
@@ -29,7 +30,6 @@ namespace Tests_and_Interviews.Services
             Task<InterviewSession> interviewSessionLoadingTask = _dbContext.GetInterviewSessionByIdAsync(_interviewSessionId);
             _interviewSession = await interviewSessionLoadingTask;
             _interviewSession.DateStart = DateTime.UtcNow;
-            _interviewSession.Status = InterviewSessionStatus.RECORDING;
 
             await _dbContext.UpdateInterviewSessionAsync(_interviewSession);
 
@@ -56,7 +56,7 @@ namespace Tests_and_Interviews.Services
         public async void SubmitRecording(string recordingFilePath)
         {
             _interviewSession.Video = recordingFilePath;
-            _interviewSession.Status = InterviewSessionStatus.SUBMITTED;
+            _interviewSession.Status = InterviewStatus.InProgress.ToString();
 
             await _dbContext.UpdateInterviewSessionAsync(_interviewSession);
             try

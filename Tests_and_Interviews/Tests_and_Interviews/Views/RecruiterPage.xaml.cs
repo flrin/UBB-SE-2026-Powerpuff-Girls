@@ -71,5 +71,26 @@ namespace Tests_and_Interviews.Views
         {
             Frame.Navigate(typeof(RecruiterTestsPage));
         }
+
+        private void RefreshPendingReviews_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.LoadPendingReviews();
+        }
+
+        private void ReviewPending_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b)
+            {
+                var tag = b.Tag;
+                int sessionId = 0;
+                if (tag is int i) sessionId = i;
+                else if (tag is string s && int.TryParse(s, out int parsed)) sessionId = parsed;
+
+                if (sessionId > 0)
+                {
+                    Frame.Navigate(typeof(InterviewInterviewerPage), sessionId);
+                }
+            }
+        }
     }
 }

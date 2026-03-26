@@ -14,6 +14,7 @@ using Tests_and_Interviews.Services;
 using Tests_and_Interviews.Models.Core;
 
 using System.Diagnostics;
+using Tests_and_Interviews.Models.Enums;
 
 namespace Tests_and_Interviews.ViewModels
 {
@@ -64,7 +65,6 @@ namespace Tests_and_Interviews.ViewModels
                 if (_session != null)
                 {
                     _session.DateStart = DateTime.UtcNow;
-                    _session.Status = InterviewSessionStatus.RECORDING;
                     await _dbContext.UpdateInterviewSessionAsync(_session);
 
                     _questions = await _dbContext.GetInterviewQuestionsByPositionAsync(_session.PositionId);
@@ -108,7 +108,7 @@ namespace Tests_and_Interviews.ViewModels
             try
             {
                 _session.Video = RecordingFilePath;
-                _session.Status = InterviewSessionStatus.SUBMITTED;
+                _session.Status = InterviewStatus.InProgress.ToString();
                 await _dbContext.UpdateInterviewSessionAsync(_session);
                 try
                 {

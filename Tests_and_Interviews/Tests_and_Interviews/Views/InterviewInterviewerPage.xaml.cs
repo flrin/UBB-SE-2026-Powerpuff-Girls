@@ -35,15 +35,35 @@ namespace Tests_and_Interviews.Views
             InitializeComponent();
             ViewModel = new InterviewInterviewerViewModel();
             SetNumberBoxNumberFormatter();
+            this.DataContext = ViewModel;
+        }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.Parameter is int id && id > 0)
+            {
+                ViewModel.InitializeSession(id);
+            }
         }
 
         private void SubmitScore_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
 
-            ViewModel.SubmitScoreCommand.Execute(null);
+            ViewModel.SubmitScore();
 
-            if (this.Frame.CanGoBack)
+
+            if (this.Tag is Window hostWindow)
+            {
+                try
+                {
+                    hostWindow.Close();
+                    return;
+                }
+                catch { }
+            }
+
+            if (this.Frame != null && this.Frame.CanGoBack)
             {
                 this.Frame.GoBack();
             }

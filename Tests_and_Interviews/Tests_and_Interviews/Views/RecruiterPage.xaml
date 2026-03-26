@@ -10,6 +10,7 @@
         <converters:IdToColorConverter x:Key="StatusToColorConverter"/>
         <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
         <converters:DurationToHeightConverter x:Key="DurationToHeightConverter"/>
+        <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
     </Page.Resources>
 
     <Page.DataContext>
@@ -41,7 +42,34 @@
                          Padding="20,12"
                          CornerRadius="10"
                          HorizontalAlignment="Left"/>
-            
+
+            <Border Background="White" CornerRadius="8" Padding="10" Margin="0,10,0,0">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Pending Reviews" FontWeight="Bold" FontSize="16" Foreground="#111827" />
+                        <Button Content="Refresh" Click="RefreshPendingReviews_Click" Margin="8,0,0,0" HorizontalAlignment="Right"/>
+                    </StackPanel>
+
+                    <ListView ItemsSource="{Binding PendingReviews}" SelectionMode="None" Height="200" BorderThickness="0">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="{Binding DateStart, Converter={StaticResource DateTimeToStringConverter}}" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Video}" TextTrimming="CharacterEllipsis" Margin="8,0" VerticalAlignment="Center" />
+
+                                    <Button Grid.Column="2" Content="Review" Click="ReviewPending_Click" Tag="{Binding Id}" Margin="8,0,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </Border>
         </StackPanel>
 
         <Grid Grid.Column="1" Margin="80,0,0,0">

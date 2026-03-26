@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models;
 using Tests_and_Interviews.Models.Core;
+using Tests_and_Interviews.Models.Enums;
 using Windows.Storage;
-using System.IO;
 
 namespace Tests_and_Interviews.Services
 {
@@ -59,7 +60,8 @@ namespace Tests_and_Interviews.Services
         public async void SubmitScore(float score) 
         {
             _interviewSession.Score = (decimal)score;
-            _interviewSession.Status = InterviewSessionStatus.REVIEWED;
+            _interviewSession.Status = InterviewStatus.Completed.ToString();
+
             await _dbContext.UpdateInterviewSessionAsync(_interviewSession);
             try
             {

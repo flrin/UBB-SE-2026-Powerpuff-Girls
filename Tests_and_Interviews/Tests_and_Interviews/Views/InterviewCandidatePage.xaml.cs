@@ -145,7 +145,6 @@ namespace Tests_and_Interviews.Views
             _mediaCapture?.Dispose();
             _mediaCapture = null;
 
-            // Invoke optional OnClosed callback so the opener can refresh data
             try { OnClosed?.Invoke(); } catch { }
 
             if (this.Tag is Window hostWindow)

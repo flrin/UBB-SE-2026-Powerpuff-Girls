@@ -3,8 +3,13 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 using Tests_and_Interviews.Models;
+using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Repositories;
+using Tests_and_Interviews.Services;
+using Tests_and_Interviews.Helpers;
+using Tests_and_Interviews.Models.Enums;
 
 namespace Tests_and_Interviews.ViewModels
 {
@@ -13,6 +18,7 @@ namespace Tests_and_Interviews.ViewModels
         private readonly SlotRepository _repo;
         private ObservableCollection<Slot> _slots = new ObservableCollection<Slot>();
         private DateTime _selectedDate = DateTime.Today;
+        private ObservableCollection<InterviewSession> _pendingReviews = new ObservableCollection<InterviewSession>();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -20,6 +26,7 @@ namespace Tests_and_Interviews.ViewModels
         {
             _repo = new SlotRepository();
             LoadSlots();
+            LoadPendingReviews();
         }
 
         public DateTime SelectedDate
@@ -44,6 +51,34 @@ namespace Tests_and_Interviews.ViewModels
             {
                 _slots = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<InterviewSession> PendingReviews
+        {
+            get => _pendingReviews;
+            set
+            {
+                _pendingReviews = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void LoadPendingReviews()
+        {
+            try
+            {
+                using var db = new AppDbContext();
+                var list = db.InterviewSessions
+                    .Where(s => s.Status == InterviewStatus.InProgress.ToString())
+                    .OrderByDescending(s => s.DateStart)
+                    .ToList();
+
+                PendingReviews = new ObservableCollection<InterviewSession>(list);
+            }
+            catch
+            {
+                PendingReviews = new ObservableCollection<InterviewSession>();
             }
         }
 
