@@ -61,6 +61,12 @@ namespace Tests_and_Interviews.Services
             _interviewSession.Score = (decimal)score;
             _interviewSession.Status = InterviewSessionStatus.REVIEWED;
             await _dbContext.UpdateInterviewSessionAsync(_interviewSession);
+            try
+            {
+                var notif = new NotificationService();
+                notif.ShowSimpleNotification("Score submitted", "The interview score was submitted successfully.");
+            }
+            catch { }
         }
     }
 }

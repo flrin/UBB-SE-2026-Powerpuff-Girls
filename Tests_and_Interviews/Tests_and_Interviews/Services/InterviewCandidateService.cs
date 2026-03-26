@@ -59,6 +59,12 @@ namespace Tests_and_Interviews.Services
             _interviewSession.Status = InterviewSessionStatus.SUBMITTED;
 
             await _dbContext.UpdateInterviewSessionAsync(_interviewSession);
+            try
+            {
+                var notif = new NotificationService();
+                notif.ShowSimpleNotification("Video uploaded", "Your interview video was uploaded successfully.");
+            }
+            catch { }
         }
     }
 }

@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Services;
+using Tests_and_Interviews.Models.Core;
+using Tests_and_Interviews;
+using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Models;
 
 namespace Tests_and_Interviews.ViewModels
@@ -14,6 +17,7 @@ namespace Tests_and_Interviews.ViewModels
     public class CandidateViewModel : INotifyPropertyChanged
     {
         private readonly BookingService _bookingService;
+        private readonly NotificationService _notificationService;
         private List<Slot> _availableSlots;
         private List<Slot> _availableDays;
         private ObservableCollection<Company> _matchedCompanies;
@@ -40,6 +44,7 @@ namespace Tests_and_Interviews.ViewModels
         public CandidateViewModel()
         {
             _bookingService = new BookingService();
+            _notificationService = new NotificationService();
             LoadSlotsCommand = new RelayCommand(_ => LoadSlots());
             ScheduleCommand = new RelayCommand((obj) => Schedule((Company)obj));
 
@@ -208,6 +213,11 @@ namespace Tests_and_Interviews.ViewModels
                 return;
 
             _bookingService.ConfirmBooking(1, SelectedSlot.Id);
+            try
+            {
+                _notificationService.ShowBookingConfirmed(SelectedCompany.CompanyName, SelectedCompany.JobTitle, SelectedSlot.StartTime, SelectedSlot.EndTime);
+            }
+            catch { }
             MatchedCompanies.Remove(SelectedCompany);
             IsBookingVisible = false;
         }
