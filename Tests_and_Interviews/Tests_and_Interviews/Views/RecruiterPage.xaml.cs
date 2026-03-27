@@ -5,11 +5,16 @@ using System.Collections.Generic;
 using Tests_and_Interviews.Models;
 using Tests_and_Interviews.Repositories;
 using Tests_and_Interviews.ViewModels;
+using Tests_and_Interviews.Helpers;
+using Tests_and_Interviews.Models.Enums;
 
 namespace Tests_and_Interviews.Views
 {
     public sealed partial class RecruiterPage : Page
     {
+        private const int MIN_TIME_SLOT_DURATION = 60;
+        private const int MAX_TIME_SLOT_DURATION = 90;
+
         public RecruiterPage()
         {
             this.InitializeComponent();
@@ -49,12 +54,12 @@ namespace Tests_and_Interviews.Views
 
                 if (await dialog.ShowAsync() == ContentDialogResult.Primary)
                 {
-                    int duration = combo.SelectedIndex == 0 ? 60 : 90;
+                    int duration = combo.SelectedIndex == 0 ? MIN_TIME_SLOT_DURATION : MAX_TIME_SLOT_DURATION;
 
                     var repo = new SlotRepository();
                     repo.Add(new Slot
                     {
-                        RecruiterId = 1,
+                        RecruiterId = Env.RECRUITER_ID,
                         StartTime = slot.StartTime,
                         EndTime = slot.StartTime.AddMinutes(duration),
                         Duration = duration,

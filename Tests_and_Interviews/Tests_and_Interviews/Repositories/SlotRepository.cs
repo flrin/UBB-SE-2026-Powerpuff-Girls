@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models;
+using Tests_and_Interviews.Models.Enums;
 
 namespace Tests_and_Interviews.Repositories
 {

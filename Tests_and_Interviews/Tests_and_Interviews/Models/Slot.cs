@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.Models

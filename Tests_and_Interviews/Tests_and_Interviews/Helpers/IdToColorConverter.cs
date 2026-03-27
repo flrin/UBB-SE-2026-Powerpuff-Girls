@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using System;
-using Tests_and_Interviews.Models;
+using Tests_and_Interviews.Models.Enums;
 using Windows.UI;
 
 namespace Tests_and_Interviews.Helpers

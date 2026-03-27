@@ -1,4 +1,4 @@
-namespace Tests_and_Interviews.Models
+namespace Tests_and_Interviews.Models.Enums
 {
     public enum SlotStatus
     {
