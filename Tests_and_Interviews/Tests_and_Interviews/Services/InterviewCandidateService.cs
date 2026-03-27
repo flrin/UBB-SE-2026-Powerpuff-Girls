@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Tests_and_Interviews.Models;
-using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Models.Enums;
-using Tests_and_Interviews.Repositories; // Ensure this is imported
+using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.Services
 {
@@ -22,13 +18,10 @@ namespace Tests_and_Interviews.Services
         private InterviewSession _interviewSession;
         private int _interviewSessionId;
 
-        // Inject the repositories via the constructor
-        public InterviewCandidateService(
-            InterviewSessionRepository interviewSessionRepo,
-            QuestionRepository questionRepo)
+        public InterviewCandidateService()
         {
-            _interviewSessionRepo = interviewSessionRepo;
-            _questionRepo = questionRepo;
+            _interviewSessionRepo = new InterviewSessionRepository();
+            _questionRepo = new QuestionRepository();
             _interviewSessionId = 1;
             LoadData();
         }

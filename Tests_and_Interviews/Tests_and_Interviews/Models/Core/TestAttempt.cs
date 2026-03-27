@@ -17,7 +17,7 @@ namespace Tests_and_Interviews.Models.Core
         [Column("test_id")]
         public int TestId { get; set; }
 
-        
+
         [Column("external_user_id")]
         public int? ExternalUserId { get; set; }
 
@@ -58,11 +58,11 @@ namespace Tests_and_Interviews.Models.Core
         [Column("rejected_at")]
         public DateTime? RejectedAt { get; set; }
 
-        public List<Answer> Answers { get; set; } = new();
+        public List<Answer> Answers { get; set; } = [];
         public Test? Test { get; set; }
         public User? User { get; set; }
 
-         public void Start()
+        public void Start()
         {
             Status = TestStatus.RECORDING.ToString();
             StartedAt = DateTime.UtcNow;

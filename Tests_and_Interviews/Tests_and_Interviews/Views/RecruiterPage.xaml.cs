@@ -58,7 +58,7 @@ namespace Tests_and_Interviews.Views
                         StartTime = slot.StartTime,
                         EndTime = slot.StartTime.AddMinutes(duration),
                         Duration = duration,
-                        Status = SlotStatus.Free, 
+                        Status = SlotStatus.Free,
                         InterviewType = "Available"
                     });
 

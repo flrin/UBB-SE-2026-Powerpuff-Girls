@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models.Core;
@@ -72,7 +71,6 @@ namespace Tests_and_Interviews.Repositories
                 command.Parameters.AddWithValue("@email", user.Email ?? (object)DBNull.Value);
 
                 await connection.OpenAsync();
-                // Capture the newly generated Identity ID and assign it back to the model
                 user.Id = (int)await command.ExecuteScalarAsync();
             }
         }
@@ -110,7 +108,6 @@ namespace Tests_and_Interviews.Repositories
             }
         }
 
-        // --- Helper Mapping Method ---
 
         private User MapUser(SqlDataReader reader)
         {

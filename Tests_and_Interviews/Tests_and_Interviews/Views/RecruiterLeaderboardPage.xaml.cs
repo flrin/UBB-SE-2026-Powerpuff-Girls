@@ -5,21 +5,18 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Tests_and_Interviews.Models.Core;
-using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.Views
 {
     public sealed partial class RecruiterLeaderboardPage : Page
     {
-        private List<TestAttempt> _entries = new();
+        private List<TestAttempt> _entries = [];
         private int _currentPage = 1;
         private const int PageSize = 10;
         private int _testId;
 
-        // Define the connection string locally for the UI code-behind
         private readonly string _connectionString = "Server=localhost;Database=WinUIDevDb;User Id=devuser;Password=devpassword;TrustServerCertificate=True;";
 
         public RecruiterLeaderboardPage()
@@ -27,7 +24,6 @@ namespace Tests_and_Interviews.Views
             InitializeComponent();
         }
 
-        // Changed to async void to safely await repository calls during navigation
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -37,7 +33,6 @@ namespace Tests_and_Interviews.Views
                 _testId = testId;
             }
 
-            // Initialize Repositories instead of AppDbContext
             var testRepo = new TestRepository();
             var attemptRepo = new TestAttemptRepository();
 
@@ -48,7 +43,6 @@ namespace Tests_and_Interviews.Views
                 PageSubtitleText.Text = "Detailed recruiter leaderboard view";
             }
 
-            // Utilize the method we built earlier which handles the exact same filtering and sorting at the SQL level
             _entries = await attemptRepo.FindValidAttemptsByTestIdAsync(_testId);
 
             RenderPage();

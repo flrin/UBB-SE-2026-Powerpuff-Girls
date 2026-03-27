@@ -16,9 +16,6 @@
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Remove="Services\AppDbContext.cs" />
-	</ItemGroup>
-	<ItemGroup>
 		<None Remove="MainWindow.xaml" />
 		<None Remove="Views\InterviewCandidatePage.xaml" />
 		<None Remove="Views\LeaderboardPage.xaml" />
@@ -54,7 +51,6 @@
 		<Page Include="MainWindow.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-		<None Include="Services\AppDbContext.cs" />
 		<Page Include="Views\LeaderboardPage.xaml" />
 		<Page Include="Views\RecruiterLeaderboardPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>

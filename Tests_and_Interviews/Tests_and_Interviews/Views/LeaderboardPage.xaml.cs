@@ -13,7 +13,7 @@ namespace Tests_and_Interviews.Views
 {
     public sealed partial class LeaderboardPage : Page
     {
-        private List<LeaderboardEntry> _entries = new();
+        private List<LeaderboardEntry> _entries = [];
         private int _currentPage = 1;
         private const int PageSize = 10;
         private int _testId;

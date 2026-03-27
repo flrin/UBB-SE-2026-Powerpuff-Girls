@@ -1,19 +1,18 @@
+using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Tests_and_Interviews.Helpers;
-using Microsoft.UI.Xaml;
-using Tests_and_Interviews.Views;
-using Tests_and_Interviews.Services;
-using Tests_and_Interviews.Models.Core;
-using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Models;
+using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Repositories;
+using Tests_and_Interviews.Services;
+using Tests_and_Interviews.Views;
 
 namespace Tests_and_Interviews.ViewModels
 {
@@ -98,11 +97,11 @@ namespace Tests_and_Interviews.ViewModels
                 }
             });
 
-            MatchedCompanies = new ObservableCollection<Company>
-            {
+            MatchedCompanies =
+            [
                 new Company { CompanyName = "Google", JobTitle = "Frontend Dev", RecruiterId = 1 },
                 new Company { CompanyName = "Amazon", JobTitle = "Backend Dev", RecruiterId = 2 }
-            };
+            ];
 
             _ = LoadInterviewSessionsAsync();
         }
@@ -136,7 +135,7 @@ namespace Tests_and_Interviews.ViewModels
 
         public async Task LoadInterviewSessionsAsync()
         {
-            InterviewSessions = new ObservableCollection<InterviewSession>();
+            InterviewSessions = [];
             try
             {
                 var sessions = await _interviewSessionRepo.GetScheduledSessionsAsync();
@@ -179,7 +178,7 @@ namespace Tests_and_Interviews.ViewModels
             }
         }
 
-        public IEnumerable<Slot> VisibleDays => (AvailableDays ?? new List<Slot>())
+        public IEnumerable<Slot> VisibleDays => (AvailableDays ?? [])
             .Skip(_dayStartIndex)
             .Take(3)
             .ToList();
@@ -206,10 +205,10 @@ namespace Tests_and_Interviews.ViewModels
         public Slot SelectedSlot
         {
             get => _selectedSlot;
-            set 
-            { 
+            set
+            {
                 _selectedSlot = value; OnPropertyChanged();
-                
+
             }
         }
 
@@ -227,11 +226,11 @@ namespace Tests_and_Interviews.ViewModels
 
         private void LoadSlots()
         {
-            MatchedCompanies = new ObservableCollection<Company>
-            {
+            MatchedCompanies =
+            [
                 new Company { CompanyName = "Google", JobTitle = "Frontend Dev", RecruiterId = 1 },
                 new Company { CompanyName = "Amazon", JobTitle = "Backend Dev", RecruiterId = 2 }
-            };
+            ];
         }
 
         private void Schedule(Company company)
@@ -286,7 +285,6 @@ namespace Tests_and_Interviews.ViewModels
                 var window = new Window();
                 page.Tag = window;
 
-                // Wrap the async load method to match the Action signature
                 page.OnClosed = () => _ = LoadInterviewSessionsAsync();
 
                 window.Content = page;
@@ -301,13 +299,13 @@ namespace Tests_and_Interviews.ViewModels
             {
                 try
                 {
-                    // Fetch existing, update status, and save via ADO.NET repo
-                    var existing = await _interviewSessionRepo.GetInterviewSessionByIdAsync(session.Id);
-                    if (existing != null)
+                    var connectedInterviewSession = await _interviewSessionRepo.GetInterviewSessionByIdAsync(session.Id);
+                    if (connectedInterviewSession != null)
                     {
-                        existing.Status = "Cancelled";
-                        await _interviewSessionRepo.UpdateInterviewSessionAsync(existing);
+                        _interviewSessionRepo.Delete(connectedInterviewSession);
                     }
+
+
 
                     await LoadInterviewSessionsAsync();
                 }

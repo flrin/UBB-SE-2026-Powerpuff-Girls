@@ -3,10 +3,10 @@ using Tests_and_Interviews.Models.Core;
 
 namespace Tests_and_Interviews.Models.Questions
 {
-    
+
     public class TextQuestion : Question
     {
-    
+
         [NotMapped]
         public string CorrectAnswerText
         {

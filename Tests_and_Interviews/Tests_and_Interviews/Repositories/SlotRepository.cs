@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models;
@@ -16,8 +15,6 @@ namespace Tests_and_Interviews.Repositories
         {
             _connectionString = Env.CONNECTION_STRING;
         }
-
-        // --- Asynchronous Methods ---
 
         public async Task<List<Slot>> GetSlotsAsync(int recruiterId, DateTime date)
         {
@@ -174,7 +171,6 @@ namespace Tests_and_Interviews.Repositories
             }
         }
 
-        // --- Synchronous Methods ---
 
         public List<Slot> GetSlots(int recruiterId, DateTime date)
         {

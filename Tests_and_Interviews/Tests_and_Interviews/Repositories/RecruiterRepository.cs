@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models;
@@ -21,13 +20,12 @@ namespace Tests_and_Interviews.Repositories
         {
             Recruiter? recruiter = null;
 
-            // We use a LEFT JOIN to fetch the recruiter and their calendar slots in one trip
             string query = @"
                 SELECT 
                     r.company_id, 
-                    r.name, -- Example placeholder: adjust to your actual model
+                    r.name,
                     s.id AS slot_id, 
-                    s.start_time -- Example placeholder: adjust to your actual model
+                    s.start_time
                 FROM Recruiters r
                 LEFT JOIN Slots s ON r.company_id = s.recruiter_id
                 WHERE r.company_id = @id";
@@ -42,24 +40,20 @@ namespace Tests_and_Interviews.Repositories
                 {
                     while (await reader.ReadAsync())
                     {
-                        // Initialize the Recruiter object on the first row
                         if (recruiter == null)
                         {
                             recruiter = new Recruiter
                             {
                                 CompanyId = reader.GetInt32(reader.GetOrdinal("company_id")),
-                                // Name = reader.GetString(reader.GetOrdinal("name")), // Adjust to actual properties
-                                Slots = new List<Slot>()
+                                Slots = []
                             };
                         }
 
-                        // If the LEFT JOIN found an associated slot, map it and add it
                         if (!reader.IsDBNull(reader.GetOrdinal("slot_id")))
                         {
                             recruiter.Slots.Add(new Slot
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("slot_id")),
-                                // StartTime = reader.GetDateTime(reader.GetOrdinal("start_time")) // Adjust to actual properties
                             });
                         }
                     }
@@ -86,7 +80,6 @@ namespace Tests_and_Interviews.Repositories
                         slots.Add(new Slot
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            // Map your other Slot properties here
                         });
                     }
                 }
@@ -96,17 +89,16 @@ namespace Tests_and_Interviews.Repositories
 
         public async Task SaveAsync(Recruiter recruiter)
         {
-            // In a real database, replacing an item in a list translates to an "Upsert" (Update or Insert)
             string query = @"
                 IF EXISTS (SELECT 1 FROM Recruiters WHERE company_id = @company_id)
                 BEGIN
                     UPDATE Recruiters 
-                    SET name = @name -- Adjust to your actual properties
+                    SET name = @name
                     WHERE company_id = @company_id
                 END
                 ELSE
                 BEGIN
-                    INSERT INTO Recruiters (company_id, name) -- Adjust to your actual properties
+                    INSERT INTO Recruiters (company_id, name)
                     VALUES (@company_id, @name)
                 END";
 
@@ -115,15 +107,9 @@ namespace Tests_and_Interviews.Repositories
             {
                 command.Parameters.AddWithValue("@company_id", recruiter.CompanyId);
 
-                // Add parameters for your other Recruiter properties here
-                // command.Parameters.AddWithValue("@name", recruiter.Name ?? (object)DBNull.Value);
-
                 await connection.OpenAsync();
                 await command.ExecuteNonQueryAsync();
             }
-
-            // Note: If saving a recruiter also means overriding their entire calendar of slots, 
-            // you will need to add a secondary SQL command here to DELETE existing slots and INSERT the new ones from recruiter.Slots.
         }
     }
 }

@@ -2,11 +2,10 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
-using Tests_and_Interviews.ViewModels;
-using System.Collections.Generic;
 using System.Linq;
 using Tests_and_Interviews.Repositories;
 using Tests_and_Interviews.Services;
+using Tests_and_Interviews.ViewModels;
 
 namespace Tests_and_Interviews.Views
 {

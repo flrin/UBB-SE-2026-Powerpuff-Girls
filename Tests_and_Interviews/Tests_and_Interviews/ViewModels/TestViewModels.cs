@@ -1,12 +1,10 @@
+using Microsoft.UI.Xaml;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
-using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Repositories;
-using Tests_and_Interviews.Services;
 
 namespace Tests_and_Interviews.ViewModels
 {
@@ -73,7 +71,7 @@ namespace Tests_and_Interviews.ViewModels
             set { _isLoading = value; OnPropertyChanged(); OnPropertyChanged(nameof(NoTestsVisible)); }
         }
 
-        public ObservableCollection<TestCardViewModel> Tests { get; } = new();
+        public ObservableCollection<TestCardViewModel> Tests { get; } = [];
 
         private TestCardViewModel? _selectedTest;
         public TestCardViewModel? SelectedTest
@@ -93,7 +91,6 @@ namespace Tests_and_Interviews.ViewModels
 
         private readonly TestRepository _testRepo;
 
-        // Injected TestRepository instead of initializing AppDbContext
         public MainTestViewModel()
         {
             _testRepo = new TestRepository();
@@ -108,14 +105,12 @@ namespace Tests_and_Interviews.ViewModels
 
             foreach (var cat in categories)
             {
-                // Replaced creating a new repo instance with the injected one
                 var tests = await _testRepo.FindTestsByCategoryAsync(cat);
 
                 foreach (var t in tests)
                 {
                     string typeLabel = "MIXED";
 
-                    // Added a null check for t.Questions just to be safe with the ADO.NET mapping
                     if (t.Questions != null && t.Questions.Count > 0)
                         typeLabel = t.Questions[0].QuestionTypeString.Replace("_", "/");
 

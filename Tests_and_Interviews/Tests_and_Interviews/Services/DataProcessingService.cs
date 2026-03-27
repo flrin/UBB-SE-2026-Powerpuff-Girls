@@ -11,7 +11,6 @@ namespace Tests_and_Interviews.Services
         private readonly TestAttemptRepository _attemptRepository;
         private readonly TestRepository _testRepository;
 
-        // Injected UserRepository instead of AppDbContext
         public DataProcessingService(
             UserRepository userRepository,
             TestAttemptRepository attemptRepository,
@@ -24,7 +23,6 @@ namespace Tests_and_Interviews.Services
 
         public async Task<bool> ProcessFinalizedAttemptAsync(int attemptId)
         {
-            // Fetching via repository instead of EF Core DbContext
             var attempt = await _attemptRepository.FindByIdAsync(attemptId);
 
             if (attempt == null)
@@ -46,7 +44,6 @@ namespace Tests_and_Interviews.Services
             }
 
             attempt.IsValidated = true;
-            // Assuming Score is a decimal?. Using GetValueOrDefault() to handle potential nulls for math operations.
             attempt.PercentageScore = ConvertToPercentageScore(attempt.Score.GetValueOrDefault());
             attempt.RejectionReason = null;
             attempt.RejectedAt = null;
@@ -57,11 +54,9 @@ namespace Tests_and_Interviews.Services
 
         private async Task<string?> ValidateAttemptAsync(TestAttempt attempt)
         {
-            // Null check for nullable foreign keys before checking the DB
             if (attempt.ExternalUserId == null)
                 return "User does not exist.";
 
-            // Replaced _db.Users.AnyAsync with a repository lookup
             var user = await _userRepository.GetByIdAsync(attempt.ExternalUserId.Value);
             if (user == null)
                 return "User does not exist.";
@@ -95,7 +90,7 @@ namespace Tests_and_Interviews.Services
 
         private decimal ConvertToPercentageScore(decimal originalScore)
         {
-            return (originalScore / 100m) * 100m;
+            return originalScore / 100m * 100m;
         }
     }
 }

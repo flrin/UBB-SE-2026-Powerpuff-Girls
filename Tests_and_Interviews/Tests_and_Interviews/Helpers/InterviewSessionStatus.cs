@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tests_and_Interviews.Helpers
+﻿namespace Tests_and_Interviews.Helpers
 {
     public static class InterviewSessionStatus
     {

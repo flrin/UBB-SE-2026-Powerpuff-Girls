@@ -23,7 +23,7 @@ namespace Tests_and_Interviews.Models.Core
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 
-        public List<Question> Questions { get; set; } = new();
-        public List<TestAttempt> Attempts { get; set; } = new();
+        public List<Question> Questions { get; set; } = [];
+        public List<TestAttempt> Attempts { get; set; } = [];
     }
 }

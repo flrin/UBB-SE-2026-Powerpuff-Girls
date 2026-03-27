@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tests_and_Interviews.Helpers;
-using Tests_and_Interviews.Models;
 using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Repositories;
@@ -19,11 +13,10 @@ namespace Tests_and_Interviews.Services
         private int _interviewSessionId;
         private InterviewSession _interviewSession;
 
-        // Inject the repository via the constructor
         public InterviewInterviewerService(InterviewSessionRepository interviewSessionRepo)
         {
             _interviewSessionRepo = interviewSessionRepo;
-            _interviewSessionId = 1; // this must be passed on by something else
+            _interviewSessionId = 1;
             LoadData();
         }
 
@@ -34,7 +27,6 @@ namespace Tests_and_Interviews.Services
 
         public string GetRecordingPath()
         {
-            // Null check added here to prevent NullReferenceException if _interviewSession isn't loaded yet
             if (_interviewSession == null || string.IsNullOrWhiteSpace(_interviewSession.Video))
             {
                 return string.Empty;

@@ -1,7 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models.Core;
@@ -58,7 +57,7 @@ namespace Tests_and_Interviews.Repositories
                                 PercentageScore = reader.IsDBNull(reader.GetOrdinal("percentage_score")) ? null : reader.GetDecimal(reader.GetOrdinal("percentage_score")),
                                 RejectionReason = reader.IsDBNull(reader.GetOrdinal("rejection_reason")) ? null : reader.GetString(reader.GetOrdinal("rejection_reason")),
                                 RejectedAt = reader.IsDBNull(reader.GetOrdinal("rejected_at")) ? null : reader.GetDateTime(reader.GetOrdinal("rejected_at")),
-                                Answers = new List<Answer>()
+                                Answers = []
                             };
                         }
 
@@ -186,7 +185,7 @@ namespace Tests_and_Interviews.Repositories
                                 PercentageScore = reader.IsDBNull(reader.GetOrdinal("percentage_score")) ? null : reader.GetDecimal(reader.GetOrdinal("percentage_score")),
                                 RejectionReason = reader.IsDBNull(reader.GetOrdinal("rejection_reason")) ? null : reader.GetString(reader.GetOrdinal("rejection_reason")),
                                 RejectedAt = reader.IsDBNull(reader.GetOrdinal("rejected_at")) ? null : reader.GetDateTime(reader.GetOrdinal("rejected_at")),
-                                Answers = new List<Answer>()
+                                Answers = []
                             };
                         }
 
@@ -240,15 +239,15 @@ namespace Tests_and_Interviews.Repositories
                             Id = reader.GetInt32(reader.GetOrdinal("ta_id")),
                             TestId = reader.GetInt32(reader.GetOrdinal("test_id")),
                             ExternalUserId = reader.GetInt32(reader.GetOrdinal("external_user_id")),
-                            Score = reader.IsDBNull(reader.GetOrdinal("score")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("score")),
+                            Score = reader.IsDBNull(reader.GetOrdinal("score")) ? null : reader.GetDecimal(reader.GetOrdinal("score")),
                             Status = reader.IsDBNull(reader.GetOrdinal("status")) ? null : reader.GetString(reader.GetOrdinal("status")),
-                            StartedAt = reader.IsDBNull(reader.GetOrdinal("started_at")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("started_at")),
-                            CompletedAt = reader.IsDBNull(reader.GetOrdinal("completed_at")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("completed_at")),
+                            StartedAt = reader.IsDBNull(reader.GetOrdinal("started_at")) ? null : reader.GetDateTime(reader.GetOrdinal("started_at")),
+                            CompletedAt = reader.IsDBNull(reader.GetOrdinal("completed_at")) ? null : reader.GetDateTime(reader.GetOrdinal("completed_at")),
                             AnswersFilePath = reader.IsDBNull(reader.GetOrdinal("answers_file_path")) ? null : reader.GetString(reader.GetOrdinal("answers_file_path")),
                             IsValidated = reader.GetBoolean(reader.GetOrdinal("is_validated")),
                             PercentageScore = reader.GetDecimal(reader.GetOrdinal("percentage_score")),
                             RejectionReason = reader.IsDBNull(reader.GetOrdinal("rejection_reason")) ? null : reader.GetString(reader.GetOrdinal("rejection_reason")),
-                            RejectedAt = reader.IsDBNull(reader.GetOrdinal("rejected_at")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("rejected_at")),
+                            RejectedAt = reader.IsDBNull(reader.GetOrdinal("rejected_at")) ? null : reader.GetDateTime(reader.GetOrdinal("rejected_at")),
 
                             User = new User
                             {

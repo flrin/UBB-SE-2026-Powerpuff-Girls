@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Tests_and_Interviews.Models.Core;
-using Tests_and_Interviews.Models.Enums;
 
 namespace Tests_and_Interviews.Services
 {
@@ -96,7 +95,7 @@ namespace Tests_and_Interviews.Services
         {
             float totalScore = 0f;
 
-            foreach(var answer in attempt.Answers)
+            foreach (var answer in attempt.Answers)
             {
                 if (!answer.Value.StartsWith("CORRECT:", StringComparison.OrdinalIgnoreCase))
                 {
@@ -105,14 +104,14 @@ namespace Tests_and_Interviews.Services
 
                 string scorePart = answer.Value.Substring("CORRECT:".Length);
 
-                if(float.TryParse(scorePart, NumberStyles.Float, CultureInfo.InvariantCulture, out float points))
+                if (float.TryParse(scorePart, NumberStyles.Float, CultureInfo.InvariantCulture, out float points))
                 {
                     totalScore += points;
                 }
 
 
-            }                
-            
+            }
+
             attempt.Score = (decimal)totalScore;
 
             return totalScore;

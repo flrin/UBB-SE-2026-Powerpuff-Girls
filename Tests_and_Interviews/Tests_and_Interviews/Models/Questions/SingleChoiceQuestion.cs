@@ -4,11 +4,11 @@ using Tests_and_Interviews.Models.Core;
 
 namespace Tests_and_Interviews.Models.Questions
 {
-    
+
     public class SingleChoiceQuestion : Question
     {
         [NotMapped]
-        public new List<string> Options { get; set; } = new();
+        public new List<string> Options { get; set; } = [];
 
         [NotMapped]
         public int CorrectAnswerIndex { get; set; }

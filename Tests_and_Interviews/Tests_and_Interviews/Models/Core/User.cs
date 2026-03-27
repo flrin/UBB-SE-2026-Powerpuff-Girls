@@ -1,6 +1,6 @@
 ﻿namespace Tests_and_Interviews.Models.Core
 {
-    
+
     public class User
     {
         public int Id { get; set; }

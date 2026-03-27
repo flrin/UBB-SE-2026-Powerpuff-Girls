@@ -51,7 +51,6 @@ namespace Tests_and_Interviews.Repositories
         public async Task<List<LeaderboardEntry>> FindTopByTestIdAsync(int testId, int limit)
         {
             var entries = new List<LeaderboardEntry>();
-            // MSSQL uses TOP (@limit) instead of LINQ's .Take()
             string query = @"
                 SELECT TOP (@limit)
                     le.id AS le_id, le.test_id, le.user_id, le.rank_position, le.normalized_score,
@@ -171,7 +170,6 @@ namespace Tests_and_Interviews.Repositories
             }
         }
 
-        // --- Helper Mapping Method ---
 
         private LeaderboardEntry MapLeaderboardEntry(SqlDataReader reader)
         {

@@ -1,8 +1,7 @@
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models.Core;
 
@@ -39,7 +38,6 @@ namespace Tests_and_Interviews.Repositories
         {
             var answers = new List<Answer>();
 
-            // The JOIN replaces EF Core's .Include(a => a.Question)
             string query = @"
                 SELECT 
                     a.id AS answer_id, a.attempt_id, a.question_id, a.value,
@@ -66,7 +64,6 @@ namespace Tests_and_Interviews.Repositories
                             QuestionId = reader.GetInt32(reader.GetOrdinal("question_id")),
                             Value = reader.IsDBNull(reader.GetOrdinal("value")) ? null : reader.GetString(reader.GetOrdinal("value")),
 
-                            // Manually map the included Question object
                             Question = new Question
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("q_id")),

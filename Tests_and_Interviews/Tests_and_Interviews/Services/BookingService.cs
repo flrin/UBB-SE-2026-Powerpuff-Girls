@@ -12,7 +12,6 @@ namespace Tests_and_Interviews.Services
         private readonly SlotRepository _slotRepo;
         private readonly InterviewSessionRepository _interviewRepo;
 
-        // Use dependency injection to pass your configured repositories
         public BookingService()
         {
             _slotRepo = new SlotRepository();

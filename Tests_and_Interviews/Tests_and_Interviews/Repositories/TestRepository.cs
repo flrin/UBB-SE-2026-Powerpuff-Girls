@@ -1,7 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models.Core;
@@ -48,7 +47,7 @@ namespace Tests_and_Interviews.Repositories
                                 Title = reader.IsDBNull(reader.GetOrdinal("title")) ? null : reader.GetString(reader.GetOrdinal("title")),
                                 Category = reader.IsDBNull(reader.GetOrdinal("category")) ? null : reader.GetString(reader.GetOrdinal("category")),
                                 CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
-                                Questions = new List<Question>()
+                                Questions = []
                             };
                         }
 
@@ -105,7 +104,7 @@ namespace Tests_and_Interviews.Repositories
                                 Title = reader.IsDBNull(reader.GetOrdinal("title")) ? null : reader.GetString(reader.GetOrdinal("title")),
                                 Category = reader.IsDBNull(reader.GetOrdinal("category")) ? null : reader.GetString(reader.GetOrdinal("category")),
                                 CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
-                                Questions = new List<Question>()
+                                Questions = []
                             };
                             testDictionary.Add(testId, test);
                         }
@@ -128,7 +127,7 @@ namespace Tests_and_Interviews.Repositories
                 }
             }
 
-            return new List<Test>(testDictionary.Values);
+            return [.. testDictionary.Values];
         }
     }
 }

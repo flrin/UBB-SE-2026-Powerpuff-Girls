@@ -1,19 +1,15 @@
-﻿using Microsoft.UI.Xaml.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Tests_and_Interviews.Helpers;
-using Windows.Graphics.Printing.PrintTicket;
-using Tests_and_Interviews.Services;
 using Tests_and_Interviews.Models.Core;
-using System.Diagnostics;
 using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Repositories;
+using Tests_and_Interviews.Services;
 
 namespace Tests_and_Interviews.ViewModels
 {
@@ -27,11 +23,10 @@ namespace Tests_and_Interviews.ViewModels
 
         private string _questionText;
         private string _recordingFilePath;
-        private List<Question> _questions = new List<Question>();
+        private List<Question> _questions = [];
         private int _currentQuestionIndex = 0;
         private InterviewSession _session;
 
-        // Replaced DbContext with specific repositories
         private readonly InterviewSessionRepository _sessionRepo;
         private readonly QuestionRepository _questionRepo;
 
@@ -40,7 +35,6 @@ namespace Tests_and_Interviews.ViewModels
         public ICommand NextQuestionCommand;
         public ICommand SubmitRecordingCommand;
 
-        // Constructor injection for repositories
         public InterviewCandidateViewModel()
         {
             _sessionRepo = new InterviewSessionRepository();
@@ -50,34 +44,19 @@ namespace Tests_and_Interviews.ViewModels
             NextQuestionCommand = new RelayCommand(NextQuestion);
             SubmitRecordingCommand = new RelayCommand(SubmitRecording);
 
-            // default initialize with session id 1 to keep previous behavior
             _ = InitializeAsync(1);
-        }
-
-        // Constructor injection for repositories with session ID override
-        public InterviewCandidateViewModel(InterviewSessionRepository sessionRepo, QuestionRepository questionRepo, int interviewSessionId)
-        {
-            _sessionRepo = sessionRepo;
-            _questionRepo = questionRepo;
-
-            _questionText = "Questions will start after starting recording";
-            NextQuestionCommand = new RelayCommand(NextQuestion);
-            SubmitRecordingCommand = new RelayCommand(SubmitRecording);
-            _ = InitializeAsync(interviewSessionId);
         }
 
         private async Task InitializeAsync(int interviewSessionId)
         {
             try
             {
-                // Replaced DbContext call with Repository call
                 _session = await _sessionRepo.GetInterviewSessionByIdAsync(interviewSessionId);
                 if (_session != null)
                 {
                     _session.DateStart = DateTime.UtcNow;
                     await _sessionRepo.UpdateInterviewSessionAsync(_session);
 
-                    // Replaced DbContext call with Repository call
                     _questions = await _questionRepo.GetInterviewQuestionsByPositionAsync(_session.PositionId);
                     _currentQuestionIndex = 0;
                 }
@@ -121,7 +100,6 @@ namespace Tests_and_Interviews.ViewModels
                 _session.Video = RecordingFilePath;
                 _session.Status = InterviewStatus.InProgress.ToString();
 
-                // Replaced DbContext call with Repository call
                 await _sessionRepo.UpdateInterviewSessionAsync(_session);
                 try
                 {

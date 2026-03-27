@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
 using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Repositories;
@@ -45,7 +43,7 @@ namespace Tests_and_Interviews.ViewModels
         public QuestionType Type { get; set; }
         public string TypeLabel => Type.ToString().Replace("_", " ");
 
-        public ObservableCollection<OptionViewModel> Options { get; set; } = new();
+        public ObservableCollection<OptionViewModel> Options { get; set; } = [];
 
         public Visibility IsSingleChoice => Type == QuestionType.SINGLE_CHOICE ? Visibility.Visible : Visibility.Collapsed;
         public Visibility IsMultipleChoice => Type == QuestionType.MULTIPLE_CHOICE ? Visibility.Visible : Visibility.Collapsed;
@@ -121,7 +119,7 @@ namespace Tests_and_Interviews.ViewModels
         void Notify([CallerMemberName] string p = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));
 
-        public ObservableCollection<QuestionViewModel> Questions { get; } = new();
+        public ObservableCollection<QuestionViewModel> Questions { get; } = [];
 
         private string _testTitle = string.Empty;
         public string TestTitle { get => _testTitle; set { _testTitle = value; Notify(); } }
@@ -137,7 +135,6 @@ namespace Tests_and_Interviews.ViewModels
 
         public bool AlreadyAttempted { get; private set; } = false;
 
-        // Repositories & Services
         private readonly UserRepository _userRepo;
         private readonly TestRepository _testRepo;
         private readonly QuestionRepository _questionRepo;
@@ -150,7 +147,6 @@ namespace Tests_and_Interviews.ViewModels
         public int UserId { get; set; }
         public int TestId { get; set; }
 
-        // Inject all required repositories via constructor
         public TestPageViewModel()
         {
             _userRepo = new UserRepository();
@@ -159,7 +155,6 @@ namespace Tests_and_Interviews.ViewModels
             _attemptRepo = new TestAttemptRepository();
             _answerRepo = new AnswerRepository();
 
-            // Instantiate internal domain services using the injected ADO.NET repositories
             var grading = new GradingService();
             var timerSvc = new TimerService(_attemptRepo);
             var validation = new AttemptValidationService(_attemptRepo);
@@ -172,7 +167,6 @@ namespace Tests_and_Interviews.ViewModels
         {
             TestId = testId;
 
-            // If a valid userId is passed in, use it. Otherwise, fallback to finding Alice for dev purposes.
             if (userId > 0)
             {
                 UserId = userId;
@@ -226,11 +220,11 @@ namespace Tests_and_Interviews.ViewModels
                     if (!string.IsNullOrEmpty(q.OptionsJson))
                     {
                         optionLabels = System.Text.Json.JsonSerializer.Deserialize<List<string>>(q.OptionsJson)
-                                       ?? new List<string> { "Option A", "Option B", "Option C", "Option D", "Option E", "Option F" };
+                                       ?? ["Option A", "Option B", "Option C", "Option D", "Option E", "Option F"];
                     }
                     else
                     {
-                        optionLabels = new List<string> { "Option A", "Option B", "Option C", "Option D", "Option E", "Option F" };
+                        optionLabels = ["Option A", "Option B", "Option C", "Option D", "Option E", "Option F"];
                     }
                     for (int i = 0; i < optionLabels.Count; i++)
                     {
@@ -238,9 +232,9 @@ namespace Tests_and_Interviews.ViewModels
                         {
                             Text = optionLabels[i],
                             Index = i,
-                            GroupName = $"q_{q.Id}"
+                            GroupName = $"q_{q.Id}",
+                            OnSelectionChanged = UpdateAnsweredCount
                         };
-                        opt.OnSelectionChanged = UpdateAnsweredCount;
                         qvm.Options.Add(opt);
                     }
                 }
@@ -255,8 +249,10 @@ namespace Tests_and_Interviews.ViewModels
 
         void StartTimer()
         {
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
             _timer.Tick += (s, e) =>
             {
                 _timeLeft = _timeLeft.Subtract(TimeSpan.FromSeconds(1));

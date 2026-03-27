@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models.Core;
@@ -118,7 +117,21 @@ namespace Tests_and_Interviews.Repositories
             }
         }
 
-        // --- Helper Mapping Method ---
+        public void Delete(InterviewSession session)
+        {
+            string query = @"
+                DELETE FROM InterviewSessions
+                WHERE id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", session.Id);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
 
         private InterviewSession MapInterviewSession(SqlDataReader reader)
         {
@@ -126,7 +139,7 @@ namespace Tests_and_Interviews.Repositories
             {
                 Id = reader.GetInt32(reader.GetOrdinal("id")),
                 PositionId = reader.GetInt32(reader.GetOrdinal("position_id")),
-                ExternalUserId = reader.IsDBNull(reader.GetOrdinal("external_user_id")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("external_user_id")),
+                ExternalUserId = reader.IsDBNull(reader.GetOrdinal("external_user_id")) ? null : reader.GetInt32(reader.GetOrdinal("external_user_id")),
                 InterviewerId = reader.GetInt32(reader.GetOrdinal("interviewer_id")),
                 DateStart = reader.GetDateTime(reader.GetOrdinal("date_start")),
                 Video = reader.IsDBNull(reader.GetOrdinal("video")) ? null : reader.GetString(reader.GetOrdinal("video")),

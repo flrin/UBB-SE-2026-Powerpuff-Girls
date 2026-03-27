@@ -1,23 +1,11 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Tests_and_Interviews.ViewModels;
 using Tests_and_Interviews.Models.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Tests_and_Interviews.ViewModels;
 using Windows.Media.Capture;
-using Windows.Media.Core;
 using Windows.Media.MediaProperties;
-using Windows.Media.Playback;
 using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -30,10 +18,8 @@ namespace Tests_and_Interviews.Views
     /// </summary>
     public sealed partial class InterviewCandidatePage : Page
     {
-        // Optional callback invoked when the page is closed so callers can react (e.g., refresh lists)
         public Action? OnClosed { get; set; }
 
-        // Optional interview session passed in when opening the page
         public InterviewSession? InterviewSession { get; set; }
 
         private MediaCapture _mediaCapture = new MediaCapture();
@@ -163,6 +149,6 @@ namespace Tests_and_Interviews.Views
             }
         }
 
-       
+
     }
 }

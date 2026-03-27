@@ -1,7 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Helpers;
 using Tests_and_Interviews.Models.Core;
@@ -55,7 +54,7 @@ namespace Tests_and_Interviews.Repositories
                                 QuestionScore = reader.GetFloat(reader.GetOrdinal("question_score")),
                                 QuestionAnswer = reader.IsDBNull(reader.GetOrdinal("question_answer")) ? null : reader.GetString(reader.GetOrdinal("question_answer")),
                                 OptionsJson = reader.IsDBNull(reader.GetOrdinal("options_json")) ? null : reader.GetString(reader.GetOrdinal("options_json")),
-                                Answers = new List<Answer>()
+                                Answers = []
                             };
                             questionDictionary.Add(questionId, question);
                         }
@@ -75,7 +74,7 @@ namespace Tests_and_Interviews.Repositories
                 }
             }
 
-            return new List<Question>(questionDictionary.Values);
+            return [.. questionDictionary.Values];
         }
 
         public async Task<List<Question>> GetInterviewQuestionsByPositionAsync(int positionId)
@@ -104,7 +103,7 @@ namespace Tests_and_Interviews.Repositories
                             TestId = reader.IsDBNull(reader.GetOrdinal("test_id")) ? null : reader.GetInt32(reader.GetOrdinal("test_id")),
                             QuestionText = reader.GetString(reader.GetOrdinal("question_text")),
                             QuestionTypeString = reader.GetString(reader.GetOrdinal("question_type_string")),
-                            QuestionScore = reader.GetFloat(reader.GetOrdinal("question_score")), // Fixed the GetDouble cast here too
+                            QuestionScore = reader.GetFloat(reader.GetOrdinal("question_score")),
                             QuestionAnswer = reader.IsDBNull(reader.GetOrdinal("question_answer")) ? null : reader.GetString(reader.GetOrdinal("question_answer")),
                             OptionsJson = reader.IsDBNull(reader.GetOrdinal("options_json")) ? null : reader.GetString(reader.GetOrdinal("options_json"))
                         });

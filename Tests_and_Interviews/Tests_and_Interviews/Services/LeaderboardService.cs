@@ -11,7 +11,6 @@ namespace Tests_and_Interviews.Services
         private readonly TestAttemptRepository _testAttemptRepository;
         private readonly LeaderboardRepository _leaderboardRepository;
 
-        // Injected TestAttemptRepository instead of AppDbContext
         public LeaderboardService()
         {
             _testAttemptRepository = new TestAttemptRepository();
@@ -20,7 +19,6 @@ namespace Tests_and_Interviews.Services
 
         public async Task RecalculateLeaderboardAsync(int testId)
         {
-            // Replaced _db.TestAttempts query with repository call
             var attempts = await _testAttemptRepository.FindValidAttemptsByTestIdAsync(testId);
 
             await _leaderboardRepository.DeleteByTestIdAsync(testId);
@@ -34,7 +32,6 @@ namespace Tests_and_Interviews.Services
                 entries.Add(new LeaderboardEntry
                 {
                     TestId = attempt.TestId,
-                    // Note: Ensure your external user ID is not null here since it passed the validation filters
                     UserId = attempt.ExternalUserId.Value,
                     NormalizedScore = attempt.PercentageScore!.Value,
                     RankPosition = i + 1,
