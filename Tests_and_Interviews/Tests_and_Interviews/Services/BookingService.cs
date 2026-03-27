@@ -28,7 +28,7 @@ namespace Tests_and_Interviews.Services
                 .ToList();
         }
 
-        public List<Slot> GetAllAvailableSlots(int recruiterId)
+        public List<Slot> GetAvailableSlotsByRecruiterId(int recruiterId)
         {
             return _slotRepo
                 .GetAllSlots(recruiterId)
@@ -43,17 +43,18 @@ namespace Tests_and_Interviews.Services
                 throw new Exception("Slot not found");
 
             if (slot.Status != SlotStatus.Free)
-                throw new Exception("This slot is no longer available");
+                throw new Exception("This salot is no longer available");
 
             slot.Status = SlotStatus.Occupied;
             slot.CandidateId = candidateId;
+            slot.InterviewType = "";
 
             _slotRepo.Update(slot);
 
             InterviewSession newInterviewSession = new InterviewSession
             {
                 SessionId = slot.Id,
-                PositionId = 0, // This should be set based on the actual position being applied for
+                PositionId = 0,
                 ExternalUserId = candidateId,
                 InterviewerId = slot.RecruiterId,
                 DateStart = slot.StartTime.ToUniversalTime(),
@@ -63,11 +64,6 @@ namespace Tests_and_Interviews.Services
             };
 
             _interviewRepo.Add(newInterviewSession);
-        }
-
-        public void confirmBooking(int candidateId, Slot slot)
-        {
-            ConfirmBooking(candidateId, slot);
         }
     }
 }

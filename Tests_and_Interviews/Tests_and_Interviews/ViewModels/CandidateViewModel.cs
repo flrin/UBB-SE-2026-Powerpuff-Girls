@@ -22,6 +22,7 @@ namespace Tests_and_Interviews.ViewModels
         private readonly BookingService _bookingService;
         private readonly InterviewSessionRepository _interviewSessionRepo;
         private readonly NotificationService _notificationService;
+        private readonly SlotRepository _slotRepository;
 
         private List<Slot> _availableSlots;
         private List<Slot> _availableDays;
@@ -49,12 +50,12 @@ namespace Tests_and_Interviews.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        // Use Dependency Injection to provide the required services
         public CandidateViewModel()
         {
             _bookingService = new BookingService();
             _interviewSessionRepo = new InterviewSessionRepository();
             _notificationService = new NotificationService();
+            _slotRepository = new SlotRepository();
 
             LoadSlotsCommand = new RelayCommand(_ => LoadSlots());
             ScheduleCommand = new RelayCommand((obj) => Schedule((Company)obj));
@@ -75,18 +76,7 @@ namespace Tests_and_Interviews.ViewModels
                 OnPropertyChanged(nameof(AvailableDays));
             });
 
-            SelectSlotCommand = new RelayCommand((obj) =>
-            {
-                var selected = (Slot)obj;
-                if (AvailableSlots == null) return;
-
-                foreach (var s in AvailableSlots)
-                    s.IsSlotSelected = false;
-
-                selected.IsSlotSelected = true;
-                SelectedSlot = selected;
-                OnPropertyChanged(nameof(AvailableSlots));
-            });
+            SelectSlotCommand = new RelayCommand((obj) => SelectSlot(obj));
 
             ConfirmCommand = new RelayCommand(ConfirmBooking);
 
@@ -114,7 +104,6 @@ namespace Tests_and_Interviews.ViewModels
                 new Company { CompanyName = "Amazon", JobTitle = "Backend Dev", RecruiterId = 2 }
             };
 
-            // Fire and forget the initial load
             _ = LoadInterviewSessionsAsync();
         }
 
@@ -131,12 +120,25 @@ namespace Tests_and_Interviews.ViewModels
             }
         }
 
+        private void SelectSlot(Object obj)
+        {
+            var selected = (Slot)obj;
+            if (AvailableSlots == null) return;
+
+            foreach (var s in AvailableSlots)
+                s.IsSlotSelected = false;
+
+            selected.IsSlotSelected = true;
+
+            SelectedSlot = selected;
+            OnPropertyChanged(nameof(AvailableSlots));
+        }
+
         public async Task LoadInterviewSessionsAsync()
         {
             InterviewSessions = new ObservableCollection<InterviewSession>();
             try
             {
-                // Fetch scheduled sessions using the ADO.NET repository
                 var sessions = await _interviewSessionRepo.GetScheduledSessionsAsync();
 
                 foreach (var s in sessions)
@@ -204,7 +206,11 @@ namespace Tests_and_Interviews.ViewModels
         public Slot SelectedSlot
         {
             get => _selectedSlot;
-            set { _selectedSlot = value; OnPropertyChanged(); }
+            set 
+            { 
+                _selectedSlot = value; OnPropertyChanged();
+                
+            }
         }
 
         public DateTime SelectedDay
@@ -233,7 +239,7 @@ namespace Tests_and_Interviews.ViewModels
             IsBookingVisible = true;
             SelectedCompany = company;
 
-            var slots = _bookingService.GetAllAvailableSlots(company.RecruiterId);
+            var slots = _bookingService.GetAvailableSlotsByRecruiterId(company.RecruiterId);
 
             AvailableDays = slots
                 .GroupBy(s => s.StartTime.Date)
@@ -248,7 +254,7 @@ namespace Tests_and_Interviews.ViewModels
             if (SelectedCompany == null) return;
 
             AvailableSlots = _bookingService
-                .GetAllAvailableSlots(SelectedCompany.RecruiterId)
+                .GetAvailableSlotsByRecruiterId(SelectedCompany.RecruiterId)
                 .Where(s => s.StartTime.Date == SelectedDay.Date)
                 .ToList();
         }

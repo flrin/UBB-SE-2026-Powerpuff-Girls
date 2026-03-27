@@ -23,7 +23,7 @@ namespace Tests_and_Interviews.Repositories
         {
             var slots = new List<Slot>();
             string query = @"
-                SELECT id, recruiter_id, start_time, end_time 
+                SELECT id, recruiter_id, start_time, end_time, duration, status, interview_type
                 FROM Slots 
                 WHERE recruiter_id = @recruiter_id AND CAST(start_time AS DATE) = CAST(@date AS DATE)
                 ORDER BY start_time";
@@ -50,7 +50,7 @@ namespace Tests_and_Interviews.Repositories
         {
             var slots = new List<Slot>();
             string query = @"
-                SELECT id, recruiter_id, start_time, end_time 
+                SELECT id, recruiter_id, start_time, end_time, duration, status, interview_type
                 FROM Slots 
                 WHERE recruiter_id = @recruiter_id
                 ORDER BY start_time";
@@ -207,7 +207,7 @@ namespace Tests_and_Interviews.Repositories
         {
             var slots = new List<Slot>();
             string query = @"
-                SELECT id, recruiter_id, start_time, end_time 
+                SELECT id, recruiter_id, start_time, end_time, duration, status, interview_type
                 FROM Slots 
                 WHERE recruiter_id = @recruiter_id
                 ORDER BY start_time";
@@ -278,15 +278,18 @@ namespace Tests_and_Interviews.Repositories
                 }
 
                 string insertQuery = @"
-                    INSERT INTO Slots (recruiter_id, start_time, end_time) 
+                    INSERT INTO Slots (recruiter_id, start_time, end_time, status, duration, interview_type) 
                     OUTPUT INSERTED.id 
-                    VALUES (@recruiter_id, @start_time, @end_time)";
+                    VALUES (@recruiter_id, @start_time, @end_time, @status, @duration, @interview_type)";
 
                 using (var insertCommand = new SqlCommand(insertQuery, connection))
                 {
                     insertCommand.Parameters.AddWithValue("@recruiter_id", slot.RecruiterId);
                     insertCommand.Parameters.AddWithValue("@start_time", slot.StartTime);
                     insertCommand.Parameters.AddWithValue("@end_time", slot.EndTime);
+                    insertCommand.Parameters.AddWithValue("@status", slot.Status);
+                    insertCommand.Parameters.AddWithValue("@duration", slot.Duration);
+                    insertCommand.Parameters.AddWithValue("@interview_type", slot.InterviewType);
 
                     slot.Id = (int)insertCommand.ExecuteScalar();
                 }
@@ -297,7 +300,7 @@ namespace Tests_and_Interviews.Repositories
         {
             string query = @"
                 UPDATE Slots 
-                SET start_time = @start_time, end_time = @end_time 
+                SET start_time = @start_time, end_time = @end_time, recruiter_id = @recruiter_id, duration = @duration, status = @status, interview_type = @interview_type
                 WHERE id = @id";
 
             using (var connection = new SqlConnection(_connectionString))
@@ -306,6 +309,10 @@ namespace Tests_and_Interviews.Repositories
                 command.Parameters.AddWithValue("@id", slot.Id);
                 command.Parameters.AddWithValue("@start_time", slot.StartTime);
                 command.Parameters.AddWithValue("@end_time", slot.EndTime);
+                command.Parameters.AddWithValue("@recruiter_id", slot.RecruiterId);
+                command.Parameters.AddWithValue("@duration", slot.Duration);
+                command.Parameters.AddWithValue("@status", slot.Status);
+                command.Parameters.AddWithValue("@interview_type", slot.InterviewType);
 
                 connection.Open();
                 int rowsAffected = command.ExecuteNonQuery();
@@ -331,7 +338,6 @@ namespace Tests_and_Interviews.Repositories
             }
         }
 
-        // --- Helper Mapping Method ---
 
         private Slot MapSlot(SqlDataReader reader)
         {
@@ -340,7 +346,10 @@ namespace Tests_and_Interviews.Repositories
                 Id = reader.GetInt32(reader.GetOrdinal("id")),
                 RecruiterId = reader.GetInt32(reader.GetOrdinal("recruiter_id")),
                 StartTime = reader.GetDateTime(reader.GetOrdinal("start_time")),
-                EndTime = reader.GetDateTime(reader.GetOrdinal("end_time"))
+                EndTime = reader.GetDateTime(reader.GetOrdinal("end_time")),
+                Duration = reader.GetInt32(reader.GetOrdinal("duration")),
+                Status = (SlotStatus)reader.GetInt32(reader.GetOrdinal("status")),
+                InterviewType = reader.GetString(reader.GetOrdinal("interview_type"))
             };
         }
     }

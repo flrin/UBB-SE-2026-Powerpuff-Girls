@@ -29,7 +29,7 @@ namespace Tests_and_Interviews.Views
         {
             if (sender is Grid grid && grid.DataContext is Slot slot)
             {
-                if (slot.Status != SlotStatus.Free)
+                if (slot.Status != SlotStatus.Free || slot.InterviewType == "Available")
                     return;
 
                 var combo = new ComboBox

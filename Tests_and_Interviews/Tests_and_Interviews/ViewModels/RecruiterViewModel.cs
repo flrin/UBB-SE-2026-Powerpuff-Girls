@@ -98,48 +98,51 @@ namespace Tests_and_Interviews.ViewModels
 
         public async Task LoadSlotsAsync()
         {
-            var existing = await _slotRepo.GetSlotsAsync(1, SelectedDate.Date);
-            var fullDay = new ObservableCollection<Slot>();
+            // Note: I replaced the hardcoded '1' with a generic property or parameter. 
+            // Adjust RecruiterId as needed for your actual ViewModel state.
+            int currentRecruiterId = 1;
 
-            var start = SelectedDate.Date.AddHours(8);
-            var end = SelectedDate.Date.AddHours(18);
+            var existing = await _slotRepo.GetSlotsAsync(currentRecruiterId, SelectedDate.Date);
+            var visibleSlots = new ObservableCollection<Slot>();
 
-            while (start < end)
+            var currentTime = SelectedDate.Date.AddHours(8);
+            var endOfDay = SelectedDate.Date.AddHours(18);
+
+            while (currentTime < endOfDay)
             {
-                var slot = existing.FirstOrDefault(s =>
-                    start >= s.StartTime && start < s.EndTime);
+                // Check if any existing slot overlaps with the CURRENT 30-minute block we are looking at
+                var overlappingSlot = existing.FirstOrDefault(s =>
+                    s.StartTime < currentTime.AddMinutes(30) && s.EndTime > currentTime);
 
-                if (slot != null)
+                if (overlappingSlot != null)
                 {
-                    bool isStart = start == slot.StartTime;
+                    // We found an occupied slot! Add the REAL object from the database directly.
+                    // This preserves the Id, RecruiterId, and all other database properties.
+                    visibleSlots.Add(overlappingSlot);
 
-                    fullDay.Add(new Slot
-                    {
-                        StartTime = start,
-                        EndTime = slot.EndTime,
-                        Duration = slot.Duration,
-                        Status = slot.Status,
-                        InterviewType = slot.InterviewType,
-                        IsHidden = !isStart
-                    });
+                    // FAST-FORWARD the clock to the end of this slot. 
+                    // If it's a 90-minute slot, this safely jumps us over the next two 30-minute ticks.
+                    currentTime = overlappingSlot.EndTime;
                 }
                 else
                 {
-                    fullDay.Add(new Slot
+                    // No slot exists here. Create a 30-minute Free block.
+                    visibleSlots.Add(new Slot
                     {
-                        StartTime = start,
-                        EndTime = start.AddMinutes(30),
+                        RecruiterId = currentRecruiterId,
+                        StartTime = currentTime,
+                        EndTime = currentTime.AddMinutes(30),
                         Duration = 30,
                         Status = SlotStatus.Free,
-                        InterviewType = "",
-                        IsHidden = false
+                        InterviewType = string.Empty
                     });
-                }
 
-                start = start.AddMinutes(30);
+                    // Tick the clock forward by 30 minutes to check the next block
+                    currentTime = currentTime.AddMinutes(30);
+                }
             }
 
-            Slots = new ObservableCollection<Slot>(fullDay.Where(s => !s.IsHidden));
+            Slots = visibleSlots;
         }
 
         public void LoadSlots()
