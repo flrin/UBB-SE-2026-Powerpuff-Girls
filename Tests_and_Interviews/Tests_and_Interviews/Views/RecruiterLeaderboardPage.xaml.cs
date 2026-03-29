@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -7,24 +6,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tests_and_Interviews.Models.Core;
-using Tests_and_Interviews.Models.Enums;
-using Tests_and_Interviews.Services;
+using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.Views
 {
     public sealed partial class RecruiterLeaderboardPage : Page
     {
-        private List<TestAttempt> _entries = new();
+        private List<TestAttempt> _entries = [];
         private int _currentPage = 1;
         private const int PageSize = 10;
         private int _testId;
+
+        private readonly string _connectionString = "Server=localhost;Database=WinUIDevDb;User Id=devuser;Password=devpassword;TrustServerCertificate=True;";
 
         public RecruiterLeaderboardPage()
         {
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -33,29 +33,17 @@ namespace Tests_and_Interviews.Views
                 _testId = testId;
             }
 
-            using var db = new AppDbContext();
+            var testRepo = new TestRepository();
+            var attemptRepo = new TestAttemptRepository();
 
-            var test = db.Tests.FirstOrDefault(t => t.Id == _testId);
+            var test = await testRepo.FindByIdAsync(_testId);
             if (test != null)
             {
                 PageTitleText.Text = test.Title;
                 PageSubtitleText.Text = "Detailed recruiter leaderboard view";
             }
 
-            _entries = db.TestAttempts
-                .Include(a => a.User)
-                .Include(a => a.Test)
-                .Include(a => a.Answers)
-                    .ThenInclude(ans => ans.Question)
-                .Where(a =>
-                    a.TestId == _testId &&
-                    a.Status == TestStatus.COMPLETED.ToString() &&
-                    a.IsValidated &&
-                    a.PercentageScore != null &&
-                    a.CompletedAt != null)
-                .OrderByDescending(a => a.PercentageScore)
-                .ThenBy(a => a.CompletedAt)
-                .ToList();
+            _entries = await attemptRepo.FindValidAttemptsByTestIdAsync(_testId);
 
             RenderPage();
         }
@@ -174,7 +162,6 @@ namespace Tests_and_Interviews.Views
             NextButton.IsEnabled = _currentPage < totalPages;
         }
 
-
         private bool AreMultipleChoiceAnswersEqual(string submitted, string correct)
         {
             var submittedSet = ParseAnswerIndexes(submitted);
@@ -205,10 +192,10 @@ namespace Tests_and_Interviews.Views
 
         private int GetDurationMinutes(TestAttempt attempt)
         {
-            if (attempt.CompletedAt == null)
+            if (attempt.CompletedAt == null || attempt.StartedAt == null)
                 return 0;
 
-            return (int)(attempt.CompletedAt.Value - attempt.StartedAt).TotalMinutes;
+            return (int)(attempt.CompletedAt.Value - attempt.StartedAt.Value).TotalMinutes;
         }
 
         private void BackToRecruiterTests_Click(object sender, RoutedEventArgs e)

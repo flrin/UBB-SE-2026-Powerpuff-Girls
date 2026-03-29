@@ -1,12 +1,10 @@
+using Microsoft.UI.Xaml;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
-using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Repositories;
-using Tests_and_Interviews.Services;
 
 namespace Tests_and_Interviews.ViewModels
 {
@@ -73,7 +71,7 @@ namespace Tests_and_Interviews.ViewModels
             set { _isLoading = value; OnPropertyChanged(); OnPropertyChanged(nameof(NoTestsVisible)); }
         }
 
-        public ObservableCollection<TestCardViewModel> Tests { get; } = new();
+        public ObservableCollection<TestCardViewModel> Tests { get; } = [];
 
         private TestCardViewModel? _selectedTest;
         public TestCardViewModel? SelectedTest
@@ -91,11 +89,11 @@ namespace Tests_and_Interviews.ViewModels
         public Visibility NoTestsVisible =>
             (!IsLoading && Tests.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
 
-        private readonly AppDbContext _db;
+        private readonly TestRepository _testRepo;
 
         public MainTestViewModel()
         {
-            _db = new AppDbContext();
+            _testRepo = new TestRepository();
         }
 
         public async Task LoadTestsAsync()
@@ -103,17 +101,17 @@ namespace Tests_and_Interviews.ViewModels
             IsLoading = true;
             Tests.Clear();
 
-            var repo = new TestRepository(_db);
-
             var categories = new List<string> { "Programming", "Database", "Computer Science" };
 
             foreach (var cat in categories)
             {
-                var tests = await repo.FindTestsByCategoryAsync(cat);
+                var tests = await _testRepo.FindTestsByCategoryAsync(cat);
+
                 foreach (var t in tests)
                 {
                     string typeLabel = "MIXED";
-                    if (t.Questions.Count > 0)
+
+                    if (t.Questions != null && t.Questions.Count > 0)
                         typeLabel = t.Questions[0].QuestionTypeString.Replace("_", "/");
 
                     Tests.Add(new TestCardViewModel

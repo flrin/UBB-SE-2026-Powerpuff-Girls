@@ -17,26 +17,26 @@ namespace Tests_and_Interviews.Models.Core
         [Column("test_id")]
         public int TestId { get; set; }
 
-        
+
         [Column("external_user_id")]
-        public int ExternalUserId { get; set; }
+        public int? ExternalUserId { get; set; }
 
         [NotMapped]
-        public int UserId
+        public int? UserId
         {
             get => ExternalUserId;
             set => ExternalUserId = value;
         }
 
         [Column("score")]
-        public decimal Score { get; set; }
+        public decimal? Score { get; set; }
 
         [Column("status")]
         [MaxLength(200)]
         public string Status { get; set; } = TestStatus.NOT_STARTED.ToString();
 
         [Column("started_at")]
-        public DateTime StartedAt { get; set; }
+        public DateTime? StartedAt { get; set; }
 
         [Column("completed_at")]
         public DateTime? CompletedAt { get; set; }
@@ -58,11 +58,11 @@ namespace Tests_and_Interviews.Models.Core
         [Column("rejected_at")]
         public DateTime? RejectedAt { get; set; }
 
-        public List<Answer> Answers { get; set; } = new();
+        public List<Answer> Answers { get; set; } = [];
         public Test? Test { get; set; }
         public User? User { get; set; }
 
-         public void Start()
+        public void Start()
         {
             Status = TestStatus.RECORDING.ToString();
             StartedAt = DateTime.UtcNow;
@@ -88,7 +88,8 @@ namespace Tests_and_Interviews.Models.Core
             foreach (var q in Test.Questions)
                 maxPossible += q.QuestionScore;
 
-            return maxPossible == 0f ? 0f : (float)Score / maxPossible * 100f;
+            float scoreValue = (float)(Score ?? 0m);
+            return maxPossible == 0f ? 0f : scoreValue / maxPossible * 100f;
         }
     }
 }

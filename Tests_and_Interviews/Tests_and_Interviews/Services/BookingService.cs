@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Tests_and_Interviews.Models;
+using Tests_and_Interviews.Models.Core;
+using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.Services
@@ -9,12 +11,13 @@ namespace Tests_and_Interviews.Services
     public class BookingService
     {
         private readonly SlotRepository _slotRepo;
+        private readonly InterviewSessionRepository _interviewRepo;
 
         public BookingService()
         {
             _slotRepo = new SlotRepository();
+            _interviewRepo = new InterviewSessionRepository();
         }
-
 
         public List<Slot> GetAvailableSlots(int recruiterId, DateTime date)
         {
@@ -24,7 +27,8 @@ namespace Tests_and_Interviews.Services
                 .OrderBy(s => s.StartTime)
                 .ToList();
         }
-        public List<Slot> GetAllAvailableSlots(int recruiterId)
+
+        public List<Slot> GetAvailableSlotsByRecruiterId(int recruiterId)
         {
             return _slotRepo
                 .GetAllSlots(recruiterId)
@@ -33,25 +37,33 @@ namespace Tests_and_Interviews.Services
                 .ToList();
         }
 
-        public void ConfirmBooking(int candidateId, int slotId)
+        public void ConfirmBooking(int candidateId, Slot slot)
         {
-            var slot = _slotRepo.GetById(slotId);
-
             if (slot == null)
                 throw new Exception("Slot not found");
 
             if (slot.Status != SlotStatus.Free)
-                throw new Exception("This slot is no longer available");
+                throw new Exception("This salot is no longer available");
 
             slot.Status = SlotStatus.Occupied;
             slot.CandidateId = candidateId;
+            slot.InterviewType = "";
 
             _slotRepo.Update(slot);
-        }
 
-        public void confirmBooking(int candidateId, int slotId)
-        {
-            ConfirmBooking(candidateId, slotId);
+            InterviewSession newInterviewSession = new InterviewSession
+            {
+                SessionId = slot.Id,
+                PositionId = 0,
+                ExternalUserId = candidateId,
+                InterviewerId = slot.RecruiterId,
+                DateStart = slot.StartTime.ToUniversalTime(),
+                Video = "",
+                Status = "Scheduled",
+                Score = 0
+            };
+
+            _interviewRepo.Add(newInterviewSession);
         }
     }
 }

@@ -16,10 +16,10 @@ namespace Tests_and_Interviews.Services
         public static List<Slot> LoadSlots()
         {
             if (!File.Exists(filePath))
-                return new List<Slot>();
+                return [];
 
             string json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<Slot>>(json) ?? new List<Slot>();
+            return JsonSerializer.Deserialize<List<Slot>>(json) ?? [];
         }
 
         public static void SaveSlots(List<Slot> slots)

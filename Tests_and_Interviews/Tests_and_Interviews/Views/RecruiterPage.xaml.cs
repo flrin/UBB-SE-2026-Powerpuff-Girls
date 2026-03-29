@@ -5,11 +5,16 @@ using System.Collections.Generic;
 using Tests_and_Interviews.Models;
 using Tests_and_Interviews.Repositories;
 using Tests_and_Interviews.ViewModels;
+using Tests_and_Interviews.Helpers;
+using Tests_and_Interviews.Models.Enums;
 
 namespace Tests_and_Interviews.Views
 {
     public sealed partial class RecruiterPage : Page
     {
+        private const int MIN_TIME_SLOT_DURATION = 60;
+        private const int MAX_TIME_SLOT_DURATION = 90;
+
         public RecruiterPage()
         {
             this.InitializeComponent();
@@ -29,7 +34,7 @@ namespace Tests_and_Interviews.Views
         {
             if (sender is Grid grid && grid.DataContext is Slot slot)
             {
-                if (slot.Status != SlotStatus.Free)
+                if (slot.Status != SlotStatus.Free || slot.InterviewType == "Available")
                     return;
 
                 var combo = new ComboBox
@@ -49,16 +54,16 @@ namespace Tests_and_Interviews.Views
 
                 if (await dialog.ShowAsync() == ContentDialogResult.Primary)
                 {
-                    int duration = combo.SelectedIndex == 0 ? 60 : 90;
+                    int duration = combo.SelectedIndex == 0 ? MIN_TIME_SLOT_DURATION : MAX_TIME_SLOT_DURATION;
 
                     var repo = new SlotRepository();
                     repo.Add(new Slot
                     {
-                        RecruiterId = 1,
+                        RecruiterId = Env.RECRUITER_ID,
                         StartTime = slot.StartTime,
                         EndTime = slot.StartTime.AddMinutes(duration),
                         Duration = duration,
-                        Status = SlotStatus.Free, 
+                        Status = SlotStatus.Free,
                         InterviewType = "Available"
                     });
 
@@ -70,6 +75,27 @@ namespace Tests_and_Interviews.Views
         private void LeaderboardInfo_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(RecruiterTestsPage));
+        }
+
+        private void RefreshPendingReviews_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.LoadPendingReviews();
+        }
+
+        private void ReviewPending_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b)
+            {
+                var tag = b.Tag;
+                int sessionId = 0;
+                if (tag is int i) sessionId = i;
+                else if (tag is string s && int.TryParse(s, out int parsed)) sessionId = parsed;
+
+                if (sessionId > 0)
+                {
+                    Frame.Navigate(typeof(InterviewInterviewerPage), sessionId);
+                }
+            }
         }
     }
 }

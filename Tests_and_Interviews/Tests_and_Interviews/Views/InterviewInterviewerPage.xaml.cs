@@ -1,20 +1,9 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Tests_and_Interviews.ViewModels;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Globalization.NumberFormatting;
-using Windows.Media.Capture;
 using Windows.Media.Core;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -35,15 +24,35 @@ namespace Tests_and_Interviews.Views
             InitializeComponent();
             ViewModel = new InterviewInterviewerViewModel();
             SetNumberBoxNumberFormatter();
+            this.DataContext = ViewModel;
+        }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.Parameter is int id && id > 0)
+            {
+                ViewModel.InitializeSession(id);
+            }
         }
 
         private void SubmitScore_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
 
-            ViewModel.SubmitScoreCommand.Execute(null);
+            ViewModel.SubmitScore();
 
-            if (this.Frame.CanGoBack)
+
+            if (this.Tag is Window hostWindow)
+            {
+                try
+                {
+                    hostWindow.Close();
+                    return;
+                }
+                catch { }
+            }
+
+            if (this.Frame != null && this.Frame.CanGoBack)
             {
                 this.Frame.GoBack();
             }
@@ -64,14 +73,18 @@ namespace Tests_and_Interviews.Views
 
         private void SetNumberBoxNumberFormatter()
         {
-            IncrementNumberRounder rounder = new IncrementNumberRounder();
-            rounder.Increment = 0.01;
-            rounder.RoundingAlgorithm = RoundingAlgorithm.RoundHalfUp;
+            IncrementNumberRounder rounder = new IncrementNumberRounder
+            {
+                Increment = 0.01,
+                RoundingAlgorithm = RoundingAlgorithm.RoundHalfUp
+            };
 
-            DecimalFormatter formatter = new DecimalFormatter();
-            formatter.IntegerDigits = 1;
-            formatter.FractionDigits = 2;
-            formatter.NumberRounder = rounder;
+            DecimalFormatter formatter = new DecimalFormatter
+            {
+                IntegerDigits = 1,
+                FractionDigits = 2,
+                NumberRounder = rounder
+            };
             FormattedNumberBox.NumberFormatter = formatter;
             FormattedNumberBox.Minimum = 1;
             FormattedNumberBox.Maximum = 10;

@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Repositories;
 
@@ -8,26 +7,23 @@ namespace Tests_and_Interviews.Services
 {
     public class DataProcessingService
     {
-        private readonly AppDbContext _db;
+        private readonly UserRepository _userRepository;
         private readonly TestAttemptRepository _attemptRepository;
         private readonly TestRepository _testRepository;
 
         public DataProcessingService(
-            AppDbContext db,
+            UserRepository userRepository,
             TestAttemptRepository attemptRepository,
             TestRepository testRepository)
         {
-            _db = db;
+            _userRepository = userRepository;
             _attemptRepository = attemptRepository;
             _testRepository = testRepository;
         }
 
         public async Task<bool> ProcessFinalizedAttemptAsync(int attemptId)
         {
-            var attempt = await _db.TestAttempts
-                .Include(a => a.User)
-                .Include(a => a.Test)
-                .FirstOrDefaultAsync(a => a.Id == attemptId);
+            var attempt = await _attemptRepository.FindByIdAsync(attemptId);
 
             if (attempt == null)
             {
@@ -48,7 +44,7 @@ namespace Tests_and_Interviews.Services
             }
 
             attempt.IsValidated = true;
-            attempt.PercentageScore = ConvertToPercentageScore(attempt.Score);
+            attempt.PercentageScore = ConvertToPercentageScore(attempt.Score.GetValueOrDefault());
             attempt.RejectionReason = null;
             attempt.RejectedAt = null;
 
@@ -58,8 +54,11 @@ namespace Tests_and_Interviews.Services
 
         private async Task<string?> ValidateAttemptAsync(TestAttempt attempt)
         {
-            var userExists = await _db.Users.AnyAsync(u => u.Id == attempt.ExternalUserId);
-            if (!userExists)
+            if (attempt.ExternalUserId == null)
+                return "User does not exist.";
+
+            var user = await _userRepository.GetByIdAsync(attempt.ExternalUserId.Value);
+            if (user == null)
                 return "User does not exist.";
 
             var test = await _testRepository.FindByIdAsync(attempt.TestId);
@@ -91,7 +90,7 @@ namespace Tests_and_Interviews.Services
 
         private decimal ConvertToPercentageScore(decimal originalScore)
         {
-            return (originalScore / 100m) * 100m;
+            return originalScore / 100m * 100m;
         }
     }
 }

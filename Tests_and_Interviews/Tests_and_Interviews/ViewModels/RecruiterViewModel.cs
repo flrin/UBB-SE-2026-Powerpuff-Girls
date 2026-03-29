@@ -1,25 +1,39 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Tests_and_Interviews.Models;
+using Tests_and_Interviews.Models.Core;
+using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.ViewModels
 {
     public class RecruiterViewModel : INotifyPropertyChanged
     {
-        private readonly SlotRepository _repo;
-        private ObservableCollection<Slot> _slots = new ObservableCollection<Slot>();
+        private readonly SlotRepository _slotRepo;
+        private readonly InterviewSessionRepository _sessionRepo;
+
+        private ObservableCollection<Slot> _slots = [];
         private DateTime _selectedDate = DateTime.Today;
+        private ObservableCollection<InterviewSession> _pendingReviews = [];
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public RecruiterViewModel()
         {
-            _repo = new SlotRepository();
-            LoadSlots();
+            _slotRepo = new SlotRepository();
+            _sessionRepo = new InterviewSessionRepository();
+
+            _ = InitializeDataAsync();
+        }
+
+        private async Task InitializeDataAsync()
+        {
+            await LoadSlotsAsync();
+            await LoadPendingReviewsAsync();
         }
 
         public DateTime SelectedDate
@@ -27,10 +41,14 @@ namespace Tests_and_Interviews.ViewModels
             get => _selectedDate;
             set
             {
-                _selectedDate = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(SelectedDateFormatted));
-                LoadSlots();
+                if (_selectedDate != value)
+                {
+                    _selectedDate = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedDateFormatted));
+
+                    _ = LoadSlotsAsync();
+                }
             }
         }
 
@@ -47,50 +65,77 @@ namespace Tests_and_Interviews.ViewModels
             }
         }
 
-        public void LoadSlots()
+        public ObservableCollection<InterviewSession> PendingReviews
         {
-            var existing = _repo.GetSlots(1, SelectedDate.Date);
-            var fullDay = new ObservableCollection<Slot>();
-
-            var start = SelectedDate.Date.AddHours(8);
-            var end = SelectedDate.Date.AddHours(18);
-
-            while (start < end)
+            get => _pendingReviews;
+            set
             {
-                var slot = existing.FirstOrDefault(s =>
-                    start >= s.StartTime && start < s.EndTime);
+                _pendingReviews = value;
+                OnPropertyChanged();
+            }
+        }
 
-                if (slot != null)
+        public async Task LoadPendingReviewsAsync()
+        {
+            try
+            {
+                var list = await _sessionRepo.GetSessionsByStatusAsync(InterviewStatus.InProgress.ToString());
+                PendingReviews = new ObservableCollection<InterviewSession>(list);
+            }
+            catch
+            {
+                PendingReviews = [];
+            }
+        }
+
+        public void LoadPendingReviews()
+        {
+            LoadPendingReviewsAsync();
+        }
+
+        public async Task LoadSlotsAsync()
+        {
+
+            int currentRecruiterId = 1;
+
+            var existing = await _slotRepo.GetSlotsAsync(currentRecruiterId, SelectedDate.Date);
+            var visibleSlots = new ObservableCollection<Slot>();
+
+            var currentTime = SelectedDate.Date.AddHours(8);
+            var endOfDay = SelectedDate.Date.AddHours(18);
+
+            while (currentTime < endOfDay)
+            {
+                var overlappingSlot = existing.FirstOrDefault(s =>
+                    s.StartTime < currentTime.AddMinutes(30) && s.EndTime > currentTime);
+
+                if (overlappingSlot != null)
                 {
-                    bool isStart = start == slot.StartTime;
-
-                    fullDay.Add(new Slot
-                    {
-                        StartTime = start,
-                        EndTime = slot.EndTime,
-                        Duration = slot.Duration,
-                        Status = slot.Status,
-                        InterviewType = slot.InterviewType,
-                        IsHidden = !isStart
-                    });
+                    visibleSlots.Add(overlappingSlot);
+                    currentTime = overlappingSlot.EndTime;
                 }
                 else
                 {
-                    fullDay.Add(new Slot
+                    visibleSlots.Add(new Slot
                     {
-                        StartTime = start,
-                        EndTime = start.AddMinutes(30),
+                        RecruiterId = currentRecruiterId,
+                        StartTime = currentTime,
+                        EndTime = currentTime.AddMinutes(30),
                         Duration = 30,
                         Status = SlotStatus.Free,
-                        InterviewType = "",
-                        IsHidden = false
+                        InterviewType = string.Empty
                     });
-                }
 
-                start = start.AddMinutes(30);
+                    currentTime = currentTime.AddMinutes(30);
+                }
             }
 
-            Slots = new ObservableCollection<Slot>(fullDay.Where(s => !s.IsHidden));
+            Slots = visibleSlots;
+        }
+
+        public void LoadSlots()
+        {
+            LoadSlotsAsync();
         }
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)

@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
-using Tests_and_Interviews.Models.Enums;
 using Tests_and_Interviews.Repositories;
 
 namespace Tests_and_Interviews.Services
-{ 
+{
     public class AttemptValidationService
     {
         private readonly TestAttemptRepository _attemptRepository;

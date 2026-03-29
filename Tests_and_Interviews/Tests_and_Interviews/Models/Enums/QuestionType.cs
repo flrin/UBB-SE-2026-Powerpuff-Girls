@@ -1,6 +1,6 @@
 ﻿namespace Tests_and_Interviews.Models.Enums
 {
-     public enum QuestionType
+    public enum QuestionType
     {
         SINGLE_CHOICE,
         MULTIPLE_CHOICE,

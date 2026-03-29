@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.Models.Enums;
@@ -32,7 +31,7 @@ namespace Tests_and_Interviews.Services
             _validationService = validationService;
         }
 
-        
+
         public async Task StartTestAsync(int userId, int testId)
         {
             await _validationService.CheckExistingAttemptsAsync(userId, testId);
@@ -50,7 +49,7 @@ namespace Tests_and_Interviews.Services
             _timerService.StartTimer(attempt.Id);
         }
 
-        
+
         public async Task SubmitTestAsync(int attemptId)
         {
             var answers = await _answerRepository.FindByAttemptAsync(attemptId);
@@ -83,13 +82,7 @@ namespace Tests_and_Interviews.Services
             await _attemptRepository.UpdateAsync(attempt);
         }
 
-        
-        public async Task LoadTestAsync(int attemptId)
-        {
-            await _answerRepository.FindByAttemptAsync(attemptId);
-        }
 
-        
         public async Task<Test?> GetNextAvailableTestAsync(string category)
         {
             var tests = await _testRepository.FindTestsByCategoryAsync(category);

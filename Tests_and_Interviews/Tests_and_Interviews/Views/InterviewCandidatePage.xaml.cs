@@ -1,22 +1,11 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using Tests_and_Interviews.Models.Core;
 using Tests_and_Interviews.ViewModels;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media.Capture;
-using Windows.Media.Core;
 using Windows.Media.MediaProperties;
-using Windows.Media.Playback;
 using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -29,14 +18,33 @@ namespace Tests_and_Interviews.Views
     /// </summary>
     public sealed partial class InterviewCandidatePage : Page
     {
+        public Action? OnClosed { get; set; }
+
+        public InterviewSession? InterviewSession { get; set; }
+
         private MediaCapture _mediaCapture = new MediaCapture();
         public InterviewCandidateViewModel ViewModel { get; }
         private bool _isRecording = false;
         private StorageFile _recordingFile;
+
         public InterviewCandidatePage()
         {
             InitializeComponent();
             ViewModel = new InterviewCandidateViewModel();
+            DataContext = ViewModel;
+            StopVideoButton.IsEnabled = false;
+            SubmitVideoButton.IsEnabled = false;
+            NextQuestionButton.IsEnabled = false;
+            RecordingBorder.BorderThickness = new Thickness(0);
+            StartCamera();
+        }
+
+        public InterviewCandidatePage(InterviewSession session)
+        {
+            InterviewSession = session;
+            ViewModel = new InterviewCandidateViewModel();
+            InitializeComponent();
+            DataContext = ViewModel;
             StopVideoButton.IsEnabled = false;
             SubmitVideoButton.IsEnabled = false;
             NextQuestionButton.IsEnabled = false;
@@ -123,12 +131,24 @@ namespace Tests_and_Interviews.Views
             _mediaCapture?.Dispose();
             _mediaCapture = null;
 
-            if (this.Frame.CanGoBack)
+            try { OnClosed?.Invoke(); } catch { }
+
+            if (this.Tag is Window hostWindow)
+            {
+                try
+                {
+                    hostWindow.Close();
+                    return;
+                }
+                catch { }
+            }
+
+            if (this.Frame != null && this.Frame.CanGoBack)
             {
                 this.Frame.GoBack();
             }
         }
 
-       
+
     }
 }

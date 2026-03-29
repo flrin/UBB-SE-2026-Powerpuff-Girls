@@ -49,6 +49,6 @@ namespace Tests_and_Interviews.Models.Core
         };
 
         public Test? Test { get; set; }
-        public List<Answer> Answers { get; set; } = new();
+        public List<Answer> Answers { get; set; } = [];
     }
 }

@@ -6,6 +6,7 @@
 
     <Page.Resources>
         <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <local:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
     </Page.Resources>
 
 
@@ -153,6 +154,48 @@
                     BorderThickness="0"
                     Command="{Binding ConfirmCommand}"/>
 
+        </StackPanel>
+
+        <StackPanel Grid.Column="0"
+                    Width="500"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Center"
+                    Margin="15,0,0,20"
+                    Spacing="8">
+            <TextBlock Text="Your Interviews" FontSize="16" FontWeight="SemiBold"/>
+
+            <ItemsControl ItemsSource="{Binding InterviewSessions}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border CornerRadius="8" Padding="8" Margin="0,4" Background="White">
+                            <StackPanel>
+                                <TextBlock Text="{Binding DateStart, Converter={StaticResource DateTimeToStringConverter}}" FontSize="14"/>
+                                <TextBlock Text="{Binding Status}" FontSize="12" Foreground="#6367FF"/>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,6,0,0">
+                                    <Button Content="Join"
+                                            Background="#6367FF"
+                                            Foreground="White"
+                                            CornerRadius="8"
+                                            Padding="8,4"
+                                            BorderThickness="0"
+                                            Command="{Binding DataContext.JoinCommand, ElementName=RootGrid}"
+                                            CommandParameter="{Binding}"/>
+
+                                    <Button Content="Cancel"
+                                            Background="#C9BEFF"
+                                            Foreground="Black"
+                                            CornerRadius="8"
+                                            Padding="8,4"
+                                            BorderThickness="0"
+                                            Command="{Binding DataContext.CancelCommand, ElementName=RootGrid}"
+                                            CommandParameter="{Binding}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
 
     </Grid>

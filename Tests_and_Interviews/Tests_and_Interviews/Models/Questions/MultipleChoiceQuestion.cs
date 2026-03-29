@@ -4,17 +4,17 @@ using Tests_and_Interviews.Models.Core;
 
 namespace Tests_and_Interviews.Models.Questions
 {
-    
+
     public class MultipleChoiceQuestion : Question
     {
         [NotMapped]
-        public new List<string> Options { get; set; } = new();
+        public new List<string> Options { get; set; } = [];
 
-       
-        [NotMapped]
-        public new List<int> CorrectAnswerIndexes { get; set; } = new();
 
         [NotMapped]
-        public List<int> SelectedIndexes { get; set; } = new();
+        public new List<int> CorrectAnswerIndexes { get; set; } = [];
+
+        [NotMapped]
+        public List<int> SelectedIndexes { get; set; } = [];
     }
 }

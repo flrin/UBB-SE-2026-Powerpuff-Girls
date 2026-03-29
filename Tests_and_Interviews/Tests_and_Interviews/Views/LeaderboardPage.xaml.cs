@@ -13,7 +13,7 @@ namespace Tests_and_Interviews.Views
 {
     public sealed partial class LeaderboardPage : Page
     {
-        private List<LeaderboardEntry> _entries = new();
+        private List<LeaderboardEntry> _entries = [];
         private int _currentPage = 1;
         private const int PageSize = 10;
         private int _testId;
@@ -31,9 +31,8 @@ namespace Tests_and_Interviews.Views
             {
                 _testId = testId;
 
-                using var db = new AppDbContext();
-                var repo = new LeaderboardRepository(db);
-                var service = new LeaderboardService(db, repo);
+                var repo = new LeaderboardRepository();
+                var service = new LeaderboardService();
 
                 _entries = await service.GetFullLeaderboardAsync(testId);
                 RenderPage();
