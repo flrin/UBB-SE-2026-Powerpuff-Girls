@@ -1,56 +1,63 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-using Tests_and_Interviews.Services;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using System.Threading.Tasks;
+using Tests_and_Interviews.Repositories;
+using Tests_and_Interviews.Views;
 
 namespace Tests_and_Interviews
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
     public partial class App : Application
     {
         private Window? _window;
 
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
+        public static int CurrentUserId { get; private set; } = 0;
+
+        private readonly string _connectionString = "Server=localhost;Database=WinUIDevDb;User Id=devuser;Password=devpassword;TrustServerCertificate=True;";
+
         public App()
         {
             InitializeComponent();
-            using (var db = new AppDbContext()) // Replace with your actual DbContext name
+
+            var userRepo = new UserRepository();
+
+            try
             {
-                db.Database.EnsureCreated();
+                var users = Task.Run(() => userRepo.GetAllAsync()).Result;
+                var alice = users.FirstOrDefault(u => u.Name == "Alice Johnson");
+
+                CurrentUserId = alice?.Id ?? 0;
+                System.Diagnostics.Debug.WriteLine($"[App] CurrentUserId = {CurrentUserId}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[App] Failed to fetch users from database. Did you run the SQL seed script? Error: {ex.Message}");
+                CurrentUserId = 0;
             }
         }
 
-        /// <summary>
-        /// Invoked when the application is launched.
-        /// </summary>
-        /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            // Main test window
             _window = new MainWindow();
             _window.Activate();
+
+            // Recruiter window
+            var recruiterWindow = new Window();
+            var recruiterFrame = new Frame();
+            recruiterFrame.Navigate(typeof(RecruiterPage));
+            recruiterWindow.Content = recruiterFrame;
+            recruiterWindow.Title = "Recruiter";
+            recruiterWindow.Activate();
+
+            // Candidate home window
+            var candidateWindow = new Window();
+            var candidateFrame = new Frame();
+            candidateFrame.Navigate(typeof(CandidateHomePage));
+            candidateWindow.Content = candidateFrame;
+            candidateWindow.Title = "Candidate Home";
+            candidateWindow.Activate();
         }
     }
 }

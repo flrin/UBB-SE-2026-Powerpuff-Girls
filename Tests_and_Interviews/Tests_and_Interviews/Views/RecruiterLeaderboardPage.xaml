@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Tests_and_Interviews.Views.RecruiterLeaderboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="#F0EEFF">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="White" Padding="32,16"
+                BorderBrush="#E8E4FF" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Click="BackToRecruiterTests_Click"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="#8494FF"
+                        FontSize="14"
+                        Padding="0">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="←" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="Back to Tests" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                    <TextBlock x:Name="PageTitleText"
+                               Text="Recruiter Leaderboard"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="#1a1a2e"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="PageSubtitleText"
+                               Text="Detailed ranking information"
+                               FontSize="13"
+                               Foreground="#777"
+                               HorizontalAlignment="Center"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" Padding="120,24,120,24"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="LeaderboardPanel" Spacing="12"/>
+        </ScrollViewer>
+
+        <Border Grid.Row="2" Background="White"
+                BorderBrush="#E8E4FF" BorderThickness="0,1,0,0"
+                Padding="24,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="PrevButton"
+                        Grid.Column="0"
+                        Content="Previous"
+                        Click="PrevButton_Click"
+                        Background="#E8E4FF"
+                        Foreground="#1a1a2e"
+                        Padding="20,10"
+                        CornerRadius="8"
+                        IsEnabled="False"/>
+
+                <TextBlock x:Name="PageInfoText"
+                           Grid.Column="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="14"
+                           Foreground="#666"/>
+
+                <Button x:Name="NextButton"
+                        Grid.Column="2"
+                        Content="Next"
+                        Click="NextButton_Click"
+                        Background="#8494FF"
+                        Foreground="White"
+                        Padding="20,10"
+                        CornerRadius="8"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>
