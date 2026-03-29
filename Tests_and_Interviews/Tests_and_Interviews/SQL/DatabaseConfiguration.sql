@@ -87,7 +87,7 @@ CREATE TABLE Slots (
     start_time DATETIME2 NOT NULL,
     end_time DATETIME2 NOT NULL,
     duration INT NOT NULL DEFAULT 30,
-    status INT NOT NULL DEFAULT 0, -- Assuming Enum 0 = Free
+    status INT NOT NULL DEFAULT 0,
     interview_type NVARCHAR(255) NULL,
     CONSTRAINT FK_Slots_Recruiters FOREIGN KEY (recruiter_id) REFERENCES Recruiters(company_id) ON DELETE CASCADE
 );

@@ -11,8 +11,11 @@ namespace Tests_and_Interviews.Services
 {
     public class TimerService
     {
+        private const int TEST_DURATION = 30;
+
+
         private static readonly ConcurrentDictionary<int, DateTime> _timers = new();
-        private static readonly TimeSpan TestDuration = TimeSpan.FromMinutes(30);
+        private static readonly TimeSpan TestDuration = TimeSpan.FromMinutes(TEST_DURATION);
         private readonly TestAttemptRepository _testAttemptRepository;
         public TimerService(TestAttemptRepository testAttemptRepository)
         {

@@ -115,6 +115,9 @@ namespace Tests_and_Interviews.ViewModels
 
     public class TestPageViewModel : INotifyPropertyChanged
     {
+
+        private const int TEST_DURATION_MINUTES = 30;
+
         public event PropertyChangedEventHandler? PropertyChanged;
         void Notify([CallerMemberName] string p = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));
@@ -124,7 +127,7 @@ namespace Tests_and_Interviews.ViewModels
         private string _testTitle = string.Empty;
         public string TestTitle { get => _testTitle; set { _testTitle = value; Notify(); } }
 
-        private TimeSpan _timeLeft = TimeSpan.FromMinutes(30);
+        private TimeSpan _timeLeft = TimeSpan.FromMinutes(TEST_DURATION_MINUTES);
         private DispatcherTimer? _timer;
         public string TimerDisplay => _timeLeft.ToString(@"mm\:ss");
         public Action? OnTimerExpired { get; set; }
