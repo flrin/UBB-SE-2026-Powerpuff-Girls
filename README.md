@@ -1,13 +1,15 @@
 # Prerequisites
 - Visual Studio 2026
 - \[WinUI application development] from the Visual Studio workloads
-- Docker Desktop
+- MSSM
 
 # Setup
-### PostgreSQL
-1. Open Docker Desktop
-2. Open command line to repo folder
-3. docker-compose up -d
+### SQL Server
+1. Create a new Database in MSSM
+2. Copy the connection string from MSSM
+3. Add "Initial Catalog=TestsAndInterviews;" to the connection string
+4. In the project in the Env.cs class change the connection string
+5. In MSSM run the sql script in the SQL folder from the project
 
 ### Project
 1. Open Visual Studio 2026
@@ -28,20 +30,8 @@ One person must review the PR!
 - Views: the UI, only .xaml files
 - ViewModels: logic (or controller) for the UI
 - Models: classes that represent objects (user, slot etc.)
-- Services: connects the controller and the database
+- Services: business logic 
+- Repositories: connects the services and the database
 - Helpers: utility classes
-
-# Notes!
-### Adding a .xaml file
-1. Right click on views
-2. Add
-3. New Item...
-4. Templates
-5. Blank Page
-
-Not .xml file!
-
-### Database not up to date
-1. Open repo folder in terminal
-2. run docker-compose down -v
-3. run docker-compose up -d 
+- SQL: sql scripts for initializing/changing the database
+- Assets: visual or audio elements
